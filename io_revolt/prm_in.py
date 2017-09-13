@@ -79,10 +79,13 @@ def import_mesh(prm, scene, filepath):
     tex_layer = bm.faces.layers.tex.new("UVMap")
     vc_layer = bm.loops.layers.color.new("Col")
     va_layer = bm.loops.layers.color.new("Alpha")
+
+    # This currently breaks UV unwrap reset, it is a Blender bug.
     type_layer = bm.faces.layers.int.new("Type")
 
     for vert in prm.vertices:
-        position = to_blender_axis(vert.position.data)
+        co = [c*IMPORT_SCALE for c in vert.position.data]
+        position = to_blender_axis(co)
         normal = to_blender_axis(vert.normal.data)
 
         # Creates vertices
@@ -122,6 +125,9 @@ def import_mesh(prm, scene, filepath):
         texture_path = rvfiles.get_texture_path(filepath, poly.texture)
         img = img_in.import_file(texture_path)
         face[tex_layer].image = img
+
+        # Assigns the face properties (bit field, one int per face)
+        face[type_layer] = poly.type
 
         # Assigns the UV mapping, colors and alpha
         for l in range(num_loops):

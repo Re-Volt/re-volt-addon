@@ -23,7 +23,8 @@ bl_info = {
 if "bpy" in locals():
     import imp
 
-    # imp.reload(common)
+    imp.reload(common)
+    imp.reload(panels)
 
     if "prm_in" in locals(): imp.reload(prm_in)
 
@@ -31,7 +32,11 @@ import bpy
 import os
 import os.path
 import time
+from bpy.app.handlers import persistent
+from . import common
+from . import panels
 
+from .common import *
 
 """
 Supported File Formats
@@ -91,6 +96,65 @@ class RVObjectProperties(bpy.types.PropertyGroup):
             # description="Only Instance objects are exported to the .fin file (and automatically rejected from World and World NCP file)",
             )
 
+class RevoltMeshProperties(bpy.types.PropertyGroup):
+    face_material = bpy.props.EnumProperty(
+        name = "Material",
+        items = materials,
+        get = get_face_material,
+        set = set_face_material
+    )
+    face_texture =bpy.props. IntProperty(
+        name = "Texture",
+        get = get_face_texture,
+        set = set_face_texture
+    )
+    face_double_sided = bpy.props.BoolProperty(
+        name = "Double sided",
+        get = lambda s: bool(get_face_property(s) & FACE_DOUBLE),
+        set = lambda s,v: set_face_property(s, v, FACE_DOUBLE)
+    )
+    face_translucent = bpy.props.BoolProperty(
+        name = "Translucent",
+        get = lambda s: bool(get_face_property(s) & FACE_TRANSLUCENT),
+        set = lambda s,v: set_face_property(s, v, FACE_TRANSLUCENT)
+    )
+    face_mirror = bpy.props.BoolProperty(
+        name = "Mirror",
+        get = lambda s: bool(get_face_property(s) & FACE_MIRROR),
+        set = lambda s,v: set_face_property(s, v, FACE_MIRROR)
+    )
+    face_additive = bpy.props.BoolProperty(
+        name = "Additive blending",
+        get = lambda s: bool(get_face_property(s) & FACE_TRANSL_TYPE),
+        set = lambda s,v: set_face_property(s, v, FACE_TRANSL_TYPE)
+    )
+    face_texture_animation = bpy.props.BoolProperty(
+        name = "Animated",
+        get = lambda s: bool(get_face_property(s) & FACE_TEXANIM),
+        set = lambda s,v: set_face_property(s, v, FACE_TEXANIM)
+    )
+    face_no_envmapping = bpy.props.BoolProperty(
+        name = "No EnvMap (.prm)",
+        get = lambda s: bool(get_face_property(s) & FACE_NOENV),
+        set = lambda s,v: set_face_property(s, v, FACE_NOENV)
+    )
+    face_envmapping = bpy.props.BoolProperty(
+        name = "EnvMapping (.w)",
+        get = lambda s: bool(get_face_property(s) & FACE_ENV),
+        set = lambda s,v: set_face_property(s, v, FACE_ENV)
+    )
+    face_cloth = bpy.props.BoolProperty(
+        name = "Cloth effect (.prm)",
+        get = lambda s: bool(get_face_property(s) & FACE_CLOTH),
+        set = lambda s,v: set_face_property(s, v, FACE_CLOTH)
+    )
+    face_skip = bpy.props.BoolProperty(
+        name = "Do not export",
+        get = lambda s: bool(get_face_property(s) & FACE_SKIP),
+        set = lambda s,v: set_face_property(s, v, FACE_SKIP)
+    )
+
+
 """
 Import Operator for all file types
 """
@@ -125,6 +189,21 @@ class ImportRV(bpy.types.Operator):
 def menu_func_import(self, context):
     self.layout.operator("import_scene.revolt", text="Re-Volt")
 
+@persistent
+def edit_object_change_handler(scene):
+    obj = scene.objects.active
+    if obj is None:
+        return None
+
+    # Adds an instance of the edit mode mesh to the global dict
+    if obj.mode == 'EDIT' and obj.type == 'MESH':
+        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        # set_collision_flag(bm)
+        return None
+
+    dic.clear()
+    return None
+
 def register():
     bpy.utils.register_module(__name__)
 
@@ -132,15 +211,20 @@ def register():
     #bpy.utils.register_class(RVObjectProperties)
     # bpy.types.Scene.revolt = bpy.props.PointerProperty(type=RV_SettingsScene)
     bpy.types.Object.revolt = bpy.props.PointerProperty(type=RVObjectProperties)
+    bpy.types.Mesh.revolt = bpy.props.PointerProperty(type = RevoltMeshProperties)
 
     bpy.types.INFO_MT_file_import.prepend(menu_func_import)
     # bpy.types.INFO_MT_file_export.prepend(menu_func_export)
+
+    bpy.app.handlers.scene_update_post.clear()
+    bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
 
 def unregister():
     bpy.utils.unregister_module(__name__)
 
     # del bpy.types.Scene.revolt
     del bpy.types.Object.revolt
+    del bpy.types.Mesh.revolt
 
     bpy.types.INFO_MT_file_import.remove(menu_func_import)
     # bpy.types.INFO_MT_file_export.remove(menu_func_export)

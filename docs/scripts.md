@@ -9,6 +9,12 @@ Collection of universal constants and functions.
 ## img_in.py
 Imports images and creates dummy textures if it can't find them.
 
+## operators.py
+Functions behind user interface buttons.
+
+## panels.py
+The user interface for the add-on.
+
 ## parameters.py
 Parses parameter files (from rvtools).
 
