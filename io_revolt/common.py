@@ -83,7 +83,7 @@ Creating bmeshes in the panels is bad practice as it causes unexpected behavior.
 """
 
 def get_face_material(self):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("revolt_material") or bm.faces.layers.int.new("revolt_material")
     selected_faces = [face for face in bm.faces if face.select]
@@ -93,7 +93,7 @@ def get_face_material(self):
         return selected_faces[0][layer]
 
 def set_face_material(self, value):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("revolt_material") or bm.faces.layers.int.new("revolt_material")
     for face in bm.faces:
@@ -101,7 +101,7 @@ def set_face_material(self, value):
             face[layer] = value
 
 def get_face_texture(self):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Texture") or bm.faces.layers.int.new("Texture")
     selected_faces = [face for face in bm.faces if face.select]
@@ -111,7 +111,7 @@ def get_face_texture(self):
         return selected_faces[0][layer]
 
 def set_face_texture(self, value):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Texture") or bm.faces.layers.int.new("Texture")
     for face in bm.faces:
@@ -119,7 +119,7 @@ def set_face_texture(self, value):
             face[layer] = value
 
 def get_face_property(self):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     selected_faces = [face for face in bm.faces if face.select]
@@ -131,7 +131,7 @@ def get_face_property(self):
     return prop
 
 def set_face_property(self, value, mask):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     for face in bm.faces:
@@ -139,7 +139,7 @@ def set_face_property(self, value, mask):
             face[layer] = face[layer] | mask if value else face[layer] & ~mask
 
 def select_faces(context, prop):
-    eo = context.edit_object
+    eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     flag_layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
 
@@ -147,6 +147,10 @@ def select_faces(context, prop):
         if face[flag_layer] & prop:
             face.select = not face.select
     redraw()
+
+"""
+Blender helpers
+"""
 
 def redraw():
     bpy.context.area.tag_redraw()
