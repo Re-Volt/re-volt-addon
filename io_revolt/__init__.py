@@ -25,7 +25,7 @@ if "bpy" in locals():
 
     # imp.reload(common)
 
-    if "io_prm" in locals(): imp.reload(io_prm)
+    if "prm_in" in locals(): imp.reload(prm_in)
 
 import bpy
 import os
@@ -111,10 +111,11 @@ class ImportRV(bpy.types.Operator):
         if format == FORMAT_UNK:
             print("Unsupported format.")
         elif format == FORMAT_PRM:
-            from . import io_prm
-            io_prm.import_file(self.filepath, scene)
+            from . import prm_in
+            prm_in.import_file(self.filepath, scene)
         else:
             print(format)
+        print("Import done.")
         return {'FINISHED'}
 
     def invoke(self, context, event):

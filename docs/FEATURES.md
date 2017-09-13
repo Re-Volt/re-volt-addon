@@ -7,7 +7,7 @@
 - [X] Vertex colors
 - [ ] Texture
 - [ ] Types
-- [ ] LoD
+- [X] LoD
 ### Export
 - [ ] Mesh
 - [ ] UV
