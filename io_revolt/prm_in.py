@@ -7,7 +7,9 @@ Meshes used for cars, game objects and track instances.
 if 'bpy' in locals():
     import imp
     imp.reload(common)
+    imp.reload(rvfiles)
     imp.reload(rvstruct)
+    imp.reload(img_in)
 
 import os
 import bpy
@@ -15,7 +17,9 @@ import bmesh
 from mathutils import Color, Vector
 
 from . import common
+from . import rvfiles
 from . import rvstruct
+from . import img_in
 
 # Makes classes, variables and functions more accessible
 from .rvstruct import PRM
@@ -44,13 +48,15 @@ def import_file(filepath, scene):
     print("Imported {} ({} meshes)".format(filename, len(meshes)))
 
     for prm in meshes:
-        me = import_mesh(prm, scene, filename)
+        me = import_mesh(prm, scene, filepath)
 
         if len(meshes) > 1:
             # Fake user if there are multiple LoDs so they're kept when saving
             me.use_fake_user = True
+
             # Append a quality suffix to meshes
-            me.name = "{}|q{}".format(me.name, meshes.index(prm))
+            bname, number = me.name.split(".")
+            me.name = "{}|q{}".format(bname, meshes.index(prm))
 
         # Assigns the highest quality mesh to an object and links it to the scn
         if meshes.index(prm) == 0:
@@ -59,19 +65,21 @@ def import_file(filepath, scene):
             scene.objects.link(ob)
             scene.objects.active = ob
 
-def import_mesh(prm, scene, filename):
+def import_mesh(prm, scene, filepath):
     """
     Creates a mesh from an rvstruct object and returns it.
     """
+    filename = os.path.basename(filepath)
     # Creates a new mesh and bmesh
     me = bpy.data.meshes.new(filename)
     bm = bmesh.new()
     bm.from_mesh(me)
 
     uv_layer = bm.loops.layers.uv.new("UVMap")
+    tex_layer = bm.faces.layers.tex.new("UVMap")
     vc_layer = bm.loops.layers.color.new("Col")
     va_layer = bm.loops.layers.color.new("Alpha")
-    flag_layer = bm.faces.layers.int.new("Flags")
+    type_layer = bm.faces.layers.int.new("Type")
 
     for vert in prm.vertices:
         position = to_blender_axis(vert.position.data)
@@ -109,6 +117,11 @@ def import_mesh(prm, scene, filename):
         except Exception as e:
             print(e)
             continue # Skips this face
+
+        # Assigns the texture to the face
+        texture_path = rvfiles.get_texture_path(filepath, poly.texture)
+        img = img_in.import_file(texture_path)
+        face[tex_layer].image = img
 
         # Assigns the UV mapping, colors and alpha
         for l in range(num_loops):
