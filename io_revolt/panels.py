@@ -29,7 +29,6 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         obj = context.object
         mesh = obj.data
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
-        # bm = dic[obj.name]
         flags = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
         if self.selected_face_count is None or self.selected_face_count != mesh.total_face_sel:
             self.selected_face_count = mesh.total_face_sel

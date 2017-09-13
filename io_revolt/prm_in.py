@@ -4,7 +4,7 @@ Meshes used for cars, game objects and track instances.
 """
 
 # Reloads potentially changed modules on reload (F8 in Blender)
-if 'bpy' in locals():
+if "bpy" in locals():
     import imp
     imp.reload(common)
     imp.reload(rvfiles)

@@ -1,8 +1,10 @@
+# Prevents it from being reloaded
+if not "bpy" in locals():
+    # Global dict to hold the mesh for edit mode
+    dic = {}
+
 import bpy
 import bmesh
-
-# Global dict to hold the mesh for edit mode
-dic = {}
 
 # Scale used for importing (multiplicative)
 IMPORT_SCALE = 0.01
@@ -81,8 +83,8 @@ Creating bmeshes in the panels is bad practice as it causes unexpected behavior.
 """
 
 def get_face_material(self):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("revolt_material") or bm.faces.layers.int.new("revolt_material")
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
@@ -91,16 +93,16 @@ def get_face_material(self):
         return selected_faces[0][layer]
 
 def set_face_material(self, value):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("revolt_material") or bm.faces.layers.int.new("revolt_material")
     for face in bm.faces:
         if face.select:
             face[layer] = value
 
 def get_face_texture(self):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Texture") or bm.faces.layers.int.new("Texture")
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
@@ -109,16 +111,16 @@ def get_face_texture(self):
         return selected_faces[0][layer]
 
 def set_face_texture(self, value):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Texture") or bm.faces.layers.int.new("Texture")
     for face in bm.faces:
         if face.select:
             face[layer] = value
 
 def get_face_property(self):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0:
@@ -129,16 +131,16 @@ def get_face_property(self):
     return prop
 
 def set_face_property(self, value, mask):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     for face in bm.faces:
         if face.select:
             face[layer] = face[layer] | mask if value else face[layer] & ~mask
 
 def select_faces(context, prop):
-    obj = bpy.context.object
-    bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+    eo = context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
     flag_layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
 
     for face in bm.faces:
