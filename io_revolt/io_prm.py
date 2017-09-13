@@ -7,16 +7,18 @@ Meshes used for cars, game objects and track instances.
 if 'bpy' in locals():
     import imp
     imp.reload(common)
+    imp.reload(rvstruct)
 
 import os
 import bpy
 import bmesh
-from mathutils import Vector
+from mathutils import Color, Vector
 
 from . import common
-from .rvstruct import PRM
+from . import rvstruct
 
 # Makes global constants and helpers accessible
+from .rvstruct import PRM
 from .common import *
 
 def import_file(filepath, scene):
@@ -38,6 +40,9 @@ def import_file(filepath, scene):
     bm.from_mesh(me)
 
     uv_layer = bm.loops.layers.uv.new("UVMap")
+    vc_layer = bm.loops.layers.color.new("Col")
+    va_layer = bm.loops.layers.color.new("Alpha")
+    flag_layer = bm.faces.layers.int.new("Flags")
 
     for vert in prm.vertices:
         position = to_blender_axis(vert.position.data)
@@ -58,13 +63,16 @@ def import_file(filepath, scene):
         if is_quad:
             verts = (bm.verts[indices[3]], bm.verts[indices[2]],
                      bm.verts[indices[1]], bm.verts[indices[0]])
-            # Reversed list of UVs
-            uvs = poly.uv[::-1]
+            # Reversed list of UVs and colors
+            uvs = reverse_quad(poly.uv)
+            colors = reverse_quad(poly.colors)
+
         else:
             verts = (bm.verts[indices[2]], bm.verts[indices[1]],
                      bm.verts[indices[0]])
-            # Reversed list of UVs without the last element
-            uvs = poly.uv[2::-1]
+            # Reversed list of UVs and colors without the last element
+            uvs = reverse_quad(poly.uv, tri=True)
+            colors = reverse_quad(poly.colors, tri=True)
 
         # Tries to create a face and yells at you when the face already exists
         try:
@@ -73,9 +81,15 @@ def import_file(filepath, scene):
             print(e)
             continue
 
-        # Assigns the UV mapping
+        # Assigns the UV mapping, colors and alpha
         for l in range(num_loops):
+            # Converts the colors to float (req. by Blender)
+            alpha = float(colors[l].alpha) / 255
+            color = [float(c)/255 for c in colors[l].color]
+            
             face.loops[l][uv_layer].uv = (uvs[l].u, 1-uvs[l].v)
+            face.loops[l][vc_layer] = Color(color)
+            face.loops[l][va_layer] = Color((alpha, alpha, alpha))
 
 
     # Converts the bmesh back to a mesh and frees resources

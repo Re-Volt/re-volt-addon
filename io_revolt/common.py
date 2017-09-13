@@ -11,3 +11,9 @@ FACE_SKIP = 8192            # 0x2000
 
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
+
+def reverse_quad(quad, tri=False):
+    if tri:
+        return quad[2::-1]
+    else:
+        return quad[::-1]
