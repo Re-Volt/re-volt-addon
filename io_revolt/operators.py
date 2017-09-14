@@ -1,12 +1,14 @@
-import bpy
-
-from . import common
-
 if "bpy" in locals():
     import imp
     imp.reload(common)
+    imp.reload(properties)
+
+import bpy
+from . import common
+from . import properties
 
 from .common import *
+from .properties import *
 
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"

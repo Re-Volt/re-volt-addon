@@ -21,6 +21,9 @@ Parses parameter files (from rvtools).
 ## prm_in.py
 Imports PRM files.
 
+## properties.py
+Blender Properties for Re-Volt Objects
+
 ## rvfiles.py
 Functions for working with the Re-Volt folder structure to locate textures and
 car/level files.

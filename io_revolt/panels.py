@@ -1,15 +1,21 @@
-import bpy
-
-from . import common
-from . import operators
+"""
+Panels for editing object and face properties.
+"""
 
 if "bpy" in locals():
     import imp
     imp.reload(common)
+    imp.reload(properties)
     imp.reload(operators)
+
+import bpy
+from . import common
+from . import operators
+from . import properties
 
 from .common import *
 from .operators import *
+from .properties import *
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
@@ -42,18 +48,28 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
                 if face[flags] & FACE_PROPS[x]:
                     count[x] += 1
 
-        self.layout.prop(context.object.data.revolt, "face_material", text="Material".format(""))
+        # self.layout.prop(context.object.data.revolt, "face_material",
+        #     text="Material".format(""))
         row  = self.layout.row()
         col = row.column(align = True)
-        col.prop(context.object.data.revolt, "face_double_sided", text="{}: Double sided".format(count[1]))
-        col.prop(context.object.data.revolt, "face_translucent", text="{}: Translucent".format(count[2]))
-        col.prop(context.object.data.revolt, "face_mirror", text="{}: Mirror".format(count[3]))
-        col.prop(context.object.data.revolt, "face_additive", text="{}: Additive blending".format(count[4]))
-        col.prop(context.object.data.revolt, "face_texture_animation", text="{}: Texture animation".format(count[5]))
-        col.prop(context.object.data.revolt, "face_no_envmapping", text="{}: No EnvMap".format(count[6]))
-        col.prop(context.object.data.revolt, "face_envmapping", text="{}: EnvMap".format(count[7]))
-        col.prop(context.object.data.revolt, "face_cloth", text="{}: Cloth effect".format(count[8]))
-        col.prop(context.object.data.revolt, "face_skip", text="{}: Do not export".format(count[9]))
+        col.prop(context.object.data.revolt, "face_double_sided",
+            text="{}: Double sided".format(count[1]))
+        col.prop(context.object.data.revolt, "face_translucent",
+            text="{}: Translucent".format(count[2]))
+        col.prop(context.object.data.revolt, "face_mirror",
+            text="{}: Mirror".format(count[3]))
+        col.prop(context.object.data.revolt, "face_additive",
+            text="{}: Additive blending".format(count[4]))
+        col.prop(context.object.data.revolt, "face_texture_animation",
+            text="{}: Texture animation".format(count[5]))
+        col.prop(context.object.data.revolt, "face_no_envmapping",
+            text="{}: No EnvMap".format(count[6]))
+        col.prop(context.object.data.revolt, "face_envmapping",
+            text="{}: EnvMap".format(count[7]))
+        col.prop(context.object.data.revolt, "face_cloth",
+            text="{}: Cloth effect".format(count[8]))
+        col.prop(context.object.data.revolt, "face_skip",
+            text="{}: Do not export".format(count[9]))
         col = row.column(align=True)
         col.scale_x = 0.15
         col.operator("faceprops.select", text="sel").prop = FACE_DOUBLE
@@ -68,7 +84,8 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
 
 
         if len(self.selection) > 1:
-            self.layout.prop(context.object.data.revolt, "face_texture", text="Texture (multiple)")
-            self.layout.label(text="(Texture will be applied to all selected faces.)")
+            self.layout.prop(context.object.data.revolt, "face_texture",
+                text="Texture (multiple faces)")
         else:
-            self.layout.prop(context.object.data.revolt, "face_texture", text="Texture".format(""))
+            self.layout.prop(context.object.data.revolt, "face_texture",
+                text="Texture".format(""))

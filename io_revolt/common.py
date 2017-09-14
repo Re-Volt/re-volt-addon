@@ -63,6 +63,43 @@ materials = [
     ]
 
 """
+Supported File Formats
+"""
+FORMAT_UNK   = -1
+FORMAT_BMP   =  0
+FORMAT_CAR   =  1
+FORMAT_FIN   =  2
+FORMAT_FOB   =  3
+FORMAT_HUL   =  4
+FORMAT_LIT   =  5
+FORMAT_NCP   =  6
+FORMAT_NCP_W =  7
+FORMAT_PRM   =  8
+FORMAT_RIM   =  9
+FORMAT_RTU   = 10
+FORMAT_TAZ   = 11
+FORMAT_VIS   = 12
+FORMAT_W     = 13
+
+file_formats = {
+    FORMAT_UNK   : "Unknown Format",
+    FORMAT_BMP   : "BMP",
+    FORMAT_CAR   : "Parameters.txt",
+    FORMAT_FIN   : "FIN",
+    FORMAT_FOB   : "FOB",
+    FORMAT_HUL   : "HUL",
+    FORMAT_LIT   : "LIT",
+    FORMAT_NCP   : "NCP (Object)",
+    FORMAT_NCP_W : "NCP (World)",
+    FORMAT_PRM   : "PRM/M",
+    FORMAT_RIM   : "RIM",
+    FORMAT_RTU   : "RTU",
+    FORMAT_TAZ   : "TAZ",
+    FORMAT_VIS   : "VIS",
+    FORMAT_W     : "W",
+}
+
+"""
 Conversion functions for Re-Volt structures.
 Axes are saved differently and many indices are saved in reverse order.
 """
@@ -75,78 +112,6 @@ def reverse_quad(quad, tri=False):
         return quad[2::-1]
     else:
         return quad[::-1]
-
-"""
-These property getters and setters use the bmesh from the global dict that gets
-updated by the scene update handler found in init.
-Creating bmeshes in the panels is bad practice as it causes unexpected behavior.
-"""
-
-def get_face_material(self):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = bm.faces.layers.int.get("revolt_material") or bm.faces.layers.int.new("revolt_material")
-    selected_faces = [face for face in bm.faces if face.select]
-    if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
-        return -1
-    else:
-        return selected_faces[0][layer]
-
-def set_face_material(self, value):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = bm.faces.layers.int.get("revolt_material") or bm.faces.layers.int.new("revolt_material")
-    for face in bm.faces:
-        if face.select:
-            face[layer] = value
-
-def get_face_texture(self):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = bm.faces.layers.int.get("Texture") or bm.faces.layers.int.new("Texture")
-    selected_faces = [face for face in bm.faces if face.select]
-    if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
-        return -1
-    else:
-        return selected_faces[0][layer]
-
-def set_face_texture(self, value):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = bm.faces.layers.int.get("Texture") or bm.faces.layers.int.new("Texture")
-    for face in bm.faces:
-        if face.select:
-            face[layer] = value
-
-def get_face_property(self):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
-    selected_faces = [face for face in bm.faces if face.select]
-    if len(selected_faces) == 0:
-        return 0
-    prop = selected_faces[0][layer]
-    for face in selected_faces:
-        prop = prop & face[layer]
-    return prop
-
-def set_face_property(self, value, mask):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
-    for face in bm.faces:
-        if face.select:
-            face[layer] = face[layer] | mask if value else face[layer] & ~mask
-
-def select_faces(context, prop):
-    eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    flag_layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
-
-    for face in bm.faces:
-        if face[flag_layer] & prop:
-            face.select = not face.select
-    redraw()
 
 """
 Blender helpers

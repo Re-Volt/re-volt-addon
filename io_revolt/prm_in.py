@@ -2,8 +2,6 @@
 PRM
 Meshes used for cars, game objects and track instances.
 """
-
-# Reloads potentially changed modules on reload (F8 in Blender)
 if "bpy" in locals():
     import imp
     imp.reload(common)
@@ -15,13 +13,11 @@ import os
 import bpy
 import bmesh
 from mathutils import Color, Vector
-
 from . import common
 from . import rvfiles
 from . import rvstruct
 from . import img_in
 
-# Makes classes, variables and functions more accessible
 from .rvstruct import PRM
 from .common import *
 
@@ -92,7 +88,7 @@ def import_mesh(prm, scene, filepath):
         bm.verts.new(Vector((position[0], position[1], position[2])))
         # vert.normal = Vector(normal) # Blender doesn't use vertex normals
 
-        # Ensures lookup table (puts out an error otherwise)
+        # Ensures lookup table (potentially puts out an error otherwise)
         bm.verts.ensure_lookup_table()
 
     for poly in prm.polygons:
