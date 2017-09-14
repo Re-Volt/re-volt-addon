@@ -51,8 +51,8 @@ def set_face_material(self, value):
 def get_face_texture(self):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("Texture")
-             or bm.faces.layers.int.new("Texture"))
+    layer = (bm.faces.layers.int.get("Texture Number")
+             or bm.faces.layers.int.new("Texture Number"))
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
         return -1
@@ -62,8 +62,8 @@ def get_face_texture(self):
 def set_face_texture(self, value):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("Texture")
-             or bm.faces.layers.int.new("Texture"))
+    layer = (bm.faces.layers.int.get("Texture Number")
+             or bm.faces.layers.int.new("Texture Number"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
