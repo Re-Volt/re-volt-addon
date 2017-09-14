@@ -77,6 +77,8 @@ def import_mesh(prm, scene, filepath):
     va_layer = bm.loops.layers.color.new("Alpha")
 
     # This currently breaks UV unwrap reset, it is a Blender bug.
+    # https://developer.blender.org/T52723
+    texnum_layer = bm.faces.layers.int.new("Texture Number")
     type_layer = bm.faces.layers.int.new("Type")
 
     for vert in prm.vertices:
@@ -124,6 +126,7 @@ def import_mesh(prm, scene, filepath):
 
         # Assigns the face properties (bit field, one int per face)
         face[type_layer] = poly.type
+        face[texnum_layer] = poly.texture
 
         # Assigns the UV mapping, colors and alpha
         for l in range(num_loops):
