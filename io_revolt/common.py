@@ -5,9 +5,11 @@ if not "bpy" in locals():
 
 import bpy
 import bmesh
+import os
 
 # Scale used for importing (multiplicative)
 IMPORT_SCALE = 0.01
+EXPORT_SCALE = 100
 
 FACE_QUAD = 1               # 0x1
 FACE_DOUBLE = 2             # 0x2
@@ -107,15 +109,66 @@ Axes are saved differently and many indices are saved in reverse order.
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
 
+def to_revolt_coord(vec):
+    return (vec[0] * EXPORT_SCALE,
+           -vec[2] * EXPORT_SCALE,
+            vec[1] * EXPORT_SCALE)
+
 def reverse_quad(quad, tri=False):
     if tri:
         return quad[2::-1]
     else:
         return quad[::-1]
 
+def texture_to_int(string):
+    num = ord(string[-5])-97
+
+    if num > 9 or num < -1:
+        return -1
+    else:
+        return num
+
 """
 Blender helpers
 """
 
+class DialogOperator(bpy.types.Operator):
+    bl_idname = 'revolt.dialog'
+    bl_label = 'Oh noes!'
+
+    def execute(self, context):
+        return {
+         'FINISHED'}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+    def draw(self, context):
+        global dialog_message
+        column = self.layout.column()
+        for line in str.split(dialog_message, '\n'):
+            column.label(line)
+
+def msg_box(message):
+    global dialog_message
+    print(message)
+    dialog_message = message
+    bpy.ops.habitat.dialog('INVOKE_DEFAULT')
+    dialog_message = ''
+
 def redraw():
     bpy.context.area.tag_redraw()
+
+def get_format(fstr):
+    """ Gets the format by the ending and returns an int (see enum in common)"""
+    fname, ext = os.path.splitext(fstr)
+
+    if ext.startswith(".bm"):
+        return FORMAT_BMP
+    elif ext == ".txt":
+        return FORMAT_CAR
+    elif ext in [".prm", ".m"]:
+        return FORMAT_PRM
+    else:
+        return FORMAT_UNK

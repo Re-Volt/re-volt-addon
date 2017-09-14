@@ -1,5 +1,5 @@
 """
-PRM
+PRM IMPORT
 Meshes used for cars, game objects and track instances.
 """
 if "bpy" in locals():
@@ -120,9 +120,10 @@ def import_mesh(prm, scene, filepath):
             continue # Skips this face
 
         # Assigns the texture to the face
-        texture_path = rvfiles.get_texture_path(filepath, poly.texture)
-        img = img_in.import_file(texture_path)
-        face[tex_layer].image = img
+        if poly.texture >= 0:
+            texture_path = rvfiles.get_texture_path(filepath, poly.texture)
+            img = img_in.import_file(texture_path)
+            face[tex_layer].image = img
 
         # Assigns the face properties (bit field, one int per face)
         face[type_layer] = poly.type

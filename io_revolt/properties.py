@@ -21,7 +21,6 @@ PointerProperty
 
 from .common import *
 
-
 """
 These property getters and setters use the bmesh from the global dict that gets
 updated by the scene update handler found in init.

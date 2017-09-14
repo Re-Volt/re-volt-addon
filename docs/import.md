@@ -30,3 +30,14 @@ If it's a level file, the texture name will be generated from the polygon's
 texture number and taken from the level folder.
 If a texture file cannot be found, a 512x512 dummy texture will be generated.
 If a texture with the same name already exist, it will be used instead.
+
+The texture number is also written onto a bmesh integer layer. This layer can be
+used instead of the texture on the tex layer for exporting (extra property
+per object).
+
+### Face Type
+The face types can be accessed with the Mesh properties which each have setter
+and getter functions that operate on int layers via bmesh.  
+The face type layer is called "Type".
+There is a Re-Volt tab in the Tool panel of the 3D view that allows users
+to set face properties in Edit mode.

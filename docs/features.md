@@ -9,9 +9,9 @@
 - [X] Types
 - [X] LoD
 ### Export
-- [ ] Mesh
-- [ ] UV
-- [ ] Vertex colors
+- [X] Mesh
+- [X] UV
+- [X] Vertex colors
 - [ ] Texture
-- [ ] Types
+- [X] Types
 - [ ] LoD

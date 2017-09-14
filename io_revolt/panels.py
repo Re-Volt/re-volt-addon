@@ -17,6 +17,26 @@ from .common import *
 from .operators import *
 from .properties import *
 
+
+"""
+Tool panel in the left sidebar of the viewport for performing
+various operations
+"""
+class RevoltIOToolPanel(bpy.types.Panel):
+    bl_label = "Import/Export"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "objectmode"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+        # i/o buttons
+        box = self.layout.box()
+        box.label(text="Import/Export")
+        row = box.row(align=True)
+        row.operator(ImportRV.bl_idname, text="Import", icon="IMPORT")
+        row.operator(ExportRV.bl_idname, text="Export", icon="EXPORT")
+
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
     bl_space_type = "VIEW_3D"
