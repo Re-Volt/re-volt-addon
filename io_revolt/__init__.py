@@ -8,11 +8,11 @@ I wrote a class (rvstruct) for handling Re-Volt files which I am using here.
 bl_info = {
     "name": "Re-Volt",
     "author": "Marvin Thiel",
-    "version": (17, 9, 12),
+    "version": (17, 9, 15),
     "blender": (2, 78, 0),
     "location": "File > Import-Export",
     "description": "Import and export Re-Volt file formats.",
-    "warning": "Experimental",
+    "warning": "Experimental. Please disable any other Re-Volt add-on.",
     "wiki_url": "http://learn.re-volt.io/blender-docs",
     "tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
                    "index.php?showtopic=2296",
@@ -33,7 +33,6 @@ if "bpy" in locals():
 import bpy
 import os
 import os.path
-import time
 from bpy.app.handlers import persistent # For the scene update handler
 from . import common, panels, properties
 
@@ -63,7 +62,7 @@ def menu_func_export(self, context):
 def register():
     bpy.utils.register_module(__name__)
 
-    # bpy.types.Scene.revolt = bpy.props.PointerProperty(type=RV_SettingsScene)
+    bpy.types.Scene.revolt = bpy.props.PointerProperty(type=RVSceneProperties)
     bpy.types.Object.revolt = bpy.props.PointerProperty(type=RVObjectProperties)
     bpy.types.Mesh.revolt = bpy.props.PointerProperty(type=RVMeshProperties)
 
@@ -76,7 +75,7 @@ def register():
 def unregister():
     bpy.utils.unregister_module(__name__)
 
-    # del bpy.types.Scene.revolt
+    del bpy.types.Scene.revolt
     del bpy.types.Object.revolt
     del bpy.types.Mesh.revolt
 

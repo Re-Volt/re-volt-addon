@@ -2,10 +2,13 @@ if "bpy" in locals():
     import imp
     imp.reload(common)
     imp.reload(properties)
+    imp.reload(tools)
 
 import bpy
+import time
 from . import common
 from . import properties
+from . import tools
 
 from .common import *
 from .properties import *
@@ -91,7 +94,11 @@ class ExportRV(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
     def draw(self, context):
-        pass
+        props = context.scene.revolt
+        layout = self.layout
+        space = context.space_data
+        # use the file selected in the file browser
+        layout.prop(props, 'triangulate_ngons')
 
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
@@ -100,4 +107,55 @@ class ButtonSelectFaceProp(bpy.types.Operator):
 
     def execute(self, context):
         select_faces(context, self.prop)
+        return{'FINISHED'}
+
+# VERTEX COLORS
+
+class ButtonVertexColorSet(bpy.types.Operator):
+    bl_idname = "vertexcolor.set"
+    bl_label = "SET COLOR"
+    number = bpy.props.IntProperty()
+
+    def execute(self, context):
+        tools.set_vertex_color(context, self.number)
+        return{'FINISHED'}
+
+class ButtonVertexColorCreateLayer(bpy.types.Operator):
+    bl_idname = "vertexcolor.create_layer"
+    bl_label = "Create Vertex Color Layer"
+
+    def execute(self, context):
+        create_color_layer(context)
+        return{'FINISHED'}
+
+class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
+    bl_idname = "alphacolor.create_layer"
+    bl_label = "Create Alpha Color Layer"
+
+    def execute(self, context):
+        create_alpha_layer(context)
+        return{'FINISHED'}
+
+class ButtonEnableTextureMode(bpy.types.Operator):
+    bl_idname = "helpers.enable_texture_mode"
+    bl_label = "Enable Texture Mode"
+
+    def execute(self, context):
+        enable_texture_mode()
+        return{'FINISHED'}
+
+class ButtonBakeShadow(bpy.types.Operator):
+    bl_idname = "lighttools.bakeshadow"
+    bl_label = "Bake Shadow"
+
+    def execute(self, context):
+        tools.bake_shadow(self, context)
+        return{'FINISHED'}
+
+class ButtonBakeLightToVertex(bpy.types.Operator):
+    bl_idname = "lighttools.bakevertex"
+    bl_label = "Bake light"
+
+    def execute(self, context):
+        tools.bake_vertex(self, context)
         return{'FINISHED'}

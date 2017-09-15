@@ -12,6 +12,6 @@
 - [X] Mesh
 - [X] UV
 - [X] Vertex colors
-- [ ] Texture
+- [X] Texture
 - [X] Types
-- [ ] LoD
+- [X] LoD

@@ -5,7 +5,6 @@ Meshes used for cars, game objects and track instances.
 if "bpy" in locals():
     import imp
     imp.reload(common)
-    imp.reload(rvfiles)
     imp.reload(rvstruct)
     imp.reload(img_in)
 
@@ -14,7 +13,6 @@ import bpy
 import bmesh
 from mathutils import Color, Vector
 from . import common
-from . import rvfiles
 from . import rvstruct
 from . import img_in
 
@@ -28,6 +26,8 @@ def export_file(filepath, scene):
     # Checks if other LoDs are present
     if "|q" in obj.data.name:
         print("LODs present.")
+        meshes = get_all_lod(obj.data.name.split('|')[0])
+        print([m.name for m in meshes])
     else:
         print("No LOD present.")
         meshes.append(obj.data)
@@ -44,6 +44,10 @@ def export_mesh(me, scene, filepath):
     # Creates a bmesh from the supplied mesh
     bm = bmesh.new()
     bm.from_mesh(me)
+
+    if scene.revolt.triangulate_ngons:
+        print("Triangulating n-gons...")
+        triangulate_ngons(bm)
 
     # Gets layers
     uv_layer = bm.loops.layers.uv.get("UVMap")
@@ -68,12 +72,17 @@ def export_mesh(me, scene, filepath):
         if is_quad:
             face[type_layer] |= FACE_QUAD
 
-        poly.type = face[type_layer]
+        poly.type = face[type_layer] & FACE_PROP_MASK
 
-        if tex_layer:
+        # Gets the texture number from the integer layer if setting enabled
+        if scene.revolt.use_tex_num and texnum_layer:
+            poly.texture = face[texnum_layer]
+        # Falls back to texture if not enabled or texnum layer not found
+        elif tex_layer and face[tex_layer]:
             poly.texture = texture_to_int(face[tex_layer].image.name)
+        # Uses no texture instead
         else:
-            poly.texture = 0
+            poly.texture = -1
 
         # Sets vertex indices for the polygon
         vert_order = [2, 1, 0, 3] if not is_quad else [3, 2, 1, 0]
@@ -116,9 +125,9 @@ def export_mesh(me, scene, filepath):
         coord = to_revolt_coord((vertex.co[0],
                                  vertex.co[1],
                                  vertex.co[2]))
-        normal = to_revolt_coord((vertex.normal[0],
-                                  vertex.normal[1],
-                                  vertex.normal[2]))
+        normal = to_revolt_axis((vertex.normal[0],
+                                 vertex.normal[1],
+                                 vertex.normal[2]))
         rvvert = rvstruct.Vertex()
         rvvert.position = rvstruct.Vector(data=coord)
         rvvert.normal = rvstruct.Vector(data=normal)

@@ -5,7 +5,6 @@ Meshes used for cars, game objects and track instances.
 if "bpy" in locals():
     import imp
     imp.reload(common)
-    imp.reload(rvfiles)
     imp.reload(rvstruct)
     imp.reload(img_in)
 
@@ -14,7 +13,6 @@ import bpy
 import bmesh
 from mathutils import Color, Vector
 from . import common
-from . import rvfiles
 from . import rvstruct
 from . import img_in
 
@@ -51,7 +49,7 @@ def import_file(filepath, scene):
             me.use_fake_user = True
 
             # Append a quality suffix to meshes
-            bname, number = me.name.split(".")
+            bname, number = me.name.rsplit(".", 1)
             me.name = "{}|q{}".format(bname, meshes.index(prm))
 
         # Assigns the highest quality mesh to an object and links it to the scn
@@ -121,7 +119,7 @@ def import_mesh(prm, scene, filepath):
 
         # Assigns the texture to the face
         if poly.texture >= 0:
-            texture_path = rvfiles.get_texture_path(filepath, poly.texture)
+            texture_path = get_texture_path(filepath, poly.texture)
             img = img_in.import_file(texture_path)
             face[tex_layer].image = img
 

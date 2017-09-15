@@ -104,11 +104,32 @@ Re-Volt object and mesh properties
 
 class RVObjectProperties(bpy.types.PropertyGroup):
 
-    is_fin = BoolProperty(
-            # name="Object is an Instance",
-            description="Object is an Instance",
-            # description="Only Instance objects are exported to the .fin file (and automatically rejected from World and World NCP file)",
-            )
+    light1 = EnumProperty(name = "Light 1",
+                          items = bake_lights,
+                          default = "SUN")
+    light2 = EnumProperty(name = "Light 2",
+                          items = bake_lights,
+                          default = "HEMI")
+    light_intensity1 = FloatProperty(name = "Intensity 1", min=0.0, default=1)
+    light_intensity2 = FloatProperty(name = "Intensity 2", min=0.0, default=.1)
+    light_orientation = EnumProperty(name = "Orientation",
+                                     items=bake_light_orientations,
+                                     default = "Z")
+    shadow_method = EnumProperty(name = "Method", items=bake_shadow_methods)
+    shadow_quality = IntProperty(name = "Quality", min=0, max=32, default=8)
+    shadow_resolution = IntProperty(name = "Resolution",
+                                    min=32, max=8192, default=128)
+    shadow_softness = FloatProperty(name = "Softness",
+                                    min=0.0, max=100.0, default=0.5)
+    shadow_table = StringProperty(name = "Shadowtable", default="")
+    vertex_color_picker = FloatVectorProperty(
+                                   name="object_color",
+                                   subtype='COLOR',
+                                   default=(1.0, 1.0, 1.0),
+                                   min=0.0, max=1.0,
+                                   description="color picker"
+                                   )
+
 
 class RVMeshProperties(bpy.types.PropertyGroup):
     face_material = EnumProperty(
@@ -119,8 +140,25 @@ class RVMeshProperties(bpy.types.PropertyGroup):
     )
     face_texture = IntProperty(
         name = "Texture",
+        description = "Texture page number:\n-1 is none,\n"
+                      "0 is texture page A\n"
+                      "1 is texture page B\n"
+                      "2 is texture page C\n"
+                      "3 is texture page D\n"
+                      "4 is texture page E\n"
+                      "5 is texture page F\n"
+                      "6 is texture page G\n"
+                      "7 is texture page H\n"
+                      "8 is texture page I\n"
+                      "9 is texture page J\n"
+                      "For this number to have an effect, "
+                      "the \"Use Texture Number\" export settings needs to be "
+                      "enabled.",
         get = get_face_texture,
-        set = set_face_texture
+        set = set_face_texture,
+        default = 0,
+        min = -1,
+        max = 9
     )
     face_double_sided = BoolProperty(
         name = "Double sided",
@@ -166,4 +204,29 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         name = "Do not export",
         get = lambda s: bool(get_face_property(s) & FACE_SKIP),
         set = lambda s,v: set_face_property(s, v, FACE_SKIP)
+    )
+
+class RVSceneProperties(bpy.types.PropertyGroup):
+    vertex_color_picker = FloatVectorProperty(
+                                   name="object_color",
+                                   subtype='COLOR',
+                                   default=(1.0, 1.0, 1.0),
+                                   min=0.0, max=1.0,
+                                   description="color picker"
+                                   )
+
+    triangulate_ngons = BoolProperty(
+        name = "Triangulate n-gons",
+        description="Triangulate n-gons when exporting.\n"
+                    "Re-Volt only supports tris and quads, n-gons will not be "
+                    "exported correctly.\nOnly turn this off if you know what "
+                    "you're doing!",
+        default = True,
+        )
+    use_tex_num = BoolProperty(
+        name = "Use Number for Textures",
+        description = "Uses the texture number from the texture layer "
+                      "accessible in the tool shelf in Edit mode.\n"
+                      "Otherwise, it uses the texture from the texture file.",
+        default = False
     )

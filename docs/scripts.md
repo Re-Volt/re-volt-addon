@@ -17,7 +17,6 @@ even if the texture file doesn't exist.
 Functions behind user interface buttons.  
 This also includes the import and export operators so they are globally
 available.  
-Helper functions that work closely with Blender can be found here.
 
 ## `panels.py`
 The user interface for the add-on.
@@ -33,11 +32,6 @@ Exports PRM files.
 
 ## `properties.py`
 Blender Properties for Re-Volt Objects and getter/setter functions.
-
-## `rvfiles.py`
-Functions for working with the Re-Volt folder structure to locate textures and
-car/level files.  
-Helper functions that have nothing to do with Blender can be found here.
 
 ## `rvstruct.py`
 Classes for Re-Volt's binary files (reads and exports, from rvtools).  

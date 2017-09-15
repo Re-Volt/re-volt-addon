@@ -17,7 +17,6 @@ from .common import *
 from .operators import *
 from .properties import *
 
-
 """
 Tool panel in the left sidebar of the viewport for performing
 various operations
@@ -31,11 +30,15 @@ class RevoltIOToolPanel(bpy.types.Panel):
 
     def draw(self, context):
         # i/o buttons
-        box = self.layout.box()
-        box.label(text="Import/Export")
-        row = box.row(align=True)
+        row = self.layout.row(align=True)
         row.operator(ImportRV.bl_idname, text="Import", icon="IMPORT")
         row.operator(ExportRV.bl_idname, text="Export", icon="EXPORT")
+        box = self.layout.box()
+        box.label(text="Settings")
+        row = box.row()
+        row.prop(context.scene.revolt, "triangulate_ngons")
+        row = box.row()
+        row.prop(context.scene.revolt, "use_tex_num")
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
@@ -56,7 +59,8 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         mesh = obj.data
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
         flags = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
-        if self.selected_face_count is None or self.selected_face_count != mesh.total_face_sel:
+        if (self.selected_face_count is None
+            or self.selected_face_count != mesh.total_face_sel):
             self.selected_face_count = mesh.total_face_sel
             self.selection = [face for face in bm.faces if face.select]
 
@@ -109,3 +113,160 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         else:
             self.layout.prop(context.object.data.revolt, "face_texture",
                 text="Texture".format(""))
+
+"""
+Panel for setting vertex colors in Edit Mode.
+If there is no vertex color layer, the user will be prompted to create one.
+It includes buttons for setting vertex colors in different shades of grey and
+a custom color which is chosen with a color picker.
+"""
+class RevoltVertexPanel(bpy.types.Panel):
+    bl_label = "Vertex Colors"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "mesh_edit"
+    bl_category = "Re-Volt"
+
+    selection = None
+    selected_face_count = None
+
+    def draw(self, context):
+        obj = context.object
+        row = self.layout.row(align=True)
+
+        # warn if texture mode is not enabled
+        widget_texture_mode(self)
+
+        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        vc_layer = bm.loops.layers.color.get("Col")
+
+        if widget_vertex_color_channel(self, obj):
+            pass # there is not vertex color channel and the panel can't be used
+
+        else:
+            box = self.layout.box()
+            row = box.row()
+            row.template_color_picker(context.scene.revolt,
+                                      "vertex_color_picker",
+                                      value_slider=True)
+            row = box.row(align=True)
+            row.prop(context.scene.revolt, "vertex_color_picker", text = '')
+            row.operator("vertexcolor.set", text="Color").number=-1
+            row = self.layout.row(align=True)
+            row.operator("vertexcolor.set", text="Grey 50%").number=50
+            row = self.layout.row()
+            col = row.column(align=True)
+            col.alignment = 'EXPAND'
+            col.operator("vertexcolor.set", text="Grey 45%").number=45
+            col.operator("vertexcolor.set", text="Grey 40%").number=40
+            col.operator("vertexcolor.set", text="Grey 35%").number=35
+            col.operator("vertexcolor.set", text="Grey 30%").number=30
+            col.operator("vertexcolor.set", text="Grey 20%").number=20
+            col.operator("vertexcolor.set", text="Grey 10%").number=10
+            col.operator("vertexcolor.set", text="Black").number=0
+            col = row.column(align=True)
+            col.alignment = 'EXPAND'
+            col.operator("vertexcolor.set", text="Grey 55%").number=55
+            col.operator("vertexcolor.set", text="Grey 60%").number=60
+            col.operator("vertexcolor.set", text="Grey 65%").number=65
+            col.operator("vertexcolor.set", text="Grey 70%").number=70
+            col.operator("vertexcolor.set", text="Grey 80%").number=80
+            col.operator("vertexcolor.set", text="Grey 90%").number=90
+            col.operator("vertexcolor.set", text="White").number=100
+
+
+class RevoltLightPanel(bpy.types.Panel):
+    bl_label = "Light and Shadow"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "objectmode"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+        view = context.space_data
+        obj = context.object
+        # warn if texture mode is not enabled
+        widget_texture_mode(self)
+
+        if obj and obj.select:
+            # Cheks if the object has a vertex color layer
+            if widget_vertex_color_channel(self, obj):
+                pass
+
+            else:
+                # light orientation selection
+                box = self.layout.box()
+                box.label(text="Shade Object")
+                row = box.row()
+                row.prop(context.object.revolt,
+                         "light_orientation",
+                         text="Orientation")
+                if obj.revolt.light_orientation == "X":
+                    dirs = ["Left", "Right"]
+                if obj.revolt.light_orientation == "Y":
+                    dirs = ["Front", "Back"]
+                if obj.revolt.light_orientation == "Z":
+                    dirs = ["Top", "Bottom"]
+                # headings
+                row = box.row()
+                row.label(text="Direction")
+                row.label(text="Light")
+                row.label(text="Intensity")
+                # settings for the first light
+                row = box.row()
+                row.label(text=dirs[0])
+                row.prop(context.object.revolt, "light1", text="")
+                row.prop(context.object.revolt, "light_intensity1", text="")
+                # settings for the second light
+                row = box.row()
+                row.label(text=dirs[1])
+                row.prop(context.object.revolt, "light2", text="")
+                row.prop(context.object.revolt, "light_intensity2", text="")
+                # bake button
+                row = box.row()
+                row.operator("lighttools.bakevertex",
+                             text="Generate Shading",
+                             icon="LIGHTPAINT")
+
+            box = self.layout.box()
+            box.label(text="Generate Shadow Texture")
+            row = box.row()
+            row.prop(context.object.revolt, "shadow_method")
+            col = box.column(align=True)
+            col.prop(context.object.revolt, "shadow_quality")
+            col.prop(context.object.revolt, "shadow_softness")
+            col.prop(context.object.revolt, "shadow_resolution")
+            row = box.row()
+            row.operator("lighttools.bakeshadow",
+                         text="Generate Shadow",
+                         icon="LAMP_SPOT")
+            row = box.row()
+            row.prop(context.object.revolt, "shadow_table", text="Table")
+
+
+"""
+Widgets are little panel snippets that generally warn users if something isn't
+set up correctly to use a feature. They return true if something isn't right.
+They return false if everything is alright.
+"""
+
+def widget_texture_mode(self):
+    if not texture_mode_enabled():
+        box = self.layout.box()
+        box.label(text="Texture Mode is not enabled.", icon='INFO')
+        row = box.row()
+        row.operator("helpers.enable_texture_mode",
+                     text="Enable Texture Mode",
+                     icon="POTATO")
+        return True
+    return False
+
+def widget_vertex_color_channel(self, obj):
+    if not obj.data.vertex_colors:
+        box = self.layout.box()
+        box.label(text="No Vertex Color Layer.", icon='INFO')
+        row = box.row()
+        row.operator("mesh.vertex_color_add", icon='PLUS',
+                     text="Create Vertex Color Layer")
+        return True
+    return False
