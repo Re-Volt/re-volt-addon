@@ -782,7 +782,7 @@ class Color:
         file.write(struct.pack("<3B", self.color[2],
                                self.color[1], self.color[0]))
         # Writes only if alpha is specified
-        if self.alpha != False and self.alpha != None:
+        if self.alpha is not False and self.alpha is not None:
             file.write(struct.pack("<B", 255 - self.alpha))
 
     def as_dict(self):

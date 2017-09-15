@@ -149,19 +149,18 @@ def bake_vertex(self, context):
     rd.use_textures = False
 
     shade_obj = context.object
-
     scene = bpy.context.scene
 
     if shade_obj.revolt.light1 != "None":
-        # Create new lamp datablock
+        # Creates new lamp datablock
         lamp_data1 = bpy.data.lamps.new(name="ShadeLight1", type=shade_obj.revolt.light1)
-        # Create new object with our lamp datablock
+        # Creates new object with our lamp datablock
         lamp_object1 = bpy.data.objects.new(name="ShadeLight1", object_data=lamp_data1)
         lamp_object1.data.energy = shade_obj.revolt.light_intensity1
-        # Link lamp object to the scene so it'll appear in this scene
+        # Links lamp object to the scene so it'll appear in this scene
         scene.objects.link(lamp_object1)
 
-        # rotate light
+        # Rotates light
         if shade_obj.revolt.light_orientation == "X":
             lamp_object1.location = (1.0, 0, 0)
             lamp_object1.rotation_euler = (0, pi/2, 0)
@@ -202,3 +201,4 @@ def bake_vertex(self, context):
     # select the other object again
     shade_obj.select = True
     scene.objects.active = shade_obj
+    redraw()

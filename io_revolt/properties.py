@@ -110,8 +110,8 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     light2 = EnumProperty(name = "Light 2",
                           items = bake_lights,
                           default = "HEMI")
-    light_intensity1 = FloatProperty(name = "Intensity 1", min=0.0, default=1)
-    light_intensity2 = FloatProperty(name = "Intensity 2", min=0.0, default=.1)
+    light_intensity1 = FloatProperty(name = "Intensity 1", min=0.0, default=1.5)
+    light_intensity2 = FloatProperty(name = "Intensity 2", min=0.0, default=.05)
     light_orientation = EnumProperty(name = "Orientation",
                                      items=bake_light_orientations,
                                      default = "Z")

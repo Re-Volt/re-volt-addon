@@ -137,8 +137,11 @@ def import_mesh(prm, scene, filepath):
             face.loops[l][vc_layer] = Color(color)
             face.loops[l][va_layer] = Color((alpha, alpha, alpha))
 
+        # Enables smooth shading for that face
+        face.smooth = True
+
     # Converts the bmesh back to a mesh and frees resources
-    # bm.normal_update() # not needed?
+    bm.normal_update()
     bm.to_mesh(me)
     bm.free()
 
