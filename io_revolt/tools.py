@@ -202,3 +202,15 @@ def bake_vertex(self, context):
     shade_obj.select = True
     scene.objects.active = shade_obj
     redraw()
+
+def check_for_export(obj):
+    if not obj:
+        msg_box("Please select an object first.")
+        return False
+    if not obj.data:
+        msg_box("The selected object does not have any data.")
+        return False
+    if not obj.type == "MESH":
+        msg_box("The selected object does not have any mesh.")
+        return False
+    return True

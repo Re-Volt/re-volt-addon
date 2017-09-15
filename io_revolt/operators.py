@@ -64,7 +64,7 @@ class ExportRV(bpy.types.Operator):
             msg_box("Not supported for export: {}".format(file_formats[format]))
         else:
             context.window.cursor_set('WAIT')
-            # turn off undo for better performance
+            # Turns off undo for better performance
             use_global_undo = bpy.context.user_preferences.edit.use_global_undo
             bpy.context.user_preferences.edit.use_global_undo = False
 
@@ -75,6 +75,8 @@ class ExportRV(bpy.types.Operator):
             # props.last_exported_filepath = self.filepath
 
             if format == FORMAT_PRM:
+                if not tools.check_for_export(scene.objects.active):
+                    return {'FINISHED'}
                 from . import prm_out
                 prm_out.export_file(self.filepath, scene)
             else:
@@ -99,6 +101,7 @@ class ExportRV(bpy.types.Operator):
         space = context.space_data
         # use the file selected in the file browser
         layout.prop(props, 'triangulate_ngons')
+        layout.prop(props, 'use_tex_num')
 
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
@@ -159,3 +162,7 @@ class ButtonBakeLightToVertex(bpy.types.Operator):
     def execute(self, context):
         tools.bake_vertex(self, context)
         return{'FINISHED'}
+
+"""
+Helpers
+"""

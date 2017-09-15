@@ -185,8 +185,7 @@ def msg_box(message):
     global dialog_message
     print(message)
     dialog_message = message
-    bpy.ops.habitat.dialog('INVOKE_DEFAULT')
-    dialog_message = ''
+    bpy.ops.revolt.dialog('INVOKE_DEFAULT')
 
 def redraw():
     bpy.context.area.tag_redraw()
@@ -231,8 +230,7 @@ Non-Blender helper functions
 
 def get_texture_path(filepath, tex_num):
     """ Gets the full texture path when given a file and its
-        polygon texture number.
-    """
+        polygon texture number. """
     path, fname = filepath.rsplit(os.sep, 1)
     folder = filepath.split(os.sep)[-2]
 
