@@ -5,9 +5,14 @@ if not "bpy" in locals():
 
 import bpy
 import bmesh
+import os
+import mathutils
+
+from .parameters import read_parameters
 
 # Scale used for importing (multiplicative)
 IMPORT_SCALE = 0.01
+EXPORT_SCALE = 100
 
 FACE_QUAD = 1               # 0x1
 FACE_DOUBLE = 2             # 0x2
@@ -20,6 +25,10 @@ FACE_ENV = 2048             # 0x800
 FACE_CLOTH = 4096           # 0x1000
 FACE_SKIP = 8192            # 0x2000
 
+# Used to unmask unsupported flags (FACE_SKIP)
+FACE_PROP_MASK = (FACE_QUAD | FACE_DOUBLE | FACE_TRANSLUCENT
+                | FACE_MIRROR | FACE_TRANSL_TYPE | FACE_TEXANIM |
+                  FACE_NOENV | FACE_ENV | FACE_CLOTH)
 FACE_PROPS = [FACE_QUAD,
               FACE_DOUBLE,
               FACE_TRANSLUCENT,
@@ -100,6 +109,26 @@ file_formats = {
 }
 
 """
+Constants for the tool shelf functions
+"""
+
+bake_lights = [
+    ("None", "None", "", -1),
+    ("HEMI", "Soft", "", 0),
+    ("SUN", "Hard", "", 1)
+]
+
+bake_light_orientations = [
+    ("X", "X (Horizontal)", "", 0),
+    ("Y", "Y (Horizontal)", "", 1),
+    ("Z", "Z (Vertical)", "", 2)
+]
+bake_shadow_methods = [
+    ("ADAPTIVE_QMC", "Default (fast)", "", 0),
+    ("CONSTANT_QMC", "High Quality (slow)", "", 1)
+]
+
+"""
 Conversion functions for Re-Volt structures.
 Axes are saved differently and many indices are saved in reverse order.
 """
@@ -107,15 +136,138 @@ Axes are saved differently and many indices are saved in reverse order.
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
 
+def to_revolt_coord(vec):
+    return (vec[0] * EXPORT_SCALE,
+           -vec[2] * EXPORT_SCALE,
+            vec[1] * EXPORT_SCALE)
+
+def to_revolt_axis(vec):
+    return (vec[0], -vec[2], vec[1])
+
 def reverse_quad(quad, tri=False):
     if tri:
         return quad[2::-1]
     else:
         return quad[::-1]
 
+def texture_to_int(string):
+    if string == "car.bmp":
+        return 0
+    elif ".bmp" in string:
+        num = ord(string[-5])-97
+        if num > 9 or num < 0:
+            return 0
+    return 0
+
 """
 Blender helpers
 """
 
+class DialogOperator(bpy.types.Operator):
+    bl_idname = 'revolt.dialog'
+    bl_label = 'Oh noes!'
+
+    def execute(self, context):
+        return {
+         'FINISHED'}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+    def draw(self, context):
+        global dialog_message
+        column = self.layout.column()
+        for line in str.split(dialog_message, '\n'):
+            column.label(line)
+
+def msg_box(message):
+    global dialog_message
+    print(message)
+    dialog_message = message
+    bpy.ops.revolt.dialog('INVOKE_DEFAULT')
+
 def redraw():
     bpy.context.area.tag_redraw()
+
+def enable_texture_mode():
+    for area in bpy.context.screen.areas:
+        if area.type == 'VIEW_3D':
+            for space in area.spaces:
+                if space.type == 'VIEW_3D':
+                    space.viewport_shade = 'TEXTURED'
+    return
+
+def texture_mode_enabled():
+    for area in bpy.context.screen.areas:
+        if area.type == 'VIEW_3D':
+            for space in area.spaces:
+                if space.type == 'VIEW_3D':
+                    if space.viewport_shade == 'TEXTURED':
+                        return True
+    return False
+
+def get_all_lod(namestr):
+    """ Gets all LoD meshes belonging to a mesh (including that mesh) """
+    meshes = []
+    for me in bpy.data.meshes:
+        if "|q" in me.name and namestr in me.name:
+            meshes.append(me)
+    return meshes
+
+def triangulate_ngons(bm):
+    """ Triangulates faces for exporting """
+    triangulate = []
+    for face in bm.faces:
+        if len(face.verts) > 4:
+            triangulate.append(face)
+    if triangulate:
+        bmesh.ops.triangulate(bm, faces=triangulate,
+                              quad_method=0, ngon_method=0)
+    return len(triangulate)
+
+
+"""
+Non-Blender helper functions
+"""
+
+def get_texture_path(filepath, tex_num):
+    """ Gets the full texture path when given a file and its
+        polygon texture number. """
+    path, fname = filepath.rsplit(os.sep, 1)
+    folder = filepath.split(os.sep)[-2]
+
+    if not os.path.isdir(path):
+        return None
+
+    # The file is part of a car
+    if "parameters.txt" in os.listdir(path):
+        params = read_parameters(os.path.join(path, "parameters.txt"))
+        tpage = params["tpage"].replace("\\", os.sep).split(os.sep)[-1]
+        return os.path.join(path, tpage)
+    # The file is part of a track
+    elif is_track_folder(path):
+        tpage = filepath.split(os.sep)[-2].lower() + chr(97 + tex_num) + ".bmp"
+        return os.path.join(path, tpage)
+    else:
+        return os.path.join(path, "dummy{}.bmp".format(chr(97 + tex_num)))
+
+def is_track_folder(path):
+    for f in os.listdir(path):
+        if ".inf" in f:
+            return True
+
+def get_format(fstr):
+    """
+    Gets the format by the ending and returns an int (see enum in common)
+    """
+    fname, ext = os.path.splitext(fstr)
+
+    if ext.startswith(".bm"):
+        return FORMAT_BMP
+    elif ext == ".txt":
+        return FORMAT_CAR
+    elif ext in [".prm", ".m"]:
+        return FORMAT_PRM
+    else:
+        return FORMAT_UNK

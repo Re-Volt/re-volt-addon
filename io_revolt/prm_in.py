@@ -1,11 +1,10 @@
 """
-PRM
+PRM IMPORT
 Meshes used for cars, game objects and track instances.
 """
 if "bpy" in locals():
     import imp
     imp.reload(common)
-    imp.reload(rvfiles)
     imp.reload(rvstruct)
     imp.reload(img_in)
 
@@ -14,7 +13,6 @@ import bpy
 import bmesh
 from mathutils import Color, Vector
 from . import common
-from . import rvfiles
 from . import rvstruct
 from . import img_in
 
@@ -51,12 +49,12 @@ def import_file(filepath, scene):
             me.use_fake_user = True
 
             # Append a quality suffix to meshes
-            bname, number = me.name.split(".")
+            bname, number = me.name.rsplit(".", 1)
             me.name = "{}|q{}".format(bname, meshes.index(prm))
 
         # Assigns the highest quality mesh to an object and links it to the scn
         if meshes.index(prm) == 0:
-            print("Creating Blender object for{}...".format(filename))
+            print("Creating Blender object for {}...".format(filename))
             ob = bpy.data.objects.new(filename, me)
             scene.objects.link(ob)
             scene.objects.active = ob
@@ -120,9 +118,10 @@ def import_mesh(prm, scene, filepath):
             continue # Skips this face
 
         # Assigns the texture to the face
-        texture_path = rvfiles.get_texture_path(filepath, poly.texture)
-        img = img_in.import_file(texture_path)
-        face[tex_layer].image = img
+        if poly.texture >= 0:
+            texture_path = get_texture_path(filepath, poly.texture)
+            img = img_in.import_file(texture_path)
+            face[tex_layer].image = img
 
         # Assigns the face properties (bit field, one int per face)
         face[type_layer] = poly.type
@@ -138,8 +137,11 @@ def import_mesh(prm, scene, filepath):
             face.loops[l][vc_layer] = Color(color)
             face.loops[l][va_layer] = Color((alpha, alpha, alpha))
 
+        # Enables smooth shading for that face
+        face.smooth = True
+
     # Converts the bmesh back to a mesh and frees resources
-    # bm.normal_update() # not needed?
+    bm.normal_update()
     bm.to_mesh(me)
     bm.free()
 
