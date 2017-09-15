@@ -36,3 +36,6 @@ Blender Properties for Re-Volt Objects and getter/setter functions.
 ## `rvstruct.py`
 Classes for Re-Volt's binary files (reads and exports, from rvtools).  
 This actually imports and exports Re-Volt files.
+
+## `tools.py`
+Contains the functions behind the buttons of the tool panel.
