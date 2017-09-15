@@ -35,6 +35,8 @@ def export_file(filepath, scene):
     # Exports all meshes to the PRM file
     with open(filepath, "wb") as file:
         for me in meshes:
+            print("Exporting mesh {} of {}".format(
+                meshes.index(me), len(meshes)))
             # Exports the mesh as a PRM object
             prm = export_mesh(me, scene, filepath)
             # Writes the PRM object to a file
@@ -45,9 +47,9 @@ def export_mesh(me, scene, filepath):
     bm = bmesh.new()
     bm.from_mesh(me)
 
-    if scene.revolt.triangulate_ngons:
-        print("Triangulating n-gons...")
-        triangulate_ngons(bm)
+    num_ngons = triangulate_ngons(bm)
+    if scene.revolt.triangulate_ngons > 0:
+        print("Triangulated {} n-gons".format(num_ngons))
 
     # Gets layers
     uv_layer = bm.loops.layers.uv.get("UVMap")
@@ -108,8 +110,6 @@ def export_mesh(me, scene, filepath):
                 # Writes opaque white
                 col = rvstruct.Color(color=(255, 255, 255), alpha=255)
                 poly.colors.append(col)
-        print([c.as_dict() for c in poly.colors])
-
 
         # Writes the UV
         for i in vert_order:

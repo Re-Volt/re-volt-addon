@@ -30,15 +30,23 @@ class RevoltIOToolPanel(bpy.types.Panel):
 
     def draw(self, context):
         # i/o buttons
+        fold_s = context.scene.revolt.ui_fold_export_settings
+
         row = self.layout.row(align=True)
         row.operator(ImportRV.bl_idname, text="Import", icon="IMPORT")
         row.operator(ExportRV.bl_idname, text="Export", icon="EXPORT")
-        box = self.layout.box()
-        box.label(text="Settings")
-        row = box.row()
-        row.prop(context.scene.revolt, "triangulate_ngons")
-        row = box.row()
-        row.prop(context.scene.revolt, "use_tex_num")
+        row = self.layout.row(align=True)
+        row.prop(
+            context.scene.revolt,
+            "ui_fold_export_settings",
+            icon = "TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
+            text = "Show Export Settings" if fold_s else "Hide Export Settings"
+        )
+        if not fold_s:
+            row = self.layout.row(align=True)
+            row.prop(context.scene.revolt, "triangulate_ngons")
+            row = self.layout.row(align=True)
+            row.prop(context.scene.revolt, "use_tex_num")
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
@@ -49,10 +57,6 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
 
     selection = None
     selected_face_count = None
-
-    @classmethod
-    def poll(self, context):
-        return (context.object is not None)
 
     def draw(self, context):
         obj = context.object
@@ -151,7 +155,7 @@ class RevoltVertexPanel(bpy.types.Panel):
                                       value_slider=True)
             row = box.row(align=True)
             row.prop(context.scene.revolt, "vertex_color_picker", text = '')
-            row.operator("vertexcolor.set", text="Color").number=-1
+            row.operator("vertexcolor.set").number=-1
             row = self.layout.row(align=True)
             row.operator("vertexcolor.set", text="Grey 50%").number=50
             row = self.layout.row()
@@ -181,6 +185,10 @@ class RevoltLightPanel(bpy.types.Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_category = "Re-Volt"
+
+    @classmethod
+    def poll(self, context):
+        return (context.scene.objects.active is not None)
 
     def draw(self, context):
         view = context.space_data

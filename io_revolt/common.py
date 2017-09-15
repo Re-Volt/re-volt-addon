@@ -221,8 +221,11 @@ def triangulate_ngons(bm):
     for face in bm.faces:
         if len(face.verts) > 4:
             triangulate.append(face)
-    bmesh.ops.triangulate(bm, faces=triangulate,
-                          quad_method=0, ngon_method=0)
+    if triangulate:
+        bmesh.ops.triangulate(bm, faces=triangulate,
+                              quad_method=0, ngon_method=0)
+    return len(triangulate)
+
 
 """
 Non-Blender helper functions

@@ -104,31 +104,74 @@ Re-Volt object and mesh properties
 
 class RVObjectProperties(bpy.types.PropertyGroup):
 
-    light1 = EnumProperty(name = "Light 1",
-                          items = bake_lights,
-                          default = "SUN")
-    light2 = EnumProperty(name = "Light 2",
-                          items = bake_lights,
-                          default = "HEMI")
-    light_intensity1 = FloatProperty(name = "Intensity 1", min=0.0, default=1.5)
-    light_intensity2 = FloatProperty(name = "Intensity 2", min=0.0, default=.05)
-    light_orientation = EnumProperty(name = "Orientation",
-                                     items=bake_light_orientations,
-                                     default = "Z")
-    shadow_method = EnumProperty(name = "Method", items=bake_shadow_methods)
-    shadow_quality = IntProperty(name = "Quality", min=0, max=32, default=8)
-    shadow_resolution = IntProperty(name = "Resolution",
-                                    min=32, max=8192, default=128)
-    shadow_softness = FloatProperty(name = "Softness",
-                                    min=0.0, max=100.0, default=0.5)
-    shadow_table = StringProperty(name = "Shadowtable", default="")
-    vertex_color_picker = FloatVectorProperty(
-                                   name="object_color",
-                                   subtype='COLOR',
-                                   default=(1.0, 1.0, 1.0),
-                                   min=0.0, max=1.0,
-                                   description="color picker"
-                                   )
+    light1 = EnumProperty(
+        name = "Light 1",
+        items = bake_lights,
+        default = "SUN",
+        description = "Type of light"
+    )
+    light2 = EnumProperty(
+        name = "Light 2",
+        items = bake_lights,
+        default = "HEMI",
+        description = "Type of light"
+    )
+    light_intensity1 = FloatProperty(
+        name = "Intensity 1",
+        min = 0.0,
+        default = 1.5,
+        description = "Intensity of Light 1"
+    )
+    light_intensity2 = FloatProperty(
+        name = "Intensity 2",
+        min= 0.0,
+        default = .05,
+        description = "Intensity of Light 2"
+    )
+    light_orientation = EnumProperty(
+        name = "Orientation",
+        items = bake_light_orientations,
+        default = "Z",
+        description = "Directions of the lights"
+    )
+    shadow_method = EnumProperty(
+        name = "Method",
+        items = bake_shadow_methods,
+        description = "Default (Adaptive QMC):\nFaster option, recommended "
+                      "for testing the shadow settings.\n\n"
+                      "High Quality:\nSlower and less grainy option, "
+                      "recommended for creating the final shadow."
+    )
+    shadow_quality = IntProperty(
+        name = "Quality",
+        min = 0,
+        max = 32,
+        default = 8,
+        description = "The amount of samples the shadow is rendered with "
+                      "(number of samples taken extra)."
+    )
+    shadow_resolution = IntProperty(
+        name = "Resolution",
+        min = 32,
+        max = 8192,
+        default = 128,
+        description = "Texture resolution of the shadow.\n"
+                      "Default: 128x128 pixels."
+    )
+    shadow_softness = FloatProperty(
+        name = "Softness",
+        min = 0.0,
+        max = 100.0,
+        default = 0.5,
+        description = "Softness of the shadow "
+                      "(Light size for ray shadow sampling)."
+    )
+    shadow_table = StringProperty(
+        name = "Shadowtable",
+        default = "",
+        description = "Shadow coordinates for use in parameters.txt of cars.\n"
+                      "Click to select all, then CTRL C to copy."
+    )
 
 
 class RVMeshProperties(bpy.types.PropertyGroup):
@@ -163,70 +206,90 @@ class RVMeshProperties(bpy.types.PropertyGroup):
     face_double_sided = BoolProperty(
         name = "Double sided",
         get = lambda s: bool(get_face_property(s) & FACE_DOUBLE),
-        set = lambda s,v: set_face_property(s, v, FACE_DOUBLE)
+        set = lambda s,v: set_face_property(s, v, FACE_DOUBLE),
+        description = "The polygon will be visible from both sides in-game."
     )
     face_translucent = BoolProperty(
         name = "Translucent",
         get = lambda s: bool(get_face_property(s) & FACE_TRANSLUCENT),
-        set = lambda s,v: set_face_property(s, v, FACE_TRANSLUCENT)
+        set = lambda s,v: set_face_property(s, v, FACE_TRANSLUCENT),
+        description = "Renders the polyon transparent\n(takes transparency "
+                      "from the \"Alpha\" vertex color layer or the alpha "
+                      "layer of the texture."
     )
     face_mirror = BoolProperty(
         name = "Mirror",
         get = lambda s: bool(get_face_property(s) & FACE_MIRROR),
-        set = lambda s,v: set_face_property(s, v, FACE_MIRROR)
+        set = lambda s,v: set_face_property(s, v, FACE_MIRROR),
+        description = "This polygon covers a mirror area. (?)"
     )
     face_additive = BoolProperty(
         name = "Additive blending",
         get = lambda s: bool(get_face_property(s) & FACE_TRANSL_TYPE),
-        set = lambda s,v: set_face_property(s, v, FACE_TRANSL_TYPE)
+        set = lambda s,v: set_face_property(s, v, FACE_TRANSL_TYPE),
+        description = "Renders the polygon with additive blending (black "
+                      "becomes transparent, bright colors are added to colors "
+                      "beneath)."
     )
     face_texture_animation = BoolProperty(
         name = "Animated",
         get = lambda s: bool(get_face_property(s) & FACE_TEXANIM),
-        set = lambda s,v: set_face_property(s, v, FACE_TEXANIM)
+        set = lambda s,v: set_face_property(s, v, FACE_TEXANIM),
+        description = "Uses texture animation for this poly (only in .w files)."
     )
     face_no_envmapping = BoolProperty(
         name = "No EnvMap (.prm)",
         get = lambda s: bool(get_face_property(s) & FACE_NOENV),
-        set = lambda s,v: set_face_property(s, v, FACE_NOENV)
+        set = lambda s,v: set_face_property(s, v, FACE_NOENV),
+        description = "Disables the environment map for this poly (.prm only)."
     )
     face_envmapping = BoolProperty(
         name = "EnvMapping (.w)",
         get = lambda s: bool(get_face_property(s) & FACE_ENV),
-        set = lambda s,v: set_face_property(s, v, FACE_ENV)
+        set = lambda s,v: set_face_property(s, v, FACE_ENV),
+        description = "Enables the environment map for this poly (.w only).\n\n"
+                      "If enabled on pickup.m, sparks will appear"
+                      "around the poly."
     )
     face_cloth = BoolProperty(
         name = "Cloth effect (.prm)",
         get = lambda s: bool(get_face_property(s) & FACE_CLOTH),
-        set = lambda s,v: set_face_property(s, v, FACE_CLOTH)
+        set = lambda s,v: set_face_property(s, v, FACE_CLOTH),
+        description = "Enables the cloth effect used on the Mystery car."
     )
     face_skip = BoolProperty(
         name = "Do not export",
         get = lambda s: bool(get_face_property(s) & FACE_SKIP),
-        set = lambda s,v: set_face_property(s, v, FACE_SKIP)
+        set = lambda s,v: set_face_property(s, v, FACE_SKIP),
+        description = "Skips the polygon when exporting (not Re-Volt related)."
     )
 
 class RVSceneProperties(bpy.types.PropertyGroup):
+    ui_fold_export_settings = BoolProperty(
+        name = "Export Settings",
+        default = False,
+        description = "Show Export Settings"
+    )
     vertex_color_picker = FloatVectorProperty(
-                                   name="object_color",
-                                   subtype='COLOR',
-                                   default=(1.0, 1.0, 1.0),
-                                   min=0.0, max=1.0,
-                                   description="color picker"
-                                   )
+        name="Object Color",
+        subtype='COLOR',
+        default=(0, 0, 1.0),
+        min=0.0, max=1.0,
+        description="Color picker for painting custom vertex colors."
+    )
 
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",
-        description="Triangulate n-gons when exporting.\n"
-                    "Re-Volt only supports tris and quads, n-gons will not be "
-                    "exported correctly.\nOnly turn this off if you know what "
-                    "you're doing!",
         default = True,
-        )
+        description = "Triangulate n-gons when exporting.\n"
+                     "Re-Volt only supports tris and quads, n-gons will not be "
+                     "exported correctly.\nOnly turn this off if you know what "
+                     "you're doing!"
+    )
     use_tex_num = BoolProperty(
         name = "Use Number for Textures",
+        default = False,
         description = "Uses the texture number from the texture layer "
                       "accessible in the tool shelf in Edit mode.\n"
-                      "Otherwise, it uses the texture from the texture file.",
-        default = False
+                      "Otherwise, it uses the texture from the texture file."
     )
