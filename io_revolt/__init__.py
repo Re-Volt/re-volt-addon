@@ -16,6 +16,7 @@ bl_info = {
     "wiki_url": "http://learn.re-volt.io/blender-docs",
     "tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
                    "index.php?showtopic=2296",
+    "support": 'COMMUNITY',
     "category": "Import-Export",
     }
 
