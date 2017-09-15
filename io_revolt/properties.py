@@ -103,7 +103,6 @@ Re-Volt object and mesh properties
 """
 
 class RVObjectProperties(bpy.types.PropertyGroup):
-
     light1 = EnumProperty(
         name = "Light 1",
         items = bake_lights,
@@ -183,25 +182,25 @@ class RVMeshProperties(bpy.types.PropertyGroup):
     )
     face_texture = IntProperty(
         name = "Texture",
-        description = "Texture page number:\n-1 is none,\n"
-                      "0 is texture page A\n"
-                      "1 is texture page B\n"
-                      "2 is texture page C\n"
-                      "3 is texture page D\n"
-                      "4 is texture page E\n"
-                      "5 is texture page F\n"
-                      "6 is texture page G\n"
-                      "7 is texture page H\n"
-                      "8 is texture page I\n"
-                      "9 is texture page J\n"
-                      "For this number to have an effect, "
-                      "the \"Use Texture Number\" export settings needs to be "
-                      "enabled.",
         get = get_face_texture,
         set = set_face_texture,
         default = 0,
         min = -1,
-        max = 9
+        max = 9,
+        description = "Texture page number:\n-1 is none,\n"
+        "0 is texture page A\n"
+        "1 is texture page B\n"
+        "2 is texture page C\n"
+        "3 is texture page D\n"
+        "4 is texture page E\n"
+        "5 is texture page F\n"
+        "6 is texture page G\n"
+        "7 is texture page H\n"
+        "8 is texture page I\n"
+        "9 is texture page J\n"
+        "For this number to have an effect, "
+        "the \"Use Texture Number\" export settings needs to be "
+        "enabled."
     )
     face_double_sided = BoolProperty(
         name = "Double sided",
@@ -267,7 +266,7 @@ class RVMeshProperties(bpy.types.PropertyGroup):
 class RVSceneProperties(bpy.types.PropertyGroup):
     ui_fold_export_settings = BoolProperty(
         name = "Export Settings",
-        default = False,
+        default = True,
         description = "Show Export Settings"
     )
     vertex_color_picker = FloatVectorProperty(
@@ -277,7 +276,6 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min=0.0, max=1.0,
         description="Color picker for painting custom vertex colors."
     )
-
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",
         default = True,

@@ -54,7 +54,7 @@ def import_file(filepath, scene):
 
         # Assigns the highest quality mesh to an object and links it to the scn
         if meshes.index(prm) == 0:
-            print("Creating Blender object for{}...".format(filename))
+            print("Creating Blender object for {}...".format(filename))
             ob = bpy.data.objects.new(filename, me)
             scene.objects.link(ob)
             scene.objects.active = ob
