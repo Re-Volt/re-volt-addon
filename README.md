@@ -1,5 +1,9 @@
 # Blender Add-On for Re-Volt File Formats
 
+* [Features](#features)
+* [Installation](#installation)
+* [Known Issues](#known-issues)
+
 ## Features
 
 * **Import and Export PRM**:  
