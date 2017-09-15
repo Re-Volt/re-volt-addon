@@ -78,7 +78,7 @@ def export_mesh(me, scene, filepath):
         if scene.revolt.use_tex_num and texnum_layer:
             poly.texture = face[texnum_layer]
         # Falls back to texture if not enabled or texnum layer not found
-        elif tex_layer and face[tex_layer]:
+        elif tex_layer and face[tex_layer].image:
             poly.texture = texture_to_int(face[tex_layer].image.name)
         # Uses no texture instead
         else:
