@@ -31,12 +31,15 @@ class ImportRV(bpy.types.Operator):
         print("Importing {}".format(self.filepath))
 
         if format == FORMAT_UNK:
-            print("Unsupported format.")
+            msg_box("Unsupported format.")
         elif format == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
+        elif format == FORMAT_CAR:
+            from . import parameters_in
+            parameters_in.import_file(self.filepath, scene)
         else:
-            print(format)
+            msg_box("Unsupported format.")
         print("Import done.")
         return {"FINISHED"}
 

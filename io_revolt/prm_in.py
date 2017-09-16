@@ -59,6 +59,8 @@ def import_file(filepath, scene):
             scene.objects.link(ob)
             scene.objects.active = ob
 
+    return ob
+
 def import_mesh(prm, scene, filepath):
     """
     Creates a mesh from an rvstruct object and returns it.
