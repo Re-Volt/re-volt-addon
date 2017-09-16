@@ -53,8 +53,10 @@ def get_face_texture(self):
     layer = (bm.faces.layers.int.get("Texture Number")
              or bm.faces.layers.int.new("Texture Number"))
     selected_faces = [face for face in bm.faces if face.select]
-    if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
-        return -1
+    if len(selected_faces) == 0:
+        return -3
+    elif any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
+        return -2
     else:
         return selected_faces[0][layer]
 
@@ -264,6 +266,10 @@ class RVMeshProperties(bpy.types.PropertyGroup):
     )
 
 class RVSceneProperties(bpy.types.PropertyGroup):
+    last_exported_filepath = StringProperty(
+        name = "Last Exported Filepath",
+        default = ""
+    )
     ui_fold_export_settings = BoolProperty(
         name = "Export Settings",
         default = True,

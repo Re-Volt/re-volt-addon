@@ -30,6 +30,7 @@ if "bpy" in locals():
 
     if "prm_in" in locals(): imp.reload(prm_in)
     if "prm_out" in locals(): imp.reload(prm_out)
+    if "parameters_in" in locals(): imp.reload(parameters_in)
 
 import bpy
 import os

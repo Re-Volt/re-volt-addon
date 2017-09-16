@@ -21,7 +21,7 @@ class ImportRV(bpy.types.Operator):
     bl_label = "Import Re-Volt Files"
     bl_description = "Import Re-Volt game files"
 
-    filepath = bpy.props.StringProperty(subtype='FILE_PATH')
+    filepath = bpy.props.StringProperty(subtype="FILE_PATH")
 
     def execute(self, context):
         scene = context.scene
@@ -31,77 +31,83 @@ class ImportRV(bpy.types.Operator):
         print("Importing {}".format(self.filepath))
 
         if format == FORMAT_UNK:
-            print("Unsupported format.")
+            msg_box("Unsupported format.")
         elif format == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
+        elif format == FORMAT_CAR:
+            from . import parameters_in
+            parameters_in.import_file(self.filepath, scene)
         else:
-            print(format)
+            msg_box("Unsupported format.")
         print("Import done.")
-        return {'FINISHED'}
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
+        return {"RUNNING_MODAL"}
 
 class ExportRV(bpy.types.Operator):
     bl_idname = "export_scene.revolt"
     bl_label = "Export Re-Volt Files"
     bl_description = "Export Re-Volt game files"
 
-    filepath = bpy.props.StringProperty(subtype='FILE_PATH')
+    filepath = bpy.props.StringProperty(subtype="FILE_PATH")
 
     def execute(self, context):
         scene = context.scene
-        # props = context.scene.revolt
+        props = context.scene.revolt
 
         start_time = time.time()
 
-        # call the export function corresponding to the file extension
-        format = get_format(self.filepath)
+        # Gets the format from the file path
+        frmt = get_format(self.filepath)
 
-        if format == FORMAT_UNK:
-            msg_box("Not supported for export: {}".format(file_formats[format]))
+        if frmt == FORMAT_UNK:
+            msg_box("Not supported for export: {}".format(file_formats[frmt]))
         else:
-            context.window.cursor_set('WAIT')
+            context.window.cursor_set("WAIT")
             # Turns off undo for better performance
             use_global_undo = bpy.context.user_preferences.edit.use_global_undo
             bpy.context.user_preferences.edit.use_global_undo = False
 
             if bpy.ops.object.mode_set.poll():
-                bpy.ops.object.mode_set(mode='OBJECT')
+                bpy.ops.object.mode_set(mode="OBJECT")
 
-            # save filepath
-            # props.last_exported_filepath = self.filepath
+            # Saves filepath for re-exporting the same file
+            props.last_exported_filepath = self.filepath
 
-            if format == FORMAT_PRM:
+            if frmt == FORMAT_PRM:
+                # Checks if a file can be exported
                 if not tools.check_for_export(scene.objects.active):
-                    return {'FINISHED'}
+                    return {"FINISHED"}
+
                 from . import prm_out
                 prm_out.export_file(self.filepath, scene)
+
             else:
-                print("Format is not PRM {}".format(file_formats[format]))
+                print("Format is not PRM {}".format(file_formats[frmt]))
 
             print("Export done.")
 
-            # turn undo back on
+            # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo
 
-            context.window.cursor_set('DEFAULT')
+            context.window.cursor_set("DEFAULT")
             print(time.time() - start_time)
-        return {'FINISHED'}
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
+        return {"RUNNING_MODAL"}
 
     def draw(self, context):
         props = context.scene.revolt
         layout = self.layout
         space = context.space_data
-        # use the file selected in the file browser
-        layout.prop(props, 'triangulate_ngons')
-        layout.prop(props, 'use_tex_num')
+
+        layout.prop(props, "triangulate_ngons")
+        layout.prop(props, "use_tex_num")
 
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
@@ -111,7 +117,7 @@ class ButtonSelectFaceProp(bpy.types.Operator):
 
     def execute(self, context):
         select_faces(context, self.prop)
-        return{'FINISHED'}
+        return{"FINISHED"}
 
 # VERTEX COLORS
 
@@ -123,7 +129,7 @@ class ButtonVertexColorSet(bpy.types.Operator):
 
     def execute(self, context):
         tools.set_vertex_color(context, self.number)
-        return{'FINISHED'}
+        return{"FINISHED"}
 
 class ButtonVertexColorCreateLayer(bpy.types.Operator):
     bl_idname = "vertexcolor.create_layer"
@@ -132,7 +138,7 @@ class ButtonVertexColorCreateLayer(bpy.types.Operator):
 
     def execute(self, context):
         create_color_layer(context)
-        return{'FINISHED'}
+        return{"FINISHED"}
 
 class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
     bl_idname = "alphacolor.create_layer"
@@ -140,7 +146,7 @@ class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
 
     def execute(self, context):
         create_alpha_layer(context)
-        return{'FINISHED'}
+        return{"FINISHED"}
 
 class ButtonEnableTextureMode(bpy.types.Operator):
     bl_idname = "helpers.enable_texture_mode"
@@ -149,7 +155,7 @@ class ButtonEnableTextureMode(bpy.types.Operator):
 
     def execute(self, context):
         enable_texture_mode()
-        return{'FINISHED'}
+        return{"FINISHED"}
 
 class ButtonBakeShadow(bpy.types.Operator):
     bl_idname = "lighttools.bakeshadow"
@@ -158,7 +164,7 @@ class ButtonBakeShadow(bpy.types.Operator):
 
     def execute(self, context):
         tools.bake_shadow(self, context)
-        return{'FINISHED'}
+        return{"FINISHED"}
 
 class ButtonBakeLightToVertex(bpy.types.Operator):
     bl_idname = "lighttools.bakevertex"
@@ -167,4 +173,4 @@ class ButtonBakeLightToVertex(bpy.types.Operator):
 
     def execute(self, context):
         tools.bake_vertex(self, context)
-        return{'FINISHED'}
+        return{"FINISHED"}

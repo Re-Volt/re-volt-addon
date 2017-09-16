@@ -60,3 +60,8 @@ There is a Re-Volt tab in the Tool panel of the 3D view that allows users
 to set face properties in Edit mode.
 ### Export
 All selected face type properties will be set when exporting.
+
+## parameters.txt (Car)
+### Import
+The add-on currently imports the car's body and wheels and their positions.  
+If a wheel file cannot be found, it will be represented with an empty object.

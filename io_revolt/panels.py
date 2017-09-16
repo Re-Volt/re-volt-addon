@@ -111,13 +111,21 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
         col.operator("faceprops.select", text="sel").prop = FACE_SKIP
 
-
+        row = self.layout.row()
         if len(self.selection) > 1:
-            self.layout.prop(context.object.data.revolt, "face_texture",
-                text="Texture (multiple faces)")
+            if context.object.data.revolt.face_texture == -2:
+                row.prop(context.object.data.revolt, "face_texture",
+                    text="Texture (different numbers)")
+            else:
+                row.prop(context.object.data.revolt, "face_texture",
+                    text="Texture (set for all)")
+        elif len(self.selection) == 0:
+            row.prop(context.object.data.revolt, "face_texture",
+                text="Texture (no selection)")
         else:
-            self.layout.prop(context.object.data.revolt, "face_texture",
+            row.prop(context.object.data.revolt, "face_texture",
                 text="Texture".format(""))
+        row.active = context.object.data.revolt.face_texture != -3
 
 """
 Panel for setting vertex colors in Edit Mode.
@@ -201,7 +209,6 @@ class RevoltLightPanel(bpy.types.Panel):
             # Cheks if the object has a vertex color layer
             if widget_vertex_color_channel(self, obj):
                 pass
-
             else:
                 # light orientation selection
                 box = self.layout.box()
@@ -222,12 +229,12 @@ class RevoltLightPanel(bpy.types.Panel):
                 row.label(text="Light")
                 row.label(text="Intensity")
                 # settings for the first light
-                row = box.row()
+                row = box.row(align=True)
                 row.label(text=dirs[0])
                 row.prop(context.object.revolt, "light1", text="")
                 row.prop(context.object.revolt, "light_intensity1", text="")
                 # settings for the second light
-                row = box.row()
+                row = box.row(align=True)
                 row.label(text=dirs[1])
                 row.prop(context.object.revolt, "light2", text="")
                 row.prop(context.object.revolt, "light_intensity2", text="")

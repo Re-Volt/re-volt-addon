@@ -93,7 +93,7 @@ FORMAT_W     = 13
 file_formats = {
     FORMAT_UNK   : "Unknown Format",
     FORMAT_BMP   : "BMP",
-    FORMAT_CAR   : "Parameters.txt",
+    FORMAT_CAR   : "parameters.txt",
     FORMAT_FIN   : "FIN",
     FORMAT_FOB   : "FOB",
     FORMAT_HUL   : "HUL",
@@ -135,6 +135,11 @@ Axes are saved differently and many indices are saved in reverse order.
 
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
+
+def to_blender_coord(vec):
+    return (vec[0] * IMPORT_SCALE,
+            vec[2] * IMPORT_SCALE,
+           -vec[1] * IMPORT_SCALE)
 
 def to_revolt_coord(vec):
     return (vec[0] * EXPORT_SCALE,
