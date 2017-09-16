@@ -71,6 +71,20 @@ def import_mesh(prm, scene, filepath):
     bm = bmesh.new()
     bm.from_mesh(me)
 
+    # Adds the prm data to the bmesh
+    add_rvmesh_to_bmesh(prm, bm, filepath)
+
+    # Converts the bmesh back to a mesh and frees resources
+    bm.normal_update()
+    bm.to_mesh(me)
+    bm.free()
+
+    return me
+
+def add_rvmesh_to_bmesh(prm, bm, filepath):
+    """
+    Adds PRM data to an existing bmesh. Returns the resulting bmesh.
+    """
     uv_layer = bm.loops.layers.uv.new("UVMap")
     tex_layer = bm.faces.layers.tex.new("UVMap")
     vc_layer = bm.loops.layers.color.new("Col")
@@ -82,13 +96,11 @@ def import_mesh(prm, scene, filepath):
     type_layer = bm.faces.layers.int.new("Type")
 
     for vert in prm.vertices:
-        co = [c*IMPORT_SCALE for c in vert.position.data]
-        position = to_blender_axis(co)
+        position = to_blender_coord(vert.position.data)
         normal = to_blender_axis(vert.normal.data)
 
         # Creates vertices
         bm.verts.new(Vector((position[0], position[1], position[2])))
-        # vert.normal = Vector(normal) # Blender doesn't use vertex normals
 
         # Ensures lookup table (potentially puts out an error otherwise)
         bm.verts.ensure_lookup_table()
@@ -141,10 +153,3 @@ def import_mesh(prm, scene, filepath):
 
         # Enables smooth shading for that face
         face.smooth = True
-
-    # Converts the bmesh back to a mesh and frees resources
-    bm.normal_update()
-    bm.to_mesh(me)
-    bm.free()
-
-    return me
