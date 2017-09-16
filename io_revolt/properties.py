@@ -266,6 +266,7 @@ class RVMeshProperties(bpy.types.PropertyGroup):
     )
 
 class RVSceneProperties(bpy.types.PropertyGroup):
+    # User interface and misc.
     last_exported_filepath = StringProperty(
         name = "Last Exported Filepath",
         default = ""
@@ -282,6 +283,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min=0.0, max=1.0,
         description="Color picker for painting custom vertex colors."
     )
+
+    # Export properties
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",
         default = True,
@@ -296,4 +299,30 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description = "Uses the texture number from the texture layer "
                       "accessible in the tool shelf in Edit mode.\n"
                       "Otherwise, it uses the texture from the texture file."
+    )
+
+    # World Import properties
+    w_parent_meshes = BoolProperty(
+        name = "Parent .w meshes to Empty",
+        default = True,
+        description = "Parents all .w meshes to an Empty object, resulting in "
+                      "less clutter in the object outliner."
+    )
+    w_import_bound_boxes = BoolProperty(
+        name = "Import Bound Boxes",
+        default = False,
+        description = "Imports the boundary box of each .w mesh for debugging "
+                      "purposes."
+    )
+    w_import_bound_balls = BoolProperty(
+        name = "Import Bound Balls",
+        default = False,
+        description = "Imports the boundary ball of each .w mesh for debugging "
+                      "purposes."
+    )
+    w_import_big_boxes = BoolProperty(
+        name = "Import Big Boxes",
+        default = False,
+        description = "Imports big boxes for debugging "
+                      "purposes."
     )

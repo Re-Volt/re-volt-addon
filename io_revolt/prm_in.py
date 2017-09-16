@@ -22,8 +22,9 @@ from .common import *
 def import_file(filepath, scene):
     """
     Imports a .prm/.m file and links it to the scene as a Blender object.
+    It also imports all LoDs of a PRM file, which can be sequentially written
+    to the file. There is no indicator for it, the file end has to be checked.
     """
-    # Imports the PRM file
     meshes = []
 
     with open(filepath, 'rb') as file:

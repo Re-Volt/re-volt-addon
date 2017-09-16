@@ -26,21 +26,34 @@ class ImportRV(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
 
-        format = get_format(self.filepath)
+        frmt = get_format(self.filepath)
+
+        start_time = time.time()
+
+        context.window.cursor_set("WAIT")
+
 
         print("Importing {}".format(self.filepath))
 
-        if format == FORMAT_UNK:
-            msg_box("Unsupported format.")
-        elif format == FORMAT_PRM:
+        if frmt == FORMAT_UNK:
+            msg_box("Unsupported format: {}".format(frmt))
+        elif frmt == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
-        elif format == FORMAT_CAR:
+        elif frmt == FORMAT_CAR:
             from . import parameters_in
             parameters_in.import_file(self.filepath, scene)
+        elif frmt == FORMAT_W:
+            from . import w_in
+            w_in.import_file(self.filepath, scene)
         else:
-            msg_box("Unsupported format.")
-        print("Import done.")
+            msg_box("Not yet supported: {}".format(frmt))
+
+        end_time = time.time() - start_time
+        print("Import done in {0:.3f} seconds.".format(end_time))
+
+        context.window.cursor_set("DEFAULT")
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -59,6 +72,7 @@ class ExportRV(bpy.types.Operator):
         props = context.scene.revolt
 
         start_time = time.time()
+        context.window.cursor_set("WAIT")
 
         # Gets the format from the file path
         frmt = get_format(self.filepath)
@@ -66,7 +80,6 @@ class ExportRV(bpy.types.Operator):
         if frmt == FORMAT_UNK:
             msg_box("Not supported for export: {}".format(file_formats[frmt]))
         else:
-            context.window.cursor_set("WAIT")
             # Turns off undo for better performance
             use_global_undo = bpy.context.user_preferences.edit.use_global_undo
             bpy.context.user_preferences.edit.use_global_undo = False
@@ -88,13 +101,14 @@ class ExportRV(bpy.types.Operator):
             else:
                 print("Format is not PRM {}".format(file_formats[frmt]))
 
-            print("Export done.")
-
             # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo
 
-            context.window.cursor_set("DEFAULT")
-            print(time.time() - start_time)
+        context.window.cursor_set("DEFAULT")
+
+        end_time = time.time() - start_time
+        print("Export done in {0:.3f} seconds.".format(end_time))
+
         return {"FINISHED"}
 
     def invoke(self, context, event):

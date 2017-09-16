@@ -274,5 +274,7 @@ def get_format(fstr):
         return FORMAT_CAR
     elif ext in [".prm", ".m"]:
         return FORMAT_PRM
+    elif ext == ".w":
+        return FORMAT_W
     else:
         return FORMAT_UNK
