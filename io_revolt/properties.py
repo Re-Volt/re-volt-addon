@@ -266,6 +266,10 @@ class RVMeshProperties(bpy.types.PropertyGroup):
     )
 
 class RVSceneProperties(bpy.types.PropertyGroup):
+    last_exported_filepath = StringProperty(
+        name = "Last Exported Filepath",
+        default = ""
+    )
     ui_fold_export_settings = BoolProperty(
         name = "Export Settings",
         default = True,
