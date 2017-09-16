@@ -2,6 +2,7 @@
 
 * [Features](#features)
 * [Installation](#installation)
+* [Documentation](#documentation)
 * [Known Issues](#known-issues)
 
 ## Features
@@ -19,6 +20,7 @@ Generate shadow textures and coordinates for in-game use with just one click.
 Shade meshes by baking light to vertex colors with just one click.
 
 ## Installation
+Find a detailed guide [here](https://github.com/Yethiel/re-volt-addon/wiki/Installation).  
 Requires Blender 2.78 or newer.  
 Move the `io_revolt` folder to Blender's addons folder, e.g:  
 `C:\Program Files\Blender Foundation\Blender\2.79\scripts\addons\io_revolt`  
@@ -28,6 +30,9 @@ or
 Then activate the add-on in the Blender preferences (`CTRL` `ALT` `U`),
 open the _Add-Ons_ tab and search for Re-Volt. Check the checkbox in the top left.  
 Optionally, click _Save User Settings_ in the bottom left.
+
+## Documentation
+The documentation can be foud [here](https://github.com/Yethiel/re-volt-addon/wiki).
 
 ## Known Issues
 * UV Unwrap reset is broken due to a [Blender Bug](https://developer.blender.org/T52723)
