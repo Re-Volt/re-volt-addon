@@ -16,6 +16,18 @@
 - [X] Types
 - [X] LoD
 
+## parameters.txt (Car)
+### Import
+- [X] Car body and offset
+- [X] Wheels and positions
+- [ ] Spinner
+- [ ] Stats
+
+### Export
+- [ ] Car body and offset
+- [ ] Wheels and positions
+- [ ] Spinner
+- [ ] Stats
 ## W
 ### Import
 - [ ] Meshes
