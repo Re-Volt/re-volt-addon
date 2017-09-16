@@ -10,6 +10,9 @@
 * **Import and Export PRM**:  
 Mesh, UV, vertex colors, texture, face properties and lods (level of detail)
 
+* **Import Cars from parameters.txt**:  
+Import the car model and wheels from parameters.txt files.
+
 * **Mesh Editing Tools**:  
 Edit face properties and vertex colors.
 
