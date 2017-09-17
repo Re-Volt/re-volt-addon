@@ -70,7 +70,6 @@ def import_mesh(prm, scene, filepath):
     # Creates a new mesh and bmesh
     me = bpy.data.meshes.new(filename)
     bm = bmesh.new()
-    bm.from_mesh(me)
 
     # Adds the prm data to the bmesh
     add_rvmesh_to_bmesh(prm, bm, filepath)

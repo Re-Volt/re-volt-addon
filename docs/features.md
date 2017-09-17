@@ -22,19 +22,21 @@
 - [X] Wheels and positions
 - [ ] Spinner
 - [ ] Stats
-
 ### Export
 - [ ] Car body and offset
 - [ ] Wheels and positions
 - [ ] Spinner
 - [ ] Stats
+
 ## W
 ### Import
-- [ ] Meshes
-- [ ] Bound Boxes
-- [ ] UV
-- [ ] Vertex colors
-- [ ] Texture
-- [ ] Types
+- [X] Meshes
+- [X] Bound Boxes
+- [X] Bound Spheres
+- [ ] Big Boxes
+- [X] UV
+- [X] Vertex colors
+- [X] Texture
+- [X] Types
 - [ ] Environment Colors
 - [ ] Texture Animation

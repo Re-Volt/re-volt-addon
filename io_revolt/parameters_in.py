@@ -31,8 +31,6 @@ def import_file(filepath, scene):
     if params:
         import_car(scene, params, filepath)
 
-
-
 def import_car(scene, params, filepath):
 
     body = params["model {}".format(params["body"]["modelnum"])]

@@ -108,6 +108,9 @@ file_formats = {
     FORMAT_W     : "W",
 }
 
+COL_BSPHERE = mathutils.Color((0.7, 0.08, 0))
+COL_BBOX = mathutils.Color((0, 0, 0.05))
+
 """
 Constants for the tool shelf functions
 """
@@ -141,6 +144,9 @@ def to_blender_coord(vec):
             vec[2] * IMPORT_SCALE,
            -vec[1] * IMPORT_SCALE)
 
+def to_blender_scale(num):
+    return num * IMPORT_SCALE
+
 def to_revolt_coord(vec):
     return (vec[0] * EXPORT_SCALE,
            -vec[2] * EXPORT_SCALE,
@@ -163,6 +169,15 @@ def texture_to_int(string):
         if num > 9 or num < 0:
             return 0
     return 0
+
+def create_material(name, diffuse, alpha):
+    mat = bpy.data.materials.new(name)
+    mat.diffuse_color = diffuse
+    mat.diffuse_intensity = 1.0
+    mat.alpha = alpha
+    if alpha:
+        mat.use_transparency = True
+    return mat
 
 """
 Blender helpers

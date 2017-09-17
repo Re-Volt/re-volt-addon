@@ -53,15 +53,19 @@ def import_file(filepath, scene):
 
         # Imports bound box for each mesh if enabled in settings
         if props.w_import_bound_boxes:
-            bbox = create_bound_box(scene, rvmesh.bbox, filepath)
+            bbox = create_bound_box(scene, rvmesh.bbox, filename)
             bbox.parent = ob
 
-def create_bound_box(scene, bbox, filepath):
-    filename = os.path.basename(filepath)
+        if props.w_import_bound_balls:
+            radius = rvmesh.bound_ball_radius
+            center = rvmesh.bound_ball_center.data
+            bsphere = create_bound_sphere(scene, center, radius, filename)
+            bsphere.parent = ob
+
+def create_bound_box(scene, bbox, filename):
     # Creates a new mesh and bmesh
-    me = bpy.data.meshes.new(filename)
+    me = bpy.data.meshes.new("bbox_{}".format(filename))
     bm = bmesh.new()
-    bm.from_mesh(me)
 
     coords = [
         to_blender_coord((bbox.xlo, bbox.ylo, bbox.zhi)),
@@ -98,7 +102,51 @@ def create_bound_box(scene, bbox, filepath):
 
     bm.normal_update()
     bm.to_mesh(me)
+    bm.free()
+
+    # Gets or creates a transparent material for the boxes
+    mat = bpy.data.materials.get("RVBBox")
+    if not mat:
+        mat = create_material("RVBBox", COL_BBOX, 0.3)
+    me.materials.append(mat)
+
     ob = bpy.data.objects.new("bbox_{}".format(filename), me)
     scene.objects.link(ob)
-    scene.objects.active = ob
+
+    # Makes the object transparent
+    ob.show_transparent = True
+    ob.draw_type = "SOLID"
+    ob.show_wire = True
+
+    return ob
+
+def create_bound_sphere(scene, center, radius, filename):
+    center = to_blender_coord(center)
+    radius = to_blender_scale(radius)
+    if not "RVBoundSphere" in bpy.data.meshes:
+        me = bpy.data.meshes.new("RVBoundSphere")
+        bm = bmesh.new()
+        # Creates a sphere with the given radius
+        bmesh.ops.create_icosphere(bm, subdivisions=3, diameter=1)
+        bm.to_mesh(me)
+        bm.free()
+        # Creates a transparent material for the object
+        me.materials.append(create_material("RVBoundSphere", COL_BSPHERE, 0.3))
+        # Makes polygons smooth
+        for poly in me.polygons:
+            poly.use_smooth = True
+    else:
+        me = bpy.data.meshes["RVBoundSphere"]
+
+    # Links the object and sets position and scale
+    ob = bpy.data.objects.new("bsphere_{}".format(filename), me)
+    scene.objects.link(ob)
+    ob.location = center
+    ob.scale = (radius, radius, radius)
+
+    # Makes the object transparent
+    ob.show_transparent = True
+    ob.draw_type = "SOLID"
+    # ob.show_wire = True
+
     return ob
