@@ -30,23 +30,32 @@ class RevoltIOToolPanel(bpy.types.Panel):
 
     def draw(self, context):
         # i/o buttons
-        fold_s = context.scene.revolt.ui_fold_export_settings
+        props = context.scene.revolt
+        fold_s = props.ui_fold_export_settings
 
         row = self.layout.row(align=True)
         row.operator(ImportRV.bl_idname, text="Import", icon="IMPORT")
         row.operator(ExportRV.bl_idname, text="Export", icon="EXPORT")
         row = self.layout.row(align=True)
         row.prop(
-            context.scene.revolt,
+            props,
             "ui_fold_export_settings",
             icon = "TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
-            text = "Show Export Settings" if fold_s else "Hide Export Settings"
+            text = "Show Settings" if fold_s else "Hide Settings"
         )
         if not fold_s:
-            row = self.layout.row(align=True)
-            row.prop(context.scene.revolt, "triangulate_ngons")
-            row = self.layout.row(align=True)
-            row.prop(context.scene.revolt, "use_tex_num")
+            box = self.layout.box()
+            box.label("Export")
+            box.prop(props, "triangulate_ngons")
+            box.prop(props, "use_tex_num")
+
+            box = self.layout.box()
+            box.label("Import World (.w)")
+            box.prop(props, "w_parent_meshes")
+            box.prop(props, "w_import_bound_boxes")
+            box.prop(props, "w_import_bound_balls")
+            box.prop(props, "w_import_big_boxes")
+
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
