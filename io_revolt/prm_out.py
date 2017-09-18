@@ -77,14 +77,15 @@ def export_mesh(me, scene, filepath):
         poly.type = face[type_layer] & FACE_PROP_MASK
 
         # Gets the texture number from the integer layer if setting enabled
+        # use_tex_num is the only way to achieve no texture
         if scene.revolt.use_tex_num and texnum_layer:
             poly.texture = face[texnum_layer]
         # Falls back to texture if not enabled or texnum layer not found
         elif tex_layer and face[tex_layer] and face[tex_layer].image:
             poly.texture = texture_to_int(face[tex_layer].image.name)
-        # Uses no texture instead
+        # Uses 'A' texture instead
         else:
-            poly.texture = -1
+            poly.texture = 0
 
         # Sets vertex indices for the polygon
         vert_order = [2, 1, 0, 3] if not is_quad else [3, 2, 1, 0]

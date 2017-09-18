@@ -1,4 +1,14 @@
-# GUI
+# Object Properties
+# Re-Volt Object Properties
+This panel is at the far bottom of the Object section of the object properties.
+You may use the right top edge to drag it further up.
+## Big Cube Properties
+This only shows when a big cube is selected.
+### Mesh Indices
+A list of mesh indices the selected big cubes belongs to. Does not affect
+export.
+
+
 # Tools Panel
 Open/Close the tools panel using `T`. The Re-Volt tab can be found at the very
 bottom.
@@ -19,19 +29,45 @@ In Object Mode, the following panels are available:
 
 #### Buttons
 There are two buttons, one for import and one for export. They have the same
-functions as the menu entries in the File -> Import/Export menus.
-
-#### Settings
+functions as the menu entries in the File -> Import/Export menus.  
 Import and Export settings can be found right beneath the buttons.
 
+#### Export Settings
 ##### Triangulate n-gons
 Triangulates faces with more than 4 vertices (also called n-gons).  
 This will only affect the exported object, the mesh itself will not be
 triangulated.  
 Deselecting this might result in broken exports.
+##### Use Number for Textures
+Instead of using the texture file to determine the texture number, the number
+set in the face properties panel will be used for exporting.
+
+#### Import World (.w)
+##### Parent .w meshes to Empty
+Creates an empty object with the imported file's name and parents all meshes
+contained in the .w file to it. This makes the object outliner a lot less
+cluttered.
+##### Import Bound Boxes
+Imports the bound box for every single mesh of the .w file.
+##### Import Bound Balls
+Imports the bound ball for every single mesh of the .w file.
+##### Import Big Cubes
+Imports the larger boundary spheres (not cubes) surrounding multiple meshes of
+the .w file.  
+The term _Big Cubes_ has been established in the community.
+##### \* Layers
+This option will be given as soon as one of the above debug settings have been
+enabled (boundary boxes, spheres and big cubes):  
+Selector for the layer(s) the debug objects will be placed on. Multiple layers
+can be selected by `Shift`-clicking or dragging.  
+By default, all objects will be imported to the first layer.
+
+When imported, the actual meshes are going to be on the first layer while the
+debug objects potentially are on other layers.  
+To view multiple layers at once, hold down `Shift` and press numbers, e.g.
+`1` and then `2`. While doing that, make sure the mouse cursor hovers over the 3D view.
 
 ### Light and Shadow
-
 #### Shade Object
 Shades a mesh by baking light to the vertex color layer.
 

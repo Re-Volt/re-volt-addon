@@ -17,6 +17,19 @@ from .common import *
 from .operators import *
 from .properties import *
 
+class RevoltObjectPanel(bpy.types.Panel):
+    bl_label = "Re-Volt Object Properties"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "object"
+
+    def draw(self, context):
+        layout = self.layout
+        obj = context.object
+        if obj.revolt.is_bcube:
+            layout.label("BigCube Properties:")
+            layout.prop(obj.revolt, "bcube_mesh_indices")
+
 """
 Tool panel in the left sidebar of the viewport for performing
 various operations
@@ -53,8 +66,18 @@ class RevoltIOToolPanel(bpy.types.Panel):
             box.label("Import World (.w)")
             box.prop(props, "w_parent_meshes")
             box.prop(props, "w_import_bound_boxes")
+            if props.w_import_bound_boxes:
+                box.prop(props, "w_bound_box_layers")
             box.prop(props, "w_import_bound_balls")
-            box.prop(props, "w_import_big_boxes")
+            if props.w_import_bound_balls:
+                box.prop(props, "w_bound_ball_layers")
+            box.prop(props, "w_import_big_cubes")
+            if props.w_import_big_cubes:
+                box.prop(props, "w_big_cube_layers")
+
+
+            if context.object.revolt.is_bcube:
+                self.layout.prop(context.object.revolt, "bcube_mesh_indices")
 
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
@@ -89,7 +112,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         # self.layout.prop(context.object.data.revolt, "face_material",
         #     text="Material".format(""))
         row  = self.layout.row()
-        col = row.column(align = True)
+        col = row.column(align=True)
         col.prop(context.object.data.revolt, "face_double_sided",
             text="{}: Double sided".format(count[1]))
         col.prop(context.object.data.revolt, "face_translucent",
@@ -102,8 +125,17 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
             text="{}: Texture animation".format(count[5]))
         col.prop(context.object.data.revolt, "face_no_envmapping",
             text="{}: No EnvMap".format(count[6]))
-        col.prop(context.object.data.revolt, "face_envmapping",
+        if context.object.data.revolt.face_envmapping:
+            split = col.split(percentage=.7)
+            scol = split.column(align=True)
+            scol.prop(context.object.data.revolt, "face_envmapping",
             text="{}: EnvMap".format(count[7]))
+            scol = split.column(align=True)
+            scol.prop(context.object.data.revolt, "face_env", text="")
+        else:
+            col.prop(context.object.data.revolt, "face_envmapping",
+            text="{}: EnvMap".format(count[7]))
+
         col.prop(context.object.data.revolt, "face_cloth",
             text="{}: Cloth effect".format(count[8]))
         col.prop(context.object.data.revolt, "face_skip",
@@ -116,7 +148,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         col.operator("faceprops.select", text="sel").prop = FACE_TRANSL_TYPE
         col.operator("faceprops.select", text="sel").prop = FACE_TEXANIM
         col.operator("faceprops.select", text="sel").prop = FACE_NOENV
-        col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
+        col.operator("faceprops.select", text="sel").prop = FACE_ENV
         col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
         col.operator("faceprops.select", text="sel").prop = FACE_SKIP
 

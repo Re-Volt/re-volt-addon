@@ -61,6 +61,23 @@ to set face properties in Edit mode.
 ### Export
 All selected face type properties will be set when exporting.
 
+## World (.w)
+### Import
+#### Meshes
+See PRM. The only addition is the environment color list that defines a
+specularity color for certain polygons if the flag is enabled for them.  
+
+The environment color is accessible on a vertex color layer called _Env_.
+The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (_EnvAlpha_).
+
+Do note that environment colors are per-polygon. The average color will be
+sampled from the vertex color layer when an env-enabled polygon is selected.
+
+#### Debug
+Bounding boxes, bounding spheres and "big cubes" (spheres) can be imported to
+selected layers. There are for debug purposes only and they will not affect
+the export in any way.
+
 ## parameters.txt (Car)
 ### Import
 The add-on currently imports the car's body and wheels and their positions.  

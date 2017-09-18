@@ -1,9 +1,9 @@
 """
 This is a module for reading and writing Re-Volt binary files.
 Todo:
-- Convert axes to Blender standard and convert them back on export?
 - Rework representations and string representations
 - Rework default values based on the game's defaults
+- Check for lengths on export
 
 Supported Formats:
 - .prm / .m (PRM)

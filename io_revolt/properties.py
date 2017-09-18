@@ -9,6 +9,7 @@ import bpy
 from . import common
 from bpy.props import (
 BoolProperty,
+BoolVectorProperty,
 EnumProperty,
 FloatProperty,
 IntProperty,
@@ -69,6 +70,50 @@ def set_face_texture(self, value):
         if face.select:
             face[layer] = value
 
+def set_face_env(self, value):
+    eo = bpy.context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    env_layer = (bm.loops.layers.color.get("Env")
+                 or bm.loops.layers.color.new("Env"))
+    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha")
+                       or bm.faces.layers.float.new("EnvAlpha"))
+    for face in bm.faces:
+        if face.select:
+            for loop in face.loops:
+                loop[env_layer] = value[:3]
+            face[env_alpha_layer] = value[-1]
+
+
+def get_face_env(self):
+    eo = bpy.context.edit_object
+    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    env_layer = (bm.loops.layers.color.get("Env")
+                 or bm.loops.layers.color.new("Env"))
+    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha")
+                       or bm.faces.layers.float.new("EnvAlpha"))
+
+    # Gets the average color for all selected faces
+    selected_faces = [face for face in bm.faces if face.select]
+    col = get_average_vcol(selected_faces, env_layer)
+
+    return [*col, selected_faces[0][env_alpha_layer]]
+
+
+def get_average_vcol(faces, layer):
+    """ Gets the average vertex color of all loops of given faces """
+    for face in faces:
+        cols = [loop[layer] for loop in face.loops]
+        r = sum([c[0] for c in cols])/4
+        g = sum([c[1] for c in cols])/4
+        b = sum([c[2] for c in cols])/4
+        return (r, g, b)
+
+def set_vcol(faces, layer, color):
+    for face in faces:
+        for loop in face.loops:
+            loop[layer] = color
+
+
 def get_face_property(self):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
@@ -97,6 +142,7 @@ def select_faces(context, prop):
 
     for face in bm.faces:
         if face[flag_layer] & prop:
+            print(face[flag_layer], prop)
             face.select = not face.select
     redraw()
 
@@ -172,6 +218,18 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = "",
         description = "Shadow coordinates for use in parameters.txt of cars.\n"
                       "Click to select all, then CTRL C to copy."
+    )
+
+    # Debug Objects
+    is_bcube = BoolProperty(
+        name = "Object is a BigCube",
+        default = False,
+        description = "Makes BigCube properties visible for this object."
+    )
+    bcube_mesh_indices = StringProperty(
+        name = "Mesh indices",
+        default = "",
+        description = "Indices of child meshes."
     )
 
 
@@ -264,6 +322,18 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         set = lambda s,v: set_face_property(s, v, FACE_SKIP),
         description = "Skips the polygon when exporting (not Re-Volt related)."
     )
+    face_env = FloatVectorProperty(
+        name = "Environment Color",
+        subtype = "COLOR",
+        size = 4,
+        min = 0.0,
+        max = 1.0,
+        soft_min = 0.0,
+        soft_max = 1.0,
+        get = get_face_env,
+        set = set_face_env,
+        description = "Color of the environment map for World meshes."
+    )
 
 class RVSceneProperties(bpy.types.PropertyGroup):
     # User interface and misc.
@@ -314,15 +384,42 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description = "Imports the boundary box of each .w mesh for debugging "
                       "purposes."
     )
+    w_bound_box_layers = BoolVectorProperty(
+        name = "Bound Box Layers",
+        subtype = "LAYER",
+        size = 20,
+        default = [True]+[False for x in range(0, 19)],
+        description = "Sets the layers the objecs will be be imported to. "
+                      "Select multiple by dragging or holding down Shift.\n"
+                      "Activate multiple layers by pressing Shift + numbers."
+    )
     w_import_bound_balls = BoolProperty(
         name = "Import Bound Balls",
         default = False,
         description = "Imports the boundary ball of each .w mesh for debugging "
                       "purposes."
     )
-    w_import_big_boxes = BoolProperty(
-        name = "Import Big Boxes",
+    w_bound_ball_layers = BoolVectorProperty(
+        name = "Bound Ball Layers",
+        subtype = "LAYER",
+        size = 20,
+        default = [True]+[False for x in range(0, 19)],
+        description = "Sets the layers the objecs will be be imported to. "
+                      "Select multiple by dragging or holding down Shift.\n"
+                      "Activate multiple layers by pressing Shift + numbers."
+    )
+    w_import_big_cubes = BoolProperty(
+        name = "Import Big Cubes",
         default = False,
-        description = "Imports big boxes for debugging "
+        description = "Imports Big Cubes (actually spheres) for debugging "
                       "purposes."
+    )
+    w_big_cube_layers = BoolVectorProperty(
+        name = "Big Cube Layers",
+        subtype = "LAYER",
+        size = 20,
+        default = [True]+[False for x in range(0, 19)],
+        description = "Sets the layers the objecs will be be imported to. "
+                      "Select multiple by dragging or holding down Shift.\n"
+                      "Activate multiple layers by pressing Shift + numbers."
     )

@@ -33,10 +33,10 @@
 - [X] Meshes
 - [X] Bound Boxes
 - [X] Bound Spheres
-- [ ] Big Boxes
+- [X] Big Boxes
 - [X] UV
 - [X] Vertex colors
 - [X] Texture
 - [X] Types
-- [ ] Environment Colors
+- [X] Environment Colors
 - [ ] Texture Animation

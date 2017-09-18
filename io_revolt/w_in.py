@@ -42,7 +42,7 @@ def import_file(filepath, scene):
         bpy.context.scene.objects.link(main_w)
     for rvmesh in meshes:
         # Creates a mesh from rv data and links it to the scene as an object
-        me = import_mesh(rvmesh, scene, filepath)
+        me = import_mesh(rvmesh, scene, filepath, world.env_list)
         ob = bpy.data.objects.new(filename, me)
         scene.objects.link(ob)
         scene.objects.active = ob
@@ -54,17 +54,35 @@ def import_file(filepath, scene):
         # Imports bound box for each mesh if enabled in settings
         if props.w_import_bound_boxes:
             bbox = create_bound_box(scene, rvmesh.bbox, filename)
+            bbox.layers = props.w_bound_box_layers
             bbox.parent = ob
 
+        # Imports bound ball for each mesh if enabled in settings
         if props.w_import_bound_balls:
             radius = rvmesh.bound_ball_radius
             center = rvmesh.bound_ball_center.data
-            bsphere = create_bound_sphere(scene, center, radius, filename)
+            bsphere = create_sphere(
+                scene, "BOUNDBALL", center, radius, filename
+            )
+            bsphere.layers = props.w_bound_ball_layers
             bsphere.parent = ob
+
+    # Creates the big cubes (spheres) around multiple meshes if enabled
+    if props.w_import_big_cubes:
+        for cube in world.bigcubes:
+            radius = cube.size
+            center = cube.center.data
+            bcube = create_sphere(
+                scene, "BIGCUBE", center, radius, filename
+            )
+            bcube.revolt.bcube_mesh_indices = ", ".join([str(c) for c in cube.mesh_indices])
+            bcube.revolt.is_bcube = True
+            bcube.layers = props.w_big_cube_layers
+            bcube.parent = main_w
 
 def create_bound_box(scene, bbox, filename):
     # Creates a new mesh and bmesh
-    me = bpy.data.meshes.new("bbox_{}".format(filename))
+    me = bpy.data.meshes.new("RVBBox_{}".format(filename))
     bm = bmesh.new()
 
     coords = [
@@ -110,7 +128,7 @@ def create_bound_box(scene, bbox, filename):
         mat = create_material("RVBBox", COL_BBOX, 0.3)
     me.materials.append(mat)
 
-    ob = bpy.data.objects.new("bbox_{}".format(filename), me)
+    ob = bpy.data.objects.new("RVBBox_{}".format(filename), me)
     scene.objects.link(ob)
 
     # Makes the object transparent
@@ -120,26 +138,33 @@ def create_bound_box(scene, bbox, filename):
 
     return ob
 
-def create_bound_sphere(scene, center, radius, filename):
+def create_sphere(scene, sptype, center, radius, filename):
+    if sptype == "BOUNDBALL":
+        mname = "RVBoundSphere"
+        col = COL_BSPHERE
+    elif sptype == "BIGCUBE":
+        mname = "RVBigCube"
+        col = COL_BCUBE
+
     center = to_blender_coord(center)
     radius = to_blender_scale(radius)
-    if not "RVBoundSphere" in bpy.data.meshes:
-        me = bpy.data.meshes.new("RVBoundSphere")
+    if not mname in bpy.data.meshes:
+        me = bpy.data.meshes.new(mname)
         bm = bmesh.new()
         # Creates a sphere with the given radius
         bmesh.ops.create_icosphere(bm, subdivisions=3, diameter=1)
         bm.to_mesh(me)
         bm.free()
         # Creates a transparent material for the object
-        me.materials.append(create_material("RVBoundSphere", COL_BSPHERE, 0.3))
+        me.materials.append(create_material(mname, col, 0.3))
         # Makes polygons smooth
         for poly in me.polygons:
             poly.use_smooth = True
     else:
-        me = bpy.data.meshes["RVBoundSphere"]
+        me = bpy.data.meshes[mname]
 
     # Links the object and sets position and scale
-    ob = bpy.data.objects.new("bsphere_{}".format(filename), me)
+    ob = bpy.data.objects.new("{}_{}".format(mname, filename), me)
     scene.objects.link(ob)
     ob.location = center
     ob.scale = (radius, radius, radius)
