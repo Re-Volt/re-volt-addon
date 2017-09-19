@@ -38,14 +38,35 @@ def export_file(filepath, scene):
             print("Exporting mesh {} of {}".format(
                 meshes.index(me), len(meshes)))
             # Exports the mesh as a PRM object
-            prm = export_mesh(me, scene, filepath)
+            prm = export_mesh(me, obj, scene, filepath)
             # Writes the PRM object to a file
             prm.write(file)
 
-def export_mesh(me, scene, filepath):
+def export_mesh(me, obj, scene, filepath):
+    props = scene.revolt
     # Creates a bmesh from the supplied mesh
     bm = bmesh.new()
     bm.from_mesh(me)
+
+    # Applies the object scale if enabled
+    if props.apply_scale:
+        bmesh.ops.scale(
+            bm,
+            vec=obj.scale,
+            space=obj.matrix_world,
+            verts=bm.verts
+        )
+
+    # Applies the object rotation if enabled
+    if props.apply_rotation:
+        bmesh.ops.rotate(
+            bm,
+            cent=obj.location,
+            matrix=obj.rotation_euler.to_matrix(),
+            space=obj.matrix_world,
+            verts=bm.verts
+            )
+
 
     num_ngons = triangulate_ngons(bm)
     if scene.revolt.triangulate_ngons > 0:

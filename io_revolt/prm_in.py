@@ -66,6 +66,7 @@ def import_mesh(prm, scene, filepath, envlist=None):
     """
     Creates a mesh from an rvstruct object and returns it.
     """
+    props = scene.revolt
     filename = os.path.basename(filepath)
     # Creates a new mesh and bmesh
     me = bpy.data.meshes.new(filename)

@@ -370,6 +370,17 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "accessible in the tool shelf in Edit mode.\n"
                       "Otherwise, it uses the texture from the texture file."
     )
+    apply_scale = BoolProperty(
+        name = "Apply Scale",
+        default = True,
+        description = "Applies the object scale on export."
+    )
+    apply_rotation = BoolProperty(
+        name = "Apply Rotation",
+        default = True,
+        description = "Applies the object rotation on export."
+    )
+
 
     # World Import properties
     w_parent_meshes = BoolProperty(

@@ -61,6 +61,8 @@ class RevoltIOToolPanel(bpy.types.Panel):
             box.label("Export")
             box.prop(props, "triangulate_ngons")
             box.prop(props, "use_tex_num")
+            box.prop(props, "apply_scale")
+            box.prop(props, "apply_rotation")
 
             box = self.layout.box()
             box.label("Import World (.w)")
@@ -74,11 +76,6 @@ class RevoltIOToolPanel(bpy.types.Panel):
             box.prop(props, "w_import_big_cubes")
             if props.w_import_big_cubes:
                 box.prop(props, "w_big_cube_layers")
-
-
-            if context.object.revolt.is_bcube:
-                self.layout.prop(context.object.revolt, "bcube_mesh_indices")
-
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
