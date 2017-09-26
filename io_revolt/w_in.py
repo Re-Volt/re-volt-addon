@@ -80,6 +80,8 @@ def import_file(filepath, scene):
             bcube.layers = props.w_big_cube_layers
             bcube.parent = main_w
 
+    props.texture_animations = str([a.as_dict() for a in world.animations])
+
 def create_bound_box(scene, bbox, filename):
     # Creates a new mesh and bmesh
     me = bpy.data.meshes.new("RVBBox_{}".format(filename))

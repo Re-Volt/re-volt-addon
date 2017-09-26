@@ -58,6 +58,10 @@ class RevoltIOToolPanel(bpy.types.Panel):
         )
         if not fold_s:
             box = self.layout.box()
+            box.label("Import")
+            box.prop(props, "enable_tex_mode")
+
+            box = self.layout.box()
             box.label("Export")
             box.prop(props, "triangulate_ngons")
             box.prop(props, "use_tex_num")
@@ -296,6 +300,35 @@ class RevoltLightPanel(bpy.types.Panel):
                          icon="LAMP_SPOT")
             row = box.row()
             row.prop(context.object.revolt, "shadow_table", text="Table")
+
+
+class RevoltAnimationPanel(bpy.types.Panel):
+    bl_label = "Texture Animation (.w)"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "mesh_edit"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+        obj = context.object
+        props = context.scene.revolt
+
+        row = self.layout.row(align=True)
+        row.prop(props, "texture_animations")
+        row = self.layout.row(align=True)
+        row.prop(props, "ta_current_slot", text="Slot")
+        column = self.layout.column(align=True)
+        column.prop(props, "ta_current_frame")
+        row = column.row(align=True)
+        row.prop(props, "ta_current_frame_tex")
+        row.prop(props, "ta_current_frame_delay")
+        row = self.layout.row()
+        column = row.column()
+        column.prop(props, "ta_current_frame_uv0")
+        column.prop(props, "ta_current_frame_uv1")
+        column = row.column()
+        column.prop(props, "ta_current_frame_uv2")
+        column.prop(props, "ta_current_frame_uv3")
 
 
 """

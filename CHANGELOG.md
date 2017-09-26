@@ -7,4 +7,5 @@ The most recent edits are at the top.
 different layers
   + Env colors with GUI implementation
 + Import .prm completed
-  + Optionally apply scale and rotation
+  + Apply scale and rotation on export by default (no need for manual apply,
+    can be disabled in the options)

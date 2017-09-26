@@ -43,7 +43,7 @@ class World:
         self.env_list = []            # an EnvList structure
 
 
-        # Immediately starts reading it if an opened file is supplied
+        # Immediately starts reading if an opened file is supplied
         if file:
             self.read(file)
 
@@ -547,7 +547,7 @@ class UV:
             self.read(file)
 
     def __repr__(self):
-        return "UV"
+        return str(self.as_dict())
 
     def read(self, file):
         # Reads the uv coordinates
@@ -686,7 +686,10 @@ class Frame:
             self.read(file)
 
     def __repr__(self):
-        return "Frame"
+        return str(self.as_dict())
+
+    def __str__(self):
+        return str(self.as_dict())
 
     def read(self, file):
         # Reads the texture id

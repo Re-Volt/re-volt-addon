@@ -25,7 +25,7 @@ class ImportRV(bpy.types.Operator):
 
     def execute(self, context):
         scene = context.scene
-
+        props = scene.revolt
         frmt = get_format(self.filepath)
 
         start_time = time.time()
@@ -40,12 +40,21 @@ class ImportRV(bpy.types.Operator):
         elif frmt == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_texture_mode()
         elif frmt == FORMAT_CAR:
             from . import parameters_in
             parameters_in.import_file(self.filepath, scene)
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_texture_mode()
         elif frmt == FORMAT_W:
             from . import w_in
             w_in.import_file(self.filepath, scene)
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_texture_mode()
         else:
             msg_box("Not yet supported: {}".format(frmt))
 

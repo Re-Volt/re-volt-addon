@@ -6,18 +6,19 @@ if "bpy" in locals():
     imp.reload(common)
 
 import bpy
+from ast import literal_eval
 from . import common
 from bpy.props import (
-BoolProperty,
-BoolVectorProperty,
-EnumProperty,
-FloatProperty,
-IntProperty,
-StringProperty,
-CollectionProperty,
-IntVectorProperty,
-FloatVectorProperty,
-PointerProperty
+    BoolProperty,
+    BoolVectorProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    StringProperty,
+    CollectionProperty,
+    IntVectorProperty,
+    FloatVectorProperty,
+    PointerProperty
 )
 
 from .common import *
@@ -145,6 +146,51 @@ def select_faces(context, prop):
             print(face[flag_layer], prop)
             face.select = not face.select
     redraw()
+
+# Texture Animation
+
+def get_ta_current_frame_tex(self):
+    props = bpy.context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = literal_eval(props.texture_animations)
+
+    return ta[slot]["frames"][frame]["texture"]
+
+def get_ta_current_frame_delay(self):
+    props = bpy.context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = literal_eval(props.texture_animations)
+
+    return ta[slot]["frames"][frame]["delay"]
+
+def get_ta_uv(self, idx):
+    props = bpy.context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = literal_eval(props.texture_animations)
+    uv = ta[slot]["frames"][frame]["uv"][idx]
+    return (uv["u"], uv["v"])
+
+def get_ta_current_frame_uv0(self):
+    return get_ta_uv(self, 0)
+def get_ta_current_frame_uv1(self):
+    return get_ta_uv(self, 1)
+def get_ta_current_frame_uv2(self):
+    return get_ta_uv(self, 2)
+def get_ta_current_frame_uv3(self):
+    return get_ta_uv(self, 3)
+
+def set_ta_current_frame_tex(self, val):
+    pass
+
 
 """
 Re-Volt object and mesh properties
@@ -346,6 +392,11 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = True,
         description = "Show Export Settings"
     )
+    enable_tex_mode = BoolProperty(
+        name = "Texture Mode after Import",
+        default = True,
+        description = "Enables Texture Mode after mesh import."
+    )
     vertex_color_picker = FloatVectorProperty(
         name="Object Color",
         subtype='COLOR',
@@ -433,4 +484,73 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description = "Sets the layers the objecs will be be imported to. "
                       "Select multiple by dragging or holding down Shift.\n"
                       "Activate multiple layers by pressing Shift + numbers."
+    )
+    # Texture Animation
+    texture_animations = StringProperty(
+        name = "Texture Animations",
+        default = "{}",
+        description = "Storage for Texture animations. Should not be changed "
+                      "by hand."
+    )
+    ta_current_slot = IntProperty(
+        name = "Animation",
+        default = 0,
+        description = "Texture animation slot.",
+        min = 0,
+        max = 9
+    )
+    ta_current_frame = IntProperty(
+        name = "Frame",
+        default = 0,
+        min = 0,
+        description = "Current frame."
+    )
+    ta_current_frame_tex = IntProperty(
+        name = "Texture",
+        default = 0,
+        get = get_ta_current_frame_tex,
+        # set = set_ta_current_frame_tex,
+        description = "Texture of the current frame."
+    )
+    ta_current_frame_delay = FloatProperty(
+        name = "Duration",
+        default = 0.01,
+        get = get_ta_current_frame_delay,
+        description = "Duration of the current frame."
+    )
+    ta_current_frame_uv0 = FloatVectorProperty(
+        name = "UV 0",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        get = get_ta_current_frame_uv0,
+        description = "UV coordinate of the first vertex."
+    )
+    ta_current_frame_uv1 = FloatVectorProperty(
+        name = "UV 1",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        get = get_ta_current_frame_uv1,
+        description = "UV coordinate of the second vertex."
+    )
+    ta_current_frame_uv2 = FloatVectorProperty(
+        name = "UV 2",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        get = get_ta_current_frame_uv2,
+        description = "UV coordinate of the third vertex."
+    )
+    ta_current_frame_uv3 = FloatVectorProperty(
+        name = "UV 3",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        get = get_ta_current_frame_uv3,
+        description = "UV coordinate of the fourth vertex."
     )

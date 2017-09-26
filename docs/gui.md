@@ -20,7 +20,7 @@ The tools panel will show different tools and properties depending on the mode.
 
 ## Object Mode
 
-In Object Mode, the following panels are available:
+In Object Mode, the following special panels are available:
 
 + [Import/Export](#import-export)
 + [Light and Shadow](#light-and-shadow)
@@ -31,6 +31,11 @@ In Object Mode, the following panels are available:
 There are two buttons, one for import and one for export. They have the same
 functions as the menu entries in the File -> Import/Export menus.  
 Import and Export settings can be found right beneath the buttons.
+
+#### Import Settings
+##### Texture Mode after Import
+Switches to texture display mode when a mesh has been imported (applies to .prm
+and .w).
 
 #### Export Settings
 ##### Triangulate n-gons
@@ -55,7 +60,7 @@ Imports the bound ball for every single mesh of the .w file.
 Imports the larger boundary spheres (not cubes) surrounding multiple meshes of
 the .w file.  
 The term _Big Cubes_ has been established in the community.
-##### \* Layers
+##### \* Import Layers
 This option will be given as soon as one of the above debug settings have been
 enabled (boundary boxes, spheres and big cubes):  
 Selector for the layer(s) the debug objects will be placed on. Multiple layers
