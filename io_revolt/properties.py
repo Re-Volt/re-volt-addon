@@ -149,48 +149,71 @@ def select_faces(context, prop):
 
 # Texture Animation
 
-def get_ta_current_frame_tex(self):
-    props = bpy.context.scene.revolt
+def update_ta_current_frame(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+
+    props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
+    props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
+    uv = ta[slot]["frames"][frame]["uv"]
+    props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
+    props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
+    props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
+    props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
+
+def update_ta_current_slot(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+
+    props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
+    props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
+    props.ta_max_frames = len(ta[slot]["frames"])
+    uv = ta[slot]["frames"][frame]["uv"]
+    props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
+    props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
+    props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
+    props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
+
+def update_ta_current_frame_tex(self, context):
+    props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
     # Converts the texture animations from string to dict
-    ta = literal_eval(props.texture_animations)
+    ta = eval(props.texture_animations)
+    # Sets the frame's texture
+    ta[slot]["frames"][frame]["texture"] = props.ta_current_frame_tex
+    # Saves the string again
+    props.texture_animations = str(ta)
 
-    return ta[slot]["frames"][frame]["texture"]
-
-def get_ta_current_frame_delay(self):
-    props = bpy.context.scene.revolt
+def update_ta_current_frame_delay(self, context):
+    props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
     # Converts the texture animations from string to dict
-    ta = literal_eval(props.texture_animations)
+    ta = eval(props.texture_animations)
+    # Sets the frame's delay/duration
+    ta[slot]["frames"][frame]["delay"] = props.ta_current_frame_delay
+    # Saves the string again
+    props.texture_animations = str(ta)
 
-    return ta[slot]["frames"][frame]["delay"]
-
-def get_ta_uv(self, idx):
+def update_ta_current_frame_uv(context, num):
     props = bpy.context.scene.revolt
+    prop_str = "ta_current_frame_uv{}".format(num)
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
-    # Converts the texture animations from string to dict
     ta = literal_eval(props.texture_animations)
-    uv = ta[slot]["frames"][frame]["uv"][idx]
-    return (uv["u"], uv["v"])
-
-def get_ta_current_frame_uv0(self):
-    return get_ta_uv(self, 0)
-def get_ta_current_frame_uv1(self):
-    return get_ta_uv(self, 1)
-def get_ta_current_frame_uv2(self):
-    return get_ta_uv(self, 2)
-def get_ta_current_frame_uv3(self):
-    return get_ta_uv(self, 3)
-
-def set_ta_current_frame_tex(self, val):
-    pass
-
+    ta[slot]["frames"][frame]["uv"][num]["u"] = getattr(props, prop_str)[0]
+    ta[slot]["frames"][frame]["uv"][num]["v"] = getattr(props, prop_str)[1]
+    props.texture_animations = str(ta)
 
 """
 Re-Volt object and mesh properties
@@ -488,34 +511,53 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     # Texture Animation
     texture_animations = StringProperty(
         name = "Texture Animations",
-        default = "{}",
+        default = "[]",
         description = "Storage for Texture animations. Should not be changed "
                       "by hand."
+    )
+    ta_max_slots = IntProperty(
+        name = "Slots",
+        min = 0,
+        max = 9,
+        default = 0,
+        description = "Total number of texture animation slots. "
+                      "All higher slots will be ignored on export."
     )
     ta_current_slot = IntProperty(
         name = "Animation",
         default = 0,
-        description = "Texture animation slot.",
         min = 0,
-        max = 9
+        max = 9,
+        update = update_ta_current_slot,
+        description = "Texture animation slot."
+    )
+    ta_max_frames = IntProperty(
+        name = "Frames",
+        min = 0,
+        default = 0,
+        description = "Total number of frames of the current slot. "
+                      "All higher frames will be ignored on export."
     )
     ta_current_frame = IntProperty(
         name = "Frame",
         default = 0,
         min = 0,
+        update = update_ta_current_frame,
         description = "Current frame."
     )
     ta_current_frame_tex = IntProperty(
         name = "Texture",
         default = 0,
-        get = get_ta_current_frame_tex,
-        # set = set_ta_current_frame_tex,
+        min = -1,
+        max = 9,
+        update = update_ta_current_frame_tex,
         description = "Texture of the current frame."
     )
     ta_current_frame_delay = FloatProperty(
         name = "Duration",
         default = 0.01,
-        get = get_ta_current_frame_delay,
+        min = 0,
+        update = update_ta_current_frame_delay,
         description = "Duration of the current frame."
     )
     ta_current_frame_uv0 = FloatVectorProperty(
@@ -524,7 +566,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = (0, 0),
         min = 0.0,
         max = 1.0,
-        get = get_ta_current_frame_uv0,
+        update = lambda self, context: update_ta_current_frame_uv(context, 0),
         description = "UV coordinate of the first vertex."
     )
     ta_current_frame_uv1 = FloatVectorProperty(
@@ -533,7 +575,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = (0, 0),
         min = 0.0,
         max = 1.0,
-        get = get_ta_current_frame_uv1,
+        update = lambda self, context: update_ta_current_frame_uv(context, 1),
         description = "UV coordinate of the second vertex."
     )
     ta_current_frame_uv2 = FloatVectorProperty(
@@ -542,7 +584,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = (0, 0),
         min = 0.0,
         max = 1.0,
-        get = get_ta_current_frame_uv2,
+        update = lambda self, context: update_ta_current_frame_uv(context, 2),
         description = "UV coordinate of the third vertex."
     )
     ta_current_frame_uv3 = FloatVectorProperty(
@@ -551,6 +593,6 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = (0, 0),
         min = 0.0,
         max = 1.0,
-        get = get_ta_current_frame_uv3,
+        update = lambda self, context: update_ta_current_frame_uv(context, 3),
         description = "UV coordinate of the fourth vertex."
     )

@@ -75,12 +75,14 @@ def import_file(filepath, scene):
             bcube = create_sphere(
                 scene, "BIGCUBE", center, radius, filename
             )
-            bcube.revolt.bcube_mesh_indices = ", ".join([str(c) for c in cube.mesh_indices])
+            m_indices = ", ".join([str(c) for c in cube.mesh_indices])
+            bcube.revolt.bcube_mesh_indices = m_indices
             bcube.revolt.is_bcube = True
             bcube.layers = props.w_big_cube_layers
             bcube.parent = main_w
 
     props.texture_animations = str([a.as_dict() for a in world.animations])
+    props.ta_max_slots = len(world.animations)
 
 def create_bound_box(scene, bbox, filename):
     # Creates a new mesh and bmesh

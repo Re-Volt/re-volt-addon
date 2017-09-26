@@ -313,11 +313,17 @@ class RevoltAnimationPanel(bpy.types.Panel):
         obj = context.object
         props = context.scene.revolt
 
+        # row = self.layout.row(align=True)
+        # row.prop(props, "texture_animations")
         row = self.layout.row(align=True)
-        row.prop(props, "texture_animations")
+        row.prop(props, "ta_max_slots", text="Total Slots")
         row = self.layout.row(align=True)
-        row.prop(props, "ta_current_slot", text="Slot")
+        column = row.column(align=True)
+        column.label("Animation Slot:")
+        column.prop(props, "ta_current_slot", text="Slot")
+        column.prop(props, "ta_max_frames")
         column = self.layout.column(align=True)
+        column.label("Animation Frame:")
         column.prop(props, "ta_current_frame")
         row = column.row(align=True)
         row.prop(props, "ta_current_frame_tex")
