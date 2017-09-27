@@ -29,22 +29,24 @@ updated by the scene update handler found in init.
 Creating bmeshes in the panels is bad practice as it causes unexpected behavior.
 """
 
+
 def get_face_material(self):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("revolt_material")
-             or bm.faces.layers.int.new("revolt_material"))
+    layer = (bm.faces.layers.int.get("revolt_material") or
+             bm.faces.layers.int.new("revolt_material"))
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
         return -1
     else:
         return selected_faces[0][layer]
 
+
 def set_face_material(self, value):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("revolt_material")
-             or bm.faces.layers.int.new("revolt_material"))
+    layer = (bm.faces.layers.int.get("revolt_material") or
+             bm.faces.layers.int.new("revolt_material"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
@@ -52,8 +54,8 @@ def set_face_material(self, value):
 def get_face_texture(self):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("Texture Number")
-             or bm.faces.layers.int.new("Texture Number"))
+    layer = (bm.faces.layers.int.get("Texture Number") or
+             bm.faces.layers.int.new("Texture Number"))
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0:
         return -3
@@ -62,22 +64,24 @@ def get_face_texture(self):
     else:
         return selected_faces[0][layer]
 
+
 def set_face_texture(self, value):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("Texture Number")
-             or bm.faces.layers.int.new("Texture Number"))
+    layer = (bm.faces.layers.int.get("Texture Number") or
+             bm.faces.layers.int.new("Texture Number"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
 
+
 def set_face_env(self, value):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    env_layer = (bm.loops.layers.color.get("Env")
-                 or bm.loops.layers.color.new("Env"))
-    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha")
-                       or bm.faces.layers.float.new("EnvAlpha"))
+    env_layer = (bm.loops.layers.color.get("Env") or
+                 bm.loops.layers.color.new("Env"))
+    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha") or
+                       bm.faces.layers.float.new("EnvAlpha"))
     for face in bm.faces:
         if face.select:
             for loop in face.loops:
@@ -104,9 +108,9 @@ def get_average_vcol(faces, layer):
     """ Gets the average vertex color of all loops of given faces """
     for face in faces:
         cols = [loop[layer] for loop in face.loops]
-        r = sum([c[0] for c in cols])/4
-        g = sum([c[1] for c in cols])/4
-        b = sum([c[2] for c in cols])/4
+        r = sum([c[0] for c in cols]) / 4
+        g = sum([c[1] for c in cols]) / 4
+        b = sum([c[2] for c in cols]) / 4
         return (r, g, b)
 
 def set_vcol(faces, layer, color):
@@ -135,11 +139,12 @@ def set_face_property(self, value, mask):
         if face.select:
             face[layer] = face[layer] | mask if value else face[layer] & ~mask
 
+
 def select_faces(context, prop):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    flag_layer = (bm.faces.layers.int.get("Type")
-                  or bm.faces.layers.int.new("Type"))
+    flag_layer = (bm.faces.layers.int.get("Type") or
+                  bm.faces.layers.int.new("Type"))
 
     for face in bm.faces:
         if face[flag_layer] & prop:
@@ -147,12 +152,15 @@ def select_faces(context, prop):
             face.select = not face.select
     redraw()
 
-# Texture Animation
 
+# Texture Animation
 def update_ta_current_frame(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
+    if frame > props.ta_max_frames - 1:
+        props.ta_current_frame = props.ta_max_frames - 1
+        return
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
 
@@ -164,10 +172,14 @@ def update_ta_current_frame(self, context):
     props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
     props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
 
+
 def update_ta_current_slot(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
+    if slot > props.ta_max_slots - 1:
+        props.ta_current_slot = props.ta_max_slots - 1
+        return
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
 
@@ -179,6 +191,7 @@ def update_ta_current_slot(self, context):
     props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
     props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
     props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
+
 
 def update_ta_current_frame_tex(self, context):
     props = context.scene.revolt
@@ -192,6 +205,7 @@ def update_ta_current_frame_tex(self, context):
     # Saves the string again
     props.texture_animations = str(ta)
 
+
 def update_ta_current_frame_delay(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
@@ -204,6 +218,7 @@ def update_ta_current_frame_delay(self, context):
     # Saves the string again
     props.texture_animations = str(ta)
 
+
 def update_ta_current_frame_uv(context, num):
     props = bpy.context.scene.revolt
     prop_str = "ta_current_frame_uv{}".format(num)
@@ -215,9 +230,11 @@ def update_ta_current_frame_uv(context, num):
     ta[slot]["frames"][frame]["uv"][num]["v"] = getattr(props, prop_str)[1]
     props.texture_animations = str(ta)
 
+
 """
 Re-Volt object and mesh properties
 """
+
 
 class RVObjectProperties(bpy.types.PropertyGroup):
     light1 = EnumProperty(
@@ -533,8 +550,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     )
     ta_max_frames = IntProperty(
         name = "Frames",
-        min = 0,
-        default = 0,
+        min = 2,
+        default = 2,
         description = "Total number of frames of the current slot. "
                       "All higher frames will be ignored on export."
     )

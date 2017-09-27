@@ -1,4 +1,22 @@
+<!-- TOC START min:1 max:3 link:true update:true -->
+- [Object Properties](#object-properties)
+- [Re-Volt Object Properties](#re-volt-object-properties)
+  - [Big Cube Properties](#big-cube-properties)
+    - [Mesh Indices](#mesh-indices)
+- [Tools Panel](#tools-panel)
+  - [Object Mode](#object-mode)
+    - [Import/Export](#importexport)
+    - [Light and Shadow](#light-and-shadow)
+  - [Edit Mode](#edit-mode)
+    - [Face Properties](#face-properties)
+    - [Vertex Colors](#vertex-colors)
+    - [Texture Animation](#texture-animation)
+
+<!-- TOC END -->
+
+
 # Object Properties
+
 # Re-Volt Object Properties
 This panel is at the far bottom of the Object section of the object properties.
 You may use the right top edge to drag it further up.
@@ -146,3 +164,34 @@ Click on the color preview to the left of the _Set Color_ button to get a more d
 
 #### Shade buttons
 These buttons can be used for easily shading a mesh. They range from black to white.
+
+### Texture Animation
+An edit panel for texture animations. The animations themselves are saved in the
+scene, not the selected object. It is only accessible in edit mode to provide
+tools to use existing polygons and UV mapping to create an animation.
+#### Total Slots
+The total amount of texture animations you would like to use.  
+For example, set this to `3` to use slots `0`, `1` and `2`.
+
+The maximum amount is 10 since a polygon's animation is determined by the
+texture number.
+
+#### Animation Slots
+##### Slot
+The animation slot to display in the panel. The actual animation is set by the
+texture number/page.
+##### Frames
+The amount of frames you want to use for the animation. For example, set this to
+`32` in order to access frames `0` to `31`.
+
+#### Animation Frame
+##### Frame
+The frame to display in the panel.
+##### Texture
+The texture page number this animation frame uses.
+##### Duration
+The duration of the frame or the delay until the next frame shows up.
+
+#### UV
+The UV mapping for the currently displayed frame. For triangular faces, UV3 will
+be ignored.

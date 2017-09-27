@@ -19,6 +19,7 @@ from . import img_in
 from .rvstruct import PRM
 from .common import *
 
+
 def import_file(filepath, scene):
     """
     Imports a .prm/.m file and links it to the scene as a Blender object.
@@ -62,6 +63,7 @@ def import_file(filepath, scene):
 
     return ob
 
+
 def import_mesh(prm, scene, filepath, envlist=None):
     """
     Creates a mesh from an rvstruct object and returns it.
@@ -81,6 +83,7 @@ def import_mesh(prm, scene, filepath, envlist=None):
     bm.free()
 
     return me
+
 
 def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
     """
@@ -115,14 +118,14 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
 
         if is_quad:
             verts = (bm.verts[indices[3]], bm.verts[indices[2]],
-            bm.verts[indices[1]], bm.verts[indices[0]])
+                     bm.verts[indices[1]], bm.verts[indices[0]])
             # Reversed list of UVs and colors
             uvs = reverse_quad(poly.uv)
             colors = reverse_quad(poly.colors)
 
         else:
             verts = (bm.verts[indices[2]], bm.verts[indices[1]],
-            bm.verts[indices[0]])
+                     bm.verts[indices[0]])
             # Reversed list of UVs and colors without the last element
             uvs = reverse_quad(poly.uv, tri=True)
             colors = reverse_quad(poly.colors, tri=True)
@@ -132,7 +135,7 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
             face = bm.faces.new(verts)
         except Exception as e:
             print(e)
-            continue # Skips this face
+            continue  # Skips this face
 
         # Assigns the texture to the face
         if poly.texture >= 0:
@@ -153,12 +156,13 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
         for l in range(num_loops):
             # Converts the colors to float (req. by Blender)
             alpha = float(colors[l].alpha) / 255
-            color = [float(c)/255 for c in colors[l].color]
+            color = [float(c) / 255 for c in colors[l].color]
             if envlist:
-                env_col = [float(c)/255 for c in envlist[prm.polygons.index(poly)].color]
+                env_col = [float(c) / 255
+                           for c in envlist[prm.polygons.index(poly)].color]
                 face.loops[l][env_layer] = env_col
 
-            face.loops[l][uv_layer].uv = (uvs[l].u, 1-uvs[l].v)
+            face.loops[l][uv_layer].uv = (uvs[l].u, 1 - uvs[l].v)
             face.loops[l][vc_layer] = Color(color)
             face.loops[l][va_layer] = Color((alpha, alpha, alpha))
 

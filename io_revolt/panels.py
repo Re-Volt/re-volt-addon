@@ -317,18 +317,25 @@ class RevoltAnimationPanel(bpy.types.Panel):
         # row.prop(props, "texture_animations")
         row = self.layout.row(align=True)
         row.prop(props, "ta_max_slots", text="Total Slots")
+
         row = self.layout.row(align=True)
+        row.active = (props.ta_max_slots > 0)
         column = row.column(align=True)
         column.label("Animation Slot:")
         column.prop(props, "ta_current_slot", text="Slot")
         column.prop(props, "ta_max_frames")
+
         column = self.layout.column(align=True)
+        column.active = (props.ta_max_slots > 0)
         column.label("Animation Frame:")
         column.prop(props, "ta_current_frame")
+
         row = column.row(align=True)
         row.prop(props, "ta_current_frame_tex")
         row.prop(props, "ta_current_frame_delay")
+
         row = self.layout.row()
+        row.active = (props.ta_max_slots > 0)
         column = row.column()
         column.prop(props, "ta_current_frame_uv0")
         column.prop(props, "ta_current_frame_uv1")

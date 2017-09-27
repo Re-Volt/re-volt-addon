@@ -1,9 +1,17 @@
-"""
-- Marv's Re-Volt Blender add-on -
+"""Marv's Re-Volt Blender add-on.
 
 This Blender Add-On is inspired by the one for 2.73 made by Jigebren.
 I wrote a class (rvstruct) for handling Re-Volt files which I am using here.
 """
+import bpy
+import os
+import os.path
+from bpy.app.handlers import persistent  # For the scene update handler
+from . import common, panels, properties
+
+# Makes common variables and classes directly accessible
+from .common import *
+from .properties import *
 
 bl_info = {
     "name": "Re-Volt",
@@ -28,39 +36,39 @@ if "bpy" in locals():
     imp.reload(panels)
     imp.reload(properties)
 
-    if "prm_in" in locals(): imp.reload(prm_in)
-    if "prm_out" in locals(): imp.reload(prm_out)
-    if "parameters_in" in locals(): imp.reload(parameters_in)
-    if "w_in" in locals(): imp.reload(w_in)
+    if "prm_in" in locals():
+        imp.reload(prm_in)
+    if "prm_out" in locals():
+        imp.reload(prm_out)
+    if "parameters_in" in locals():
+        imp.reload(parameters_in)
+    if "w_in" in locals():
+        imp.reload(w_in)
 
-import bpy
-import os
-import os.path
-from bpy.app.handlers import persistent # For the scene update handler
-from . import common, panels, properties
-
-# Makes common variables and classes directly accessible
-from .common import *
-from .properties import *
 
 @persistent
 def edit_object_change_handler(scene):
+    """Makes the edit mode bmesh available for use in GUI panels."""
     obj = scene.objects.active
     if obj is None:
-        return None
+        return
     # Adds an instance of the edit mode mesh to the global dict
     if obj.mode == 'EDIT' and obj.type == 'MESH':
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
-        return None
+        return
 
     dic.clear()
-    return None
+
 
 def menu_func_import(self, context):
+    """Import function for the user interface."""
     self.layout.operator("import_scene.revolt", text="Re-Volt")
 
+
 def menu_func_export(self, context):
+    """Export function for the user interface."""
     self.layout.operator("export_scene.revolt", text="Re-Volt")
+
 
 def register():
     bpy.utils.register_module(__name__)
@@ -75,6 +83,7 @@ def register():
     # bpy.app.handlers.scene_update_post.clear()
     bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
 
+
 def unregister():
     bpy.utils.unregister_module(__name__)
 
@@ -84,6 +93,7 @@ def unregister():
 
     bpy.types.INFO_MT_file_import.remove(menu_func_import)
     bpy.types.INFO_MT_file_export.remove(menu_func_export)
+
 
 if __name__ == "__main__":
     register()

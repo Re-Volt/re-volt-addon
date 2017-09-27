@@ -1,3 +1,19 @@
+<!-- TOC START min:1 max:3 link:true update:true -->
+- [Included scripts](#included-scripts)
+  - [`__init__.py`](#__init__py)
+  - [`common.py`](#commonpy)
+  - [`img_in.py`](#img_inpy)
+  - [`operators.py`](#operatorspy)
+  - [`panels.py`](#panelspy)
+  - [`parameters.py`](#parameterspy)
+  - [`prm_in.py`](#prm_inpy)
+  - [`prm_out.py`](#prm_outpy)
+  - [`properties.py`](#propertiespy)
+  - [`rvstruct.py`](#rvstructpy)
+  - [`tools.py`](#toolspy)
+
+<!-- TOC END -->
+
 # Included scripts
 
 ## `__init__.py`

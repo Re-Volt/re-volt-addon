@@ -18,6 +18,7 @@ from . import img_in
 
 from .common import *
 
+
 def export_file(filepath, scene):
     obj = scene.objects.active
     print("Exporting PRM for {}...".format(obj.name))
@@ -42,6 +43,7 @@ def export_file(filepath, scene):
             # Writes the PRM object to a file
             prm.write(file)
 
+
 def export_mesh(me, obj, scene, filepath):
     props = scene.revolt
     # Creates a bmesh from the supplied mesh
@@ -65,8 +67,7 @@ def export_mesh(me, obj, scene, filepath):
             matrix=obj.rotation_euler.to_matrix(),
             space=obj.matrix_world,
             verts=bm.verts
-            )
-
+        )
 
     num_ngons = triangulate_ngons(bm)
     if scene.revolt.triangulate_ngons > 0:
@@ -78,8 +79,8 @@ def export_mesh(me, obj, scene, filepath):
     vc_layer = bm.loops.layers.color.get("Col")
     va_layer = bm.loops.layers.color.get("Alpha")
     texnum_layer = bm.faces.layers.int.get("Texture Number")
-    type_layer = (bm.faces.layers.int.get("Type")
-                  or bm.faces.layers.int.new("Type"))
+    type_layer = (bm.faces.layers.int.get("Type") or
+                  bm.faces.layers.int.new("Type"))
 
     # Creates an empty PRM structure
     prm = rvstruct.PRM()
@@ -121,12 +122,13 @@ def export_mesh(me, obj, scene, filepath):
         for i in vert_order:
             if i < len(face.verts):
                 # Gets color from the channel or falls back to a default value
-                color = face.loops[i][vc_layer] if vc_layer else Color((1,1,1))
-                alpha = face.loops[i][va_layer] if va_layer else Color((1,1,1))
+                white = Color((1, 1, 1))
+                color = face.loops[i][vc_layer] if vc_layer else white
+                alpha = face.loops[i][va_layer] if va_layer else white
                 col = rvstruct.Color(color=(int(color.r * 255),
                                             int(color.g * 255),
                                             int(color.b * 255)),
-                                     alpha= int((alpha.v) * 255))
+                                     alpha=int((alpha.v) * 255))
                 poly.colors.append(col)
             else:
                 # Writes opaque white

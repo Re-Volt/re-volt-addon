@@ -1,14 +1,3 @@
-"""
-WORLD IMPORT
-Imports level files which include meshes and other structures for optimization.
-"""
-if "bpy" in locals():
-    import imp
-    imp.reload(common)
-    imp.reload(rvstruct)
-    imp.reload(img_in)
-    imp.reload(prm_in)
-
 import os
 import bpy
 import bmesh
@@ -21,6 +10,17 @@ from . import prm_in
 from .rvstruct import World
 from .common import *
 from .prm_in import import_mesh
+"""
+WORLD IMPORT
+Imports level files which include meshes and other structures for optimization.s
+"""
+if "bpy" in locals():
+    import imp
+    imp.reload(common)
+    imp.reload(rvstruct)
+    imp.reload(img_in)
+    imp.reload(prm_in)
+
 
 def import_file(filepath, scene):
     """
@@ -84,6 +84,7 @@ def import_file(filepath, scene):
     props.texture_animations = str([a.as_dict() for a in world.animations])
     props.ta_max_slots = len(world.animations)
 
+
 def create_bound_box(scene, bbox, filename):
     # Creates a new mesh and bmesh
     me = bpy.data.meshes.new("RVBBox_{}".format(filename))
@@ -142,6 +143,7 @@ def create_bound_box(scene, bbox, filename):
 
     return ob
 
+
 def create_sphere(scene, sptype, center, radius, filename):
     if sptype == "BOUNDBALL":
         mname = "RVBoundSphere"
@@ -152,7 +154,7 @@ def create_sphere(scene, sptype, center, radius, filename):
 
     center = to_blender_coord(center)
     radius = to_blender_scale(radius)
-    if not mname in bpy.data.meshes:
+    if mname not in bpy.data.meshes:
         me = bpy.data.meshes.new(mname)
         bm = bmesh.new()
         # Creates a sphere with the given radius

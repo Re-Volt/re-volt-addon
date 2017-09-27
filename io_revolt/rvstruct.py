@@ -22,6 +22,7 @@ Missing Formats:
 
 import struct
 
+
 class World:
     """
     Reads a .w file and stores all sub-structures
@@ -41,7 +42,6 @@ class World:
 
         self.env_count = 0              # amount of faces with env enabled
         self.env_list = []            # an EnvList structure
-
 
         # Immediately starts reading if an opened file is supplied
         if file:
@@ -105,15 +105,15 @@ class World:
         return "World"
 
     def as_dict(self):
-        dic = { "mesh_count" : self.mesh_count,
-                "meshes" : self.meshes,
-                "bigcube_count" : self.bigcube_count,
-                "bigcubes" : self.bigcubes,
-                "animation_count" : self.animation_count,
-                "animations" : self.animations,
-                "env_count" : self.env_count,
-                "env_list" : self.env_list
-        }
+        dic = {"mesh_count": self.mesh_count,
+               "meshes": self.meshes,
+               "bigcube_count": self.bigcube_count,
+               "bigcubes": self.bigcubes,
+               "animation_count": self.animation_count,
+               "animations": self.animations,
+               "env_count": self.env_count,
+               "env_list": self.env_list
+               }
         return dic
 
     # Uses the to-string for dumping the whole .w structure
@@ -519,9 +519,9 @@ class Vertex:
         self.normal.write(file)
 
     def as_dict(self):
-        dic = { "position" : self.position.as_dict(),
-                "normal" : self.normal.as_dict()
-        }
+        dic = {"position": self.position.as_dict(),
+               "normal": self.normal.as_dict()
+               }
         return dic
 
     def dump(self):
