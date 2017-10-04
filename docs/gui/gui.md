@@ -1,23 +1,13 @@
-<!-- TOC START min:1 max:3 link:true update:true -->
-- [Object Properties](#object-properties)
-- [Re-Volt Object Properties](#re-volt-object-properties)
-  - [Big Cube Properties](#big-cube-properties)
-    - [Mesh Indices](#mesh-indices)
-- [Tools Panel](#tools-panel)
-  - [Object Mode](#object-mode)
-    - [Import/Export](#importexport)
-    - [Light and Shadow](#light-and-shadow)
-  - [Edit Mode](#edit-mode)
-    - [Face Properties](#face-properties)
-    - [Vertex Colors](#vertex-colors)
-    - [Texture Animation](#texture-animation)
+[$\leftarrow$ Back](..)
 
-<!-- TOC END -->
-
+---
 
 # Object Properties
 
+[TOC]
+
 # Re-Volt Object Properties
+
 This panel is at the far bottom of the Object section of the object properties.
 You may use the right top edge to drag it further up.
 ## Big Cube Properties

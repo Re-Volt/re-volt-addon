@@ -1,1 +1,0 @@
-Search.setIndex({docnames:["index"],envversion:53,filenames:["index.rst"],objects:{},objnames:{},objtypes:{},terms:{index:0,modul:0,page:0,search:0},titles:["Welcome to Marv\u2019s Re-Volt Add-On\u2019s documentation!"],titleterms:{add:0,document:0,indic:0,marv:0,tabl:0,volt:0,welcom:0}})
