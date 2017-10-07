@@ -8,7 +8,7 @@ from . import common, panels, properties
 bl_info = {
     "name": "Re-Volt",
     "author": "Marvin Thiel",
-    "version": (17, 10, 07),
+    "version": (17, 10, 7),
     "blender": (2, 79, 0),
     "location": "File > Import-Export",
     "description": "Import and export Re-Volt file formats.",
