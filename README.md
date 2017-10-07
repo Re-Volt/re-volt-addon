@@ -26,7 +26,7 @@ Generate shadow textures and coordinates for in-game use with just one click.
 Shade meshes by baking light to vertex colors with just one click.
 
 ## Installation
-Find a detailed guide [here](https://github.com/Yethiel/re-volt-addon/wiki/Installation).  
+Find a detailed guide [here](https://yethiel.github.io/re-volt-addon/installation).  
 Requires Blender 2.78 or newer.  
 Move the `io_revolt` folder to Blender's addons folder, e.g:  
 `C:\Program Files\Blender Foundation\Blender\2.79\scripts\addons\io_revolt`  
