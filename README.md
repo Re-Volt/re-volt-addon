@@ -13,6 +13,9 @@ Mesh, UV, vertex colors, texture, face properties and lods (level of detail)
 * **Import Cars from parameters.txt**:  
 Import the car model and wheels from parameters.txt files.
 
+* **Import World (.w)**:
+Import Re-Volt level mesh files.
+
 * **Mesh Editing Tools**:  
 Edit face properties and vertex colors.
 
@@ -35,7 +38,7 @@ open the _Add-Ons_ tab and search for Re-Volt. Check the checkbox in the top lef
 Optionally, click _Save User Settings_ in the bottom left.
 
 ## Documentation
-The documentation can be foud [here](https://github.com/Yethiel/re-volt-addon/wiki).
+The documentation can be foud [here](https://yethiel.github.io/re-volt-addon/).
 
 ## Known Issues
-* UV Unwrap reset is broken due to a [Blender Bug](https://developer.blender.org/T52723)
+* UV Unwrap reset is broken due to a [Blender Bug](https://developer.blender.org/T52723). Get Blender 2.79 from [here](https://builder.blender.org/download/) to solve the issue.
