@@ -222,6 +222,12 @@ class Mesh:
     def __repr__(self):
         return "Mesh"
 
+    def from_prm(self, prm):
+        self.polygon_count = prm.polygon_count
+        self.vertex_count = prm.vertex_count
+        self.polygons = prm.polygons
+        self.vertices = prm.vertices
+
     def read(self, file):
         # Reads bounding "ball" center and the radius
         self.bound_ball_center = Vector(file)

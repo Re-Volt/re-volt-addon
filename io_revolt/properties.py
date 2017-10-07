@@ -26,13 +26,14 @@ from .common import *
 """
 These property getters and setters use the bmesh from the global dict that gets
 updated by the scene update handler found in init.
-Creating bmeshes in the panels is bad practice as it causes unexpected behavior.
+Creating bmeshes in the panels is bad practice as it causes unexpected
+behavior.
 """
 
 
 def get_face_material(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = (bm.faces.layers.int.get("revolt_material") or
              bm.faces.layers.int.new("revolt_material"))
     selected_faces = [face for face in bm.faces if face.select]
@@ -44,7 +45,7 @@ def get_face_material(self):
 
 def set_face_material(self, value):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = (bm.faces.layers.int.get("revolt_material") or
              bm.faces.layers.int.new("revolt_material"))
     for face in bm.faces:
@@ -53,7 +54,7 @@ def set_face_material(self, value):
 
 def get_face_texture(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = (bm.faces.layers.int.get("Texture Number") or
              bm.faces.layers.int.new("Texture Number"))
     selected_faces = [face for face in bm.faces if face.select]
@@ -67,7 +68,7 @@ def get_face_texture(self):
 
 def set_face_texture(self, value):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = (bm.faces.layers.int.get("Texture Number") or
              bm.faces.layers.int.new("Texture Number"))
     for face in bm.faces:
@@ -77,7 +78,7 @@ def set_face_texture(self, value):
 
 def set_face_env(self, value):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     env_layer = (bm.loops.layers.color.get("Env") or
                  bm.loops.layers.color.new("Env"))
     env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha") or
@@ -91,7 +92,7 @@ def set_face_env(self, value):
 
 def get_face_env(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     env_layer = (bm.loops.layers.color.get("Env")
                  or bm.loops.layers.color.new("Env"))
     env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha")
@@ -113,6 +114,7 @@ def get_average_vcol(faces, layer):
         b = sum([c[2] for c in cols]) / 4
         return (r, g, b)
 
+
 def set_vcol(faces, layer, color):
     for face in faces:
         for loop in face.loops:
@@ -121,7 +123,7 @@ def set_vcol(faces, layer, color):
 
 def get_face_property(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0:
@@ -131,9 +133,10 @@ def get_face_property(self):
         prop = prop & face[layer]
     return prop
 
+
 def set_face_property(self, value, mask):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     for face in bm.faces:
         if face.select:
@@ -142,7 +145,7 @@ def set_face_property(self, value, mask):
 
 def select_faces(context, prop):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     flag_layer = (bm.faces.layers.int.get("Type") or
                   bm.faces.layers.int.new("Type"))
 
@@ -279,7 +282,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         name = "Quality",
         min = 0,
         max = 32,
-        default = 8,
+        default = 15,
         description = "The amount of samples the shadow is rendered with "
                       "(number of samples taken extra)."
     )
@@ -295,7 +298,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         name = "Softness",
         min = 0.0,
         max = 100.0,
-        default = 0.5,
+        default = 1,
         description = "Softness of the shadow "
                       "(Light size for ray shadow sampling)."
     )

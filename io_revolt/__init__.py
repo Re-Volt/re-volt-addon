@@ -9,10 +9,6 @@ import os.path
 from bpy.app.handlers import persistent  # For the scene update handler
 from . import common, panels, properties
 
-# Makes common variables and classes directly accessible
-from .common import *
-from .properties import *
-
 bl_info = {
     "name": "Re-Volt",
     "author": "Marvin Thiel",
@@ -44,6 +40,10 @@ if "bpy" in locals():
         imp.reload(parameters_in)
     if "w_in" in locals():
         imp.reload(w_in)
+
+# Makes common variables and classes directly accessible
+from .common import *
+from .properties import *
 
 
 @persistent
@@ -80,7 +80,6 @@ def register():
     bpy.types.INFO_MT_file_import.prepend(menu_func_import)
     bpy.types.INFO_MT_file_export.prepend(menu_func_export)
 
-    # bpy.app.handlers.scene_update_post.clear()
     bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
 
 
@@ -93,6 +92,7 @@ def unregister():
 
     bpy.types.INFO_MT_file_import.remove(menu_func_import)
     bpy.types.INFO_MT_file_export.remove(menu_func_export)
+    # bpy.app.handlers.scene_update_post.clear()
 
 
 if __name__ == "__main__":

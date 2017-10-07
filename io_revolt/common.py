@@ -197,6 +197,17 @@ Blender helpers
 """
 
 
+def get_edit_bmesh(obj):
+    try:
+        bm = dic[obj.name]
+        bm.faces.layers.int.get("Type")
+        return bm
+    except Exception as e:
+        # print("Bmesh is gone, creating new one...")
+        del dic[obj.name]
+        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        return bm
+
 class DialogOperator(bpy.types.Operator):
     bl_idname = 'revolt.dialog'
     bl_label = 'Oh noes!'

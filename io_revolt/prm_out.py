@@ -44,7 +44,7 @@ def export_file(filepath, scene):
             prm.write(file)
 
 
-def export_mesh(me, obj, scene, filepath):
+def export_mesh(me, obj, scene, filepath, world=None):
     props = scene.revolt
     # Creates a bmesh from the supplied mesh
     bm = bmesh.new()

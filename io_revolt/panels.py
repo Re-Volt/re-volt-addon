@@ -17,6 +17,7 @@ from .common import *
 from .operators import *
 from .properties import *
 
+
 class RevoltObjectPanel(bpy.types.Panel):
     bl_label = "Re-Volt Object Properties"
     bl_space_type = "PROPERTIES"
@@ -30,11 +31,12 @@ class RevoltObjectPanel(bpy.types.Panel):
             layout.label("BigCube Properties:")
             layout.prop(obj.revolt, "bcube_mesh_indices")
 
-"""
-Tool panel in the left sidebar of the viewport for performing
-various operations
-"""
+
 class RevoltIOToolPanel(bpy.types.Panel):
+    """
+    Tool panel in the left sidebar of the viewport for performing
+    various operations
+    """
     bl_label = "Import/Export"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
@@ -53,8 +55,8 @@ class RevoltIOToolPanel(bpy.types.Panel):
         row.prop(
             props,
             "ui_fold_export_settings",
-            icon = "TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
-            text = "Show Settings" if fold_s else "Hide Settings"
+            icon="TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
+            text="Show Settings" if fold_s else "Hide Settings"
         )
         if not fold_s:
             box = self.layout.box()
@@ -81,6 +83,7 @@ class RevoltIOToolPanel(bpy.types.Panel):
             if props.w_import_big_cubes:
                 box.prop(props, "w_big_cube_layers")
 
+
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
     bl_space_type = "VIEW_3D"
@@ -94,7 +97,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
     def draw(self, context):
         obj = context.object
         mesh = obj.data
-        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        bm = get_edit_bmesh(obj)
         flags = (bm.faces.layers.int.get("Type")
                  or bm.faces.layers.int.new("Type"))
         if (self.selected_face_count is None
@@ -192,7 +195,7 @@ class RevoltVertexPanel(bpy.types.Panel):
         # warn if texture mode is not enabled
         widget_texture_mode(self)
 
-        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        bm = get_edit_bmesh(obj)
         vc_layer = bm.loops.layers.color.get("Col")
 
         if widget_vertex_color_channel(self, obj):
