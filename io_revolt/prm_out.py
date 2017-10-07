@@ -18,6 +18,7 @@ from . import img_in
 
 from .common import *
 
+
 def export_file(filepath, scene):
     obj = scene.objects.active
     print("Exporting PRM for {}...".format(obj.name))
@@ -38,14 +39,35 @@ def export_file(filepath, scene):
             print("Exporting mesh {} of {}".format(
                 meshes.index(me), len(meshes)))
             # Exports the mesh as a PRM object
-            prm = export_mesh(me, scene, filepath)
+            prm = export_mesh(me, obj, scene, filepath)
             # Writes the PRM object to a file
             prm.write(file)
 
-def export_mesh(me, scene, filepath):
+
+def export_mesh(me, obj, scene, filepath, world=None):
+    props = scene.revolt
     # Creates a bmesh from the supplied mesh
     bm = bmesh.new()
     bm.from_mesh(me)
+
+    # Applies the object scale if enabled
+    if props.apply_scale:
+        bmesh.ops.scale(
+            bm,
+            vec=obj.scale,
+            space=obj.matrix_world,
+            verts=bm.verts
+        )
+
+    # Applies the object rotation if enabled
+    if props.apply_rotation:
+        bmesh.ops.rotate(
+            bm,
+            cent=obj.location,
+            matrix=obj.rotation_euler.to_matrix(),
+            space=obj.matrix_world,
+            verts=bm.verts
+        )
 
     num_ngons = triangulate_ngons(bm)
     if scene.revolt.triangulate_ngons > 0:
@@ -57,8 +79,8 @@ def export_mesh(me, scene, filepath):
     vc_layer = bm.loops.layers.color.get("Col")
     va_layer = bm.loops.layers.color.get("Alpha")
     texnum_layer = bm.faces.layers.int.get("Texture Number")
-    type_layer = (bm.faces.layers.int.get("Type")
-                  or bm.faces.layers.int.new("Type"))
+    type_layer = (bm.faces.layers.int.get("Type") or
+                  bm.faces.layers.int.new("Type"))
 
     # Creates an empty PRM structure
     prm = rvstruct.PRM()
@@ -77,14 +99,15 @@ def export_mesh(me, scene, filepath):
         poly.type = face[type_layer] & FACE_PROP_MASK
 
         # Gets the texture number from the integer layer if setting enabled
+        # use_tex_num is the only way to achieve no texture
         if scene.revolt.use_tex_num and texnum_layer:
             poly.texture = face[texnum_layer]
         # Falls back to texture if not enabled or texnum layer not found
         elif tex_layer and face[tex_layer] and face[tex_layer].image:
             poly.texture = texture_to_int(face[tex_layer].image.name)
-        # Uses no texture instead
+        # Uses 'A' texture instead
         else:
-            poly.texture = -1
+            poly.texture = 0
 
         # Sets vertex indices for the polygon
         vert_order = [2, 1, 0, 3] if not is_quad else [3, 2, 1, 0]
@@ -99,12 +122,13 @@ def export_mesh(me, scene, filepath):
         for i in vert_order:
             if i < len(face.verts):
                 # Gets color from the channel or falls back to a default value
-                color = face.loops[i][vc_layer] if vc_layer else Color((1,1,1))
-                alpha = face.loops[i][va_layer] if va_layer else Color((1,1,1))
+                white = Color((1, 1, 1))
+                color = face.loops[i][vc_layer] if vc_layer else white
+                alpha = face.loops[i][va_layer] if va_layer else white
                 col = rvstruct.Color(color=(int(color.r * 255),
                                             int(color.g * 255),
                                             int(color.b * 255)),
-                                     alpha= int((alpha.v) * 255))
+                                     alpha=int((alpha.v) * 255))
                 poly.colors.append(col)
             else:
                 # Writes opaque white

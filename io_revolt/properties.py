@@ -6,17 +6,19 @@ if "bpy" in locals():
     imp.reload(common)
 
 import bpy
+from ast import literal_eval
 from . import common
 from bpy.props import (
-BoolProperty,
-EnumProperty,
-FloatProperty,
-IntProperty,
-StringProperty,
-CollectionProperty,
-IntVectorProperty,
-FloatVectorProperty,
-PointerProperty
+    BoolProperty,
+    BoolVectorProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    StringProperty,
+    CollectionProperty,
+    IntVectorProperty,
+    FloatVectorProperty,
+    PointerProperty
 )
 
 from .common import *
@@ -24,34 +26,37 @@ from .common import *
 """
 These property getters and setters use the bmesh from the global dict that gets
 updated by the scene update handler found in init.
-Creating bmeshes in the panels is bad practice as it causes unexpected behavior.
+Creating bmeshes in the panels is bad practice as it causes unexpected
+behavior.
 """
+
 
 def get_face_material(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("revolt_material")
-             or bm.faces.layers.int.new("revolt_material"))
+    bm = get_edit_bmesh(eo)
+    layer = (bm.faces.layers.int.get("revolt_material") or
+             bm.faces.layers.int.new("revolt_material"))
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
         return -1
     else:
         return selected_faces[0][layer]
 
+
 def set_face_material(self, value):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("revolt_material")
-             or bm.faces.layers.int.new("revolt_material"))
+    bm = get_edit_bmesh(eo)
+    layer = (bm.faces.layers.int.get("revolt_material") or
+             bm.faces.layers.int.new("revolt_material"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
 
 def get_face_texture(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("Texture Number")
-             or bm.faces.layers.int.new("Texture Number"))
+    bm = get_edit_bmesh(eo)
+    layer = (bm.faces.layers.int.get("Texture Number") or
+             bm.faces.layers.int.new("Texture Number"))
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0:
         return -3
@@ -60,18 +65,65 @@ def get_face_texture(self):
     else:
         return selected_faces[0][layer]
 
+
 def set_face_texture(self, value):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    layer = (bm.faces.layers.int.get("Texture Number")
-             or bm.faces.layers.int.new("Texture Number"))
+    bm = get_edit_bmesh(eo)
+    layer = (bm.faces.layers.int.get("Texture Number") or
+             bm.faces.layers.int.new("Texture Number"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
 
+
+def set_face_env(self, value):
+    eo = bpy.context.edit_object
+    bm = get_edit_bmesh(eo)
+    env_layer = (bm.loops.layers.color.get("Env") or
+                 bm.loops.layers.color.new("Env"))
+    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha") or
+                       bm.faces.layers.float.new("EnvAlpha"))
+    for face in bm.faces:
+        if face.select:
+            for loop in face.loops:
+                loop[env_layer] = value[:3]
+            face[env_alpha_layer] = value[-1]
+
+
+def get_face_env(self):
+    eo = bpy.context.edit_object
+    bm = get_edit_bmesh(eo)
+    env_layer = (bm.loops.layers.color.get("Env")
+                 or bm.loops.layers.color.new("Env"))
+    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha")
+                       or bm.faces.layers.float.new("EnvAlpha"))
+
+    # Gets the average color for all selected faces
+    selected_faces = [face for face in bm.faces if face.select]
+    col = get_average_vcol(selected_faces, env_layer)
+
+    return [*col, selected_faces[0][env_alpha_layer]]
+
+
+def get_average_vcol(faces, layer):
+    """ Gets the average vertex color of all loops of given faces """
+    for face in faces:
+        cols = [loop[layer] for loop in face.loops]
+        r = sum([c[0] for c in cols]) / 4
+        g = sum([c[1] for c in cols]) / 4
+        b = sum([c[2] for c in cols]) / 4
+        return (r, g, b)
+
+
+def set_vcol(faces, layer, color):
+    for face in faces:
+        for loop in face.loops:
+            loop[layer] = color
+
+
 def get_face_property(self):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0:
@@ -81,28 +133,111 @@ def get_face_property(self):
         prop = prop & face[layer]
     return prop
 
+
 def set_face_property(self, value, mask):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
+    bm = get_edit_bmesh(eo)
     layer = bm.faces.layers.int.get("Type") or bm.faces.layers.int.new("Type")
     for face in bm.faces:
         if face.select:
             face[layer] = face[layer] | mask if value else face[layer] & ~mask
 
+
 def select_faces(context, prop):
     eo = bpy.context.edit_object
-    bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
-    flag_layer = (bm.faces.layers.int.get("Type")
-                  or bm.faces.layers.int.new("Type"))
+    bm = get_edit_bmesh(eo)
+    flag_layer = (bm.faces.layers.int.get("Type") or
+                  bm.faces.layers.int.new("Type"))
 
     for face in bm.faces:
         if face[flag_layer] & prop:
+            print(face[flag_layer], prop)
             face.select = not face.select
     redraw()
+
+
+# Texture Animation
+def update_ta_current_frame(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+    if frame > props.ta_max_frames - 1:
+        props.ta_current_frame = props.ta_max_frames - 1
+        return
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+
+    props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
+    props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
+    uv = ta[slot]["frames"][frame]["uv"]
+    props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
+    props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
+    props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
+    props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
+
+
+def update_ta_current_slot(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+    if slot > props.ta_max_slots - 1:
+        props.ta_current_slot = props.ta_max_slots - 1
+        return
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+
+    props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
+    props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
+    props.ta_max_frames = len(ta[slot]["frames"])
+    uv = ta[slot]["frames"][frame]["uv"]
+    props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
+    props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
+    props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
+    props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
+
+
+def update_ta_current_frame_tex(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+    # Sets the frame's texture
+    ta[slot]["frames"][frame]["texture"] = props.ta_current_frame_tex
+    # Saves the string again
+    props.texture_animations = str(ta)
+
+
+def update_ta_current_frame_delay(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+    # Sets the frame's delay/duration
+    ta[slot]["frames"][frame]["delay"] = props.ta_current_frame_delay
+    # Saves the string again
+    props.texture_animations = str(ta)
+
+
+def update_ta_current_frame_uv(context, num):
+    props = bpy.context.scene.revolt
+    prop_str = "ta_current_frame_uv{}".format(num)
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    ta = literal_eval(props.texture_animations)
+    ta[slot]["frames"][frame]["uv"][num]["u"] = getattr(props, prop_str)[0]
+    ta[slot]["frames"][frame]["uv"][num]["v"] = getattr(props, prop_str)[1]
+    props.texture_animations = str(ta)
+
 
 """
 Re-Volt object and mesh properties
 """
+
 
 class RVObjectProperties(bpy.types.PropertyGroup):
     light1 = EnumProperty(
@@ -147,7 +282,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         name = "Quality",
         min = 0,
         max = 32,
-        default = 8,
+        default = 15,
         description = "The amount of samples the shadow is rendered with "
                       "(number of samples taken extra)."
     )
@@ -163,7 +298,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         name = "Softness",
         min = 0.0,
         max = 100.0,
-        default = 0.5,
+        default = 1,
         description = "Softness of the shadow "
                       "(Light size for ray shadow sampling)."
     )
@@ -172,6 +307,18 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = "",
         description = "Shadow coordinates for use in parameters.txt of cars.\n"
                       "Click to select all, then CTRL C to copy."
+    )
+
+    # Debug Objects
+    is_bcube = BoolProperty(
+        name = "Object is a BigCube",
+        default = False,
+        description = "Makes BigCube properties visible for this object."
+    )
+    bcube_mesh_indices = StringProperty(
+        name = "Mesh indices",
+        default = "",
+        description = "Indices of child meshes."
     )
 
 
@@ -264,8 +411,21 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         set = lambda s,v: set_face_property(s, v, FACE_SKIP),
         description = "Skips the polygon when exporting (not Re-Volt related)."
     )
+    face_env = FloatVectorProperty(
+        name = "Environment Color",
+        subtype = "COLOR",
+        size = 4,
+        min = 0.0,
+        max = 1.0,
+        soft_min = 0.0,
+        soft_max = 1.0,
+        get = get_face_env,
+        set = set_face_env,
+        description = "Color of the environment map for World meshes."
+    )
 
 class RVSceneProperties(bpy.types.PropertyGroup):
+    # User interface and misc.
     last_exported_filepath = StringProperty(
         name = "Last Exported Filepath",
         default = ""
@@ -275,6 +435,11 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = True,
         description = "Show Export Settings"
     )
+    enable_tex_mode = BoolProperty(
+        name = "Texture Mode after Import",
+        default = True,
+        description = "Enables Texture Mode after mesh import."
+    )
     vertex_color_picker = FloatVectorProperty(
         name="Object Color",
         subtype='COLOR',
@@ -282,6 +447,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min=0.0, max=1.0,
         description="Color picker for painting custom vertex colors."
     )
+
+    # Export properties
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",
         default = True,
@@ -296,4 +463,156 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description = "Uses the texture number from the texture layer "
                       "accessible in the tool shelf in Edit mode.\n"
                       "Otherwise, it uses the texture from the texture file."
+    )
+    apply_scale = BoolProperty(
+        name = "Apply Scale",
+        default = True,
+        description = "Applies the object scale on export."
+    )
+    apply_rotation = BoolProperty(
+        name = "Apply Rotation",
+        default = True,
+        description = "Applies the object rotation on export."
+    )
+
+
+    # World Import properties
+    w_parent_meshes = BoolProperty(
+        name = "Parent .w meshes to Empty",
+        default = True,
+        description = "Parents all .w meshes to an Empty object, resulting in "
+                      "less clutter in the object outliner."
+    )
+    w_import_bound_boxes = BoolProperty(
+        name = "Import Bound Boxes",
+        default = False,
+        description = "Imports the boundary box of each .w mesh for debugging "
+                      "purposes."
+    )
+    w_bound_box_layers = BoolVectorProperty(
+        name = "Bound Box Layers",
+        subtype = "LAYER",
+        size = 20,
+        default = [True]+[False for x in range(0, 19)],
+        description = "Sets the layers the objecs will be be imported to. "
+                      "Select multiple by dragging or holding down Shift.\n"
+                      "Activate multiple layers by pressing Shift + numbers."
+    )
+    w_import_bound_balls = BoolProperty(
+        name = "Import Bound Balls",
+        default = False,
+        description = "Imports the boundary ball of each .w mesh for debugging "
+                      "purposes."
+    )
+    w_bound_ball_layers = BoolVectorProperty(
+        name = "Bound Ball Layers",
+        subtype = "LAYER",
+        size = 20,
+        default = [True]+[False for x in range(0, 19)],
+        description = "Sets the layers the objecs will be be imported to. "
+                      "Select multiple by dragging or holding down Shift.\n"
+                      "Activate multiple layers by pressing Shift + numbers."
+    )
+    w_import_big_cubes = BoolProperty(
+        name = "Import Big Cubes",
+        default = False,
+        description = "Imports Big Cubes (actually spheres) for debugging "
+                      "purposes."
+    )
+    w_big_cube_layers = BoolVectorProperty(
+        name = "Big Cube Layers",
+        subtype = "LAYER",
+        size = 20,
+        default = [True]+[False for x in range(0, 19)],
+        description = "Sets the layers the objecs will be be imported to. "
+                      "Select multiple by dragging or holding down Shift.\n"
+                      "Activate multiple layers by pressing Shift + numbers."
+    )
+    # Texture Animation
+    texture_animations = StringProperty(
+        name = "Texture Animations",
+        default = "[]",
+        description = "Storage for Texture animations. Should not be changed "
+                      "by hand."
+    )
+    ta_max_slots = IntProperty(
+        name = "Slots",
+        min = 0,
+        max = 9,
+        default = 0,
+        description = "Total number of texture animation slots. "
+                      "All higher slots will be ignored on export."
+    )
+    ta_current_slot = IntProperty(
+        name = "Animation",
+        default = 0,
+        min = 0,
+        max = 9,
+        update = update_ta_current_slot,
+        description = "Texture animation slot."
+    )
+    ta_max_frames = IntProperty(
+        name = "Frames",
+        min = 2,
+        default = 2,
+        description = "Total number of frames of the current slot. "
+                      "All higher frames will be ignored on export."
+    )
+    ta_current_frame = IntProperty(
+        name = "Frame",
+        default = 0,
+        min = 0,
+        update = update_ta_current_frame,
+        description = "Current frame."
+    )
+    ta_current_frame_tex = IntProperty(
+        name = "Texture",
+        default = 0,
+        min = -1,
+        max = 9,
+        update = update_ta_current_frame_tex,
+        description = "Texture of the current frame."
+    )
+    ta_current_frame_delay = FloatProperty(
+        name = "Duration",
+        default = 0.01,
+        min = 0,
+        update = update_ta_current_frame_delay,
+        description = "Duration of the current frame."
+    )
+    ta_current_frame_uv0 = FloatVectorProperty(
+        name = "UV 0",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        update = lambda self, context: update_ta_current_frame_uv(context, 0),
+        description = "UV coordinate of the first vertex."
+    )
+    ta_current_frame_uv1 = FloatVectorProperty(
+        name = "UV 1",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        update = lambda self, context: update_ta_current_frame_uv(context, 1),
+        description = "UV coordinate of the second vertex."
+    )
+    ta_current_frame_uv2 = FloatVectorProperty(
+        name = "UV 2",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        update = lambda self, context: update_ta_current_frame_uv(context, 2),
+        description = "UV coordinate of the third vertex."
+    )
+    ta_current_frame_uv3 = FloatVectorProperty(
+        name = "UV 3",
+        size = 2,
+        default = (0, 0),
+        min = 0.0,
+        max = 1.0,
+        update = lambda self, context: update_ta_current_frame_uv(context, 3),
+        description = "UV coordinate of the fourth vertex."
     )

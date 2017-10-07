@@ -19,11 +19,13 @@ from . import img_in
 from .rvstruct import PRM
 from .common import *
 
+
 def import_file(filepath, scene):
     """
     Imports a .prm/.m file and links it to the scene as a Blender object.
+    It also imports all LoDs of a PRM file, which can be sequentially written
+    to the file. There is no indicator for it, the file end has to be checked.
     """
-    # Imports the PRM file
     meshes = []
 
     with open(filepath, 'rb') as file:
@@ -61,19 +63,37 @@ def import_file(filepath, scene):
 
     return ob
 
-def import_mesh(prm, scene, filepath):
+
+def import_mesh(prm, scene, filepath, envlist=None):
     """
     Creates a mesh from an rvstruct object and returns it.
     """
+    props = scene.revolt
     filename = os.path.basename(filepath)
     # Creates a new mesh and bmesh
     me = bpy.data.meshes.new(filename)
     bm = bmesh.new()
-    bm.from_mesh(me)
 
+    # Adds the prm data to the bmesh
+    add_rvmesh_to_bmesh(prm, bm, filepath, envlist)
+
+    # Converts the bmesh back to a mesh and frees resources
+    bm.normal_update()
+    bm.to_mesh(me)
+    bm.free()
+
+    return me
+
+
+def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
+    """
+    Adds PRM data to an existing bmesh. Returns the resulting bmesh.
+    """
     uv_layer = bm.loops.layers.uv.new("UVMap")
     tex_layer = bm.faces.layers.tex.new("UVMap")
     vc_layer = bm.loops.layers.color.new("Col")
+    env_layer = bm.loops.layers.color.new("Env")
+    env_alpha_layer = bm.faces.layers.float.new("EnvAlpha")
     va_layer = bm.loops.layers.color.new("Alpha")
 
     # This currently breaks UV unwrap reset, it is a Blender bug.
@@ -82,13 +102,11 @@ def import_mesh(prm, scene, filepath):
     type_layer = bm.faces.layers.int.new("Type")
 
     for vert in prm.vertices:
-        co = [c*IMPORT_SCALE for c in vert.position.data]
-        position = to_blender_axis(co)
+        position = to_blender_coord(vert.position.data)
         normal = to_blender_axis(vert.normal.data)
 
         # Creates vertices
         bm.verts.new(Vector((position[0], position[1], position[2])))
-        # vert.normal = Vector(normal) # Blender doesn't use vertex normals
 
         # Ensures lookup table (potentially puts out an error otherwise)
         bm.verts.ensure_lookup_table()
@@ -100,14 +118,14 @@ def import_mesh(prm, scene, filepath):
 
         if is_quad:
             verts = (bm.verts[indices[3]], bm.verts[indices[2]],
-            bm.verts[indices[1]], bm.verts[indices[0]])
+                     bm.verts[indices[1]], bm.verts[indices[0]])
             # Reversed list of UVs and colors
             uvs = reverse_quad(poly.uv)
             colors = reverse_quad(poly.colors)
 
         else:
             verts = (bm.verts[indices[2]], bm.verts[indices[1]],
-            bm.verts[indices[0]])
+                     bm.verts[indices[0]])
             # Reversed list of UVs and colors without the last element
             uvs = reverse_quad(poly.uv, tri=True)
             colors = reverse_quad(poly.colors, tri=True)
@@ -117,7 +135,7 @@ def import_mesh(prm, scene, filepath):
             face = bm.faces.new(verts)
         except Exception as e:
             print(e)
-            continue # Skips this face
+            continue  # Skips this face
 
         # Assigns the texture to the face
         if poly.texture >= 0:
@@ -129,22 +147,24 @@ def import_mesh(prm, scene, filepath):
         face[type_layer] = poly.type
         face[texnum_layer] = poly.texture
 
+        # Assigns env alpha to face. Colors are on a vcol layer
+        if envlist:
+            env_col_alpha = envlist[prm.polygons.index(poly)].alpha
+            face[env_alpha_layer] = float(env_col_alpha) / 255
+
         # Assigns the UV mapping, colors and alpha
         for l in range(num_loops):
             # Converts the colors to float (req. by Blender)
             alpha = float(colors[l].alpha) / 255
-            color = [float(c)/255 for c in colors[l].color]
+            color = [float(c) / 255 for c in colors[l].color]
+            if envlist:
+                env_col = [float(c) / 255
+                           for c in envlist[prm.polygons.index(poly)].color]
+                face.loops[l][env_layer] = env_col
 
-            face.loops[l][uv_layer].uv = (uvs[l].u, 1-uvs[l].v)
+            face.loops[l][uv_layer].uv = (uvs[l].u, 1 - uvs[l].v)
             face.loops[l][vc_layer] = Color(color)
             face.loops[l][va_layer] = Color((alpha, alpha, alpha))
 
         # Enables smooth shading for that face
         face.smooth = True
-
-    # Converts the bmesh back to a mesh and frees resources
-    bm.normal_update()
-    bm.to_mesh(me)
-    bm.free()
-
-    return me

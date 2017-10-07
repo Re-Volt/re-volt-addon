@@ -1,5 +1,5 @@
 # Prevents it from being reloaded
-if not "bpy" in locals():
+if "bpy" not in locals():
     # Global dict to hold the mesh for edit mode
     dic = {}
 
@@ -26,9 +26,11 @@ FACE_CLOTH = 4096           # 0x1000
 FACE_SKIP = 8192            # 0x2000
 
 # Used to unmask unsupported flags (FACE_SKIP)
-FACE_PROP_MASK = (FACE_QUAD | FACE_DOUBLE | FACE_TRANSLUCENT
-                | FACE_MIRROR | FACE_TRANSL_TYPE | FACE_TEXANIM |
-                  FACE_NOENV | FACE_ENV | FACE_CLOTH)
+FACE_PROP_MASK = (
+    FACE_QUAD | FACE_DOUBLE | FACE_TRANSLUCENT | FACE_MIRROR |
+    FACE_TRANSL_TYPE | FACE_TEXANIM | FACE_NOENV | FACE_ENV |
+    FACE_CLOTH
+)
 FACE_PROPS = [FACE_QUAD,
               FACE_DOUBLE,
               FACE_TRANSLUCENT,
@@ -69,44 +71,49 @@ materials = [
     ("MATERIAL_CONVEYOR_MARKET1", "Conveyor Market 1", "None", "", 24),
     ("MATERIAL_CONVEYOR_MARKET2", "Conveyor Market 2", "None", "", 25),
     ("MATERIAL_PAVING", "Paving", "None", "", 26)
-    ]
+]
 
 """
 Supported File Formats
 """
-FORMAT_UNK   = -1
-FORMAT_BMP   =  0
-FORMAT_CAR   =  1
-FORMAT_FIN   =  2
-FORMAT_FOB   =  3
-FORMAT_HUL   =  4
-FORMAT_LIT   =  5
-FORMAT_NCP   =  6
-FORMAT_NCP_W =  7
-FORMAT_PRM   =  8
-FORMAT_RIM   =  9
-FORMAT_RTU   = 10
-FORMAT_TAZ   = 11
-FORMAT_VIS   = 12
-FORMAT_W     = 13
+FORMAT_UNK = -1
+FORMAT_BMP = 0
+FORMAT_CAR = 1
+FORMAT_FIN = 2
+FORMAT_FOB = 3
+FORMAT_HUL = 4
+FORMAT_LIT = 5
+FORMAT_NCP = 6
+FORMAT_NCP_W = 7
+FORMAT_PRM = 8
+FORMAT_RIM = 9
+FORMAT_RTU = 10
+FORMAT_TAZ = 11
+FORMAT_VIS = 12
+FORMAT_W = 13
 
 file_formats = {
-    FORMAT_UNK   : "Unknown Format",
-    FORMAT_BMP   : "BMP",
-    FORMAT_CAR   : "parameters.txt",
-    FORMAT_FIN   : "FIN",
-    FORMAT_FOB   : "FOB",
-    FORMAT_HUL   : "HUL",
-    FORMAT_LIT   : "LIT",
-    FORMAT_NCP   : "NCP (Object)",
-    FORMAT_NCP_W : "NCP (World)",
-    FORMAT_PRM   : "PRM/M",
-    FORMAT_RIM   : "RIM",
-    FORMAT_RTU   : "RTU",
-    FORMAT_TAZ   : "TAZ",
-    FORMAT_VIS   : "VIS",
-    FORMAT_W     : "W",
+    FORMAT_UNK: "Unknown Format",
+    FORMAT_BMP: "BMP",
+    FORMAT_CAR: "parameters.txt",
+    FORMAT_FIN: "FIN",
+    FORMAT_FOB: "FOB",
+    FORMAT_HUL: "HUL",
+    FORMAT_LIT: "LIT",
+    FORMAT_NCP: "NCP (Object)",
+    FORMAT_NCP_W: "NCP (World)",
+    FORMAT_PRM: "PRM/M",
+    FORMAT_RIM: "RIM",
+    FORMAT_RTU: "RTU",
+    FORMAT_TAZ: "TAZ",
+    FORMAT_VIS: "VIS",
+    FORMAT_W: "W",
 }
+
+# Colors for debug objects
+COL_BSPHERE = mathutils.Color((0.7, 0.08, 0))
+COL_BBOX = mathutils.Color((0, 0, 0.05))
+COL_BCUBE = mathutils.Color((0, 0.7, 0.08))
 
 """
 Constants for the tool shelf functions
@@ -133,21 +140,30 @@ Conversion functions for Re-Volt structures.
 Axes are saved differently and many indices are saved in reverse order.
 """
 
+
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
+
 
 def to_blender_coord(vec):
     return (vec[0] * IMPORT_SCALE,
             vec[2] * IMPORT_SCALE,
-           -vec[1] * IMPORT_SCALE)
+            -vec[1] * IMPORT_SCALE)
+
+
+def to_blender_scale(num):
+    return num * IMPORT_SCALE
+
 
 def to_revolt_coord(vec):
     return (vec[0] * EXPORT_SCALE,
-           -vec[2] * EXPORT_SCALE,
+            -vec[2] * EXPORT_SCALE,
             vec[1] * EXPORT_SCALE)
+
 
 def to_revolt_axis(vec):
     return (vec[0], -vec[2], vec[1])
+
 
 def reverse_quad(quad, tri=False):
     if tri:
@@ -155,26 +171,49 @@ def reverse_quad(quad, tri=False):
     else:
         return quad[::-1]
 
+
 def texture_to_int(string):
     if string == "car.bmp":
         return 0
     elif ".bmp" in string:
-        num = ord(string[-5])-97
+        num = ord(string[-5]) - 97
         if num > 9 or num < 0:
             return 0
     return 0
 
+
+def create_material(name, diffuse, alpha):
+    mat = bpy.data.materials.new(name)
+    mat.diffuse_color = diffuse
+    mat.diffuse_intensity = 1.0
+    mat.alpha = alpha
+    if alpha:
+        mat.use_transparency = True
+    return mat
+
+
 """
 Blender helpers
 """
+
+
+def get_edit_bmesh(obj):
+    try:
+        bm = dic[obj.name]
+        bm.faces.layers.int.get("Type")
+        return bm
+    except Exception as e:
+        # print("Bmesh is gone, creating new one...")
+        del dic[obj.name]
+        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        return bm
 
 class DialogOperator(bpy.types.Operator):
     bl_idname = 'revolt.dialog'
     bl_label = 'Oh noes!'
 
     def execute(self, context):
-        return {
-         'FINISHED'}
+        return {'FINISHED'}
 
     def invoke(self, context, event):
         wm = context.window_manager
@@ -186,14 +225,17 @@ class DialogOperator(bpy.types.Operator):
         for line in str.split(dialog_message, '\n'):
             column.label(line)
 
+
 def msg_box(message):
     global dialog_message
     print(message)
     dialog_message = message
     bpy.ops.revolt.dialog('INVOKE_DEFAULT')
 
+
 def redraw():
     bpy.context.area.tag_redraw()
+
 
 def enable_texture_mode():
     for area in bpy.context.screen.areas:
@@ -202,6 +244,7 @@ def enable_texture_mode():
                 if space.type == 'VIEW_3D':
                     space.viewport_shade = 'TEXTURED'
     return
+
 
 def texture_mode_enabled():
     for area in bpy.context.screen.areas:
@@ -212,6 +255,7 @@ def texture_mode_enabled():
                         return True
     return False
 
+
 def get_all_lod(namestr):
     """ Gets all LoD meshes belonging to a mesh (including that mesh) """
     meshes = []
@@ -219,6 +263,7 @@ def get_all_lod(namestr):
         if "|q" in me.name and namestr in me.name:
             meshes.append(me)
     return meshes
+
 
 def triangulate_ngons(bm):
     """ Triangulates faces for exporting """
@@ -235,6 +280,7 @@ def triangulate_ngons(bm):
 """
 Non-Blender helper functions
 """
+
 
 def get_texture_path(filepath, tex_num):
     """ Gets the full texture path when given a file and its
@@ -257,10 +303,12 @@ def get_texture_path(filepath, tex_num):
     else:
         return os.path.join(path, "dummy{}.bmp".format(chr(97 + tex_num)))
 
+
 def is_track_folder(path):
     for f in os.listdir(path):
         if ".inf" in f:
             return True
+
 
 def get_format(fstr):
     """
@@ -274,5 +322,7 @@ def get_format(fstr):
         return FORMAT_CAR
     elif ext in [".prm", ".m"]:
         return FORMAT_PRM
+    elif ext == ".w":
+        return FORMAT_W
     else:
         return FORMAT_UNK

@@ -1,3 +1,7 @@
+[$\leftarrow$ Back](..)
+
+---
+
 To install the add-on, locate the `addons` folder within your Blender folder.
 
 In most cases, it is located at `C:\Program Files\Blender Foundation\Blender\2.79\scripts\addons`.

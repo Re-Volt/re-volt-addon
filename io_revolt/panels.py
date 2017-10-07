@@ -17,11 +17,26 @@ from .common import *
 from .operators import *
 from .properties import *
 
-"""
-Tool panel in the left sidebar of the viewport for performing
-various operations
-"""
+
+class RevoltObjectPanel(bpy.types.Panel):
+    bl_label = "Re-Volt Object Properties"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "object"
+
+    def draw(self, context):
+        layout = self.layout
+        obj = context.object
+        if obj.revolt.is_bcube:
+            layout.label("BigCube Properties:")
+            layout.prop(obj.revolt, "bcube_mesh_indices")
+
+
 class RevoltIOToolPanel(bpy.types.Panel):
+    """
+    Tool panel in the left sidebar of the viewport for performing
+    various operations
+    """
     bl_label = "Import/Export"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
@@ -30,23 +45,44 @@ class RevoltIOToolPanel(bpy.types.Panel):
 
     def draw(self, context):
         # i/o buttons
-        fold_s = context.scene.revolt.ui_fold_export_settings
+        props = context.scene.revolt
+        fold_s = props.ui_fold_export_settings
 
         row = self.layout.row(align=True)
         row.operator(ImportRV.bl_idname, text="Import", icon="IMPORT")
         row.operator(ExportRV.bl_idname, text="Export", icon="EXPORT")
         row = self.layout.row(align=True)
         row.prop(
-            context.scene.revolt,
+            props,
             "ui_fold_export_settings",
-            icon = "TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
-            text = "Show Export Settings" if fold_s else "Hide Export Settings"
+            icon="TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
+            text="Show Settings" if fold_s else "Hide Settings"
         )
         if not fold_s:
-            row = self.layout.row(align=True)
-            row.prop(context.scene.revolt, "triangulate_ngons")
-            row = self.layout.row(align=True)
-            row.prop(context.scene.revolt, "use_tex_num")
+            box = self.layout.box()
+            box.label("Import")
+            box.prop(props, "enable_tex_mode")
+
+            box = self.layout.box()
+            box.label("Export")
+            box.prop(props, "triangulate_ngons")
+            box.prop(props, "use_tex_num")
+            box.prop(props, "apply_scale")
+            box.prop(props, "apply_rotation")
+
+            box = self.layout.box()
+            box.label("Import World (.w)")
+            box.prop(props, "w_parent_meshes")
+            box.prop(props, "w_import_bound_boxes")
+            if props.w_import_bound_boxes:
+                box.prop(props, "w_bound_box_layers")
+            box.prop(props, "w_import_bound_balls")
+            if props.w_import_bound_balls:
+                box.prop(props, "w_bound_ball_layers")
+            box.prop(props, "w_import_big_cubes")
+            if props.w_import_big_cubes:
+                box.prop(props, "w_big_cube_layers")
+
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
@@ -61,7 +97,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
     def draw(self, context):
         obj = context.object
         mesh = obj.data
-        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        bm = get_edit_bmesh(obj)
         flags = (bm.faces.layers.int.get("Type")
                  or bm.faces.layers.int.new("Type"))
         if (self.selected_face_count is None
@@ -80,7 +116,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         # self.layout.prop(context.object.data.revolt, "face_material",
         #     text="Material".format(""))
         row  = self.layout.row()
-        col = row.column(align = True)
+        col = row.column(align=True)
         col.prop(context.object.data.revolt, "face_double_sided",
             text="{}: Double sided".format(count[1]))
         col.prop(context.object.data.revolt, "face_translucent",
@@ -93,8 +129,17 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
             text="{}: Texture animation".format(count[5]))
         col.prop(context.object.data.revolt, "face_no_envmapping",
             text="{}: No EnvMap".format(count[6]))
-        col.prop(context.object.data.revolt, "face_envmapping",
+        if context.object.data.revolt.face_envmapping:
+            split = col.split(percentage=.7)
+            scol = split.column(align=True)
+            scol.prop(context.object.data.revolt, "face_envmapping",
             text="{}: EnvMap".format(count[7]))
+            scol = split.column(align=True)
+            scol.prop(context.object.data.revolt, "face_env", text="")
+        else:
+            col.prop(context.object.data.revolt, "face_envmapping",
+            text="{}: EnvMap".format(count[7]))
+
         col.prop(context.object.data.revolt, "face_cloth",
             text="{}: Cloth effect".format(count[8]))
         col.prop(context.object.data.revolt, "face_skip",
@@ -107,7 +152,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         col.operator("faceprops.select", text="sel").prop = FACE_TRANSL_TYPE
         col.operator("faceprops.select", text="sel").prop = FACE_TEXANIM
         col.operator("faceprops.select", text="sel").prop = FACE_NOENV
-        col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
+        col.operator("faceprops.select", text="sel").prop = FACE_ENV
         col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
         col.operator("faceprops.select", text="sel").prop = FACE_SKIP
 
@@ -150,7 +195,7 @@ class RevoltVertexPanel(bpy.types.Panel):
         # warn if texture mode is not enabled
         widget_texture_mode(self)
 
-        bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
+        bm = get_edit_bmesh(obj)
         vc_layer = bm.loops.layers.color.get("Col")
 
         if widget_vertex_color_channel(self, obj):
@@ -258,6 +303,48 @@ class RevoltLightPanel(bpy.types.Panel):
                          icon="LAMP_SPOT")
             row = box.row()
             row.prop(context.object.revolt, "shadow_table", text="Table")
+
+
+class RevoltAnimationPanel(bpy.types.Panel):
+    bl_label = "Texture Animation (.w)"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "mesh_edit"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+        obj = context.object
+        props = context.scene.revolt
+
+        # row = self.layout.row(align=True)
+        # row.prop(props, "texture_animations")
+        row = self.layout.row(align=True)
+        row.prop(props, "ta_max_slots", text="Total Slots")
+
+        row = self.layout.row(align=True)
+        row.active = (props.ta_max_slots > 0)
+        column = row.column(align=True)
+        column.label("Animation Slot:")
+        column.prop(props, "ta_current_slot", text="Slot")
+        column.prop(props, "ta_max_frames")
+
+        column = self.layout.column(align=True)
+        column.active = (props.ta_max_slots > 0)
+        column.label("Animation Frame:")
+        column.prop(props, "ta_current_frame")
+
+        row = column.row(align=True)
+        row.prop(props, "ta_current_frame_tex")
+        row.prop(props, "ta_current_frame_delay")
+
+        row = self.layout.row()
+        row.active = (props.ta_max_slots > 0)
+        column = row.column()
+        column.prop(props, "ta_current_frame_uv0")
+        column.prop(props, "ta_current_frame_uv1")
+        column = row.column()
+        column.prop(props, "ta_current_frame_uv2")
+        column.prop(props, "ta_current_frame_uv3")
 
 
 """

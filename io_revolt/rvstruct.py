@@ -1,9 +1,9 @@
 """
 This is a module for reading and writing Re-Volt binary files.
 Todo:
-- Convert axes to Blender standard and convert them back on export?
 - Rework representations and string representations
 - Rework default values based on the game's defaults
+- Check for lengths on export
 
 Supported Formats:
 - .prm / .m (PRM)
@@ -21,6 +21,7 @@ Missing Formats:
 """
 
 import struct
+
 
 class World:
     """
@@ -42,8 +43,7 @@ class World:
         self.env_count = 0              # amount of faces with env enabled
         self.env_list = []            # an EnvList structure
 
-
-        # Immediately starts reading it if an opened file is supplied
+        # Immediately starts reading if an opened file is supplied
         if file:
             self.read(file)
 
@@ -105,15 +105,15 @@ class World:
         return "World"
 
     def as_dict(self):
-        dic = { "mesh_count" : self.mesh_count,
-                "meshes" : self.meshes,
-                "bigcube_count" : self.bigcube_count,
-                "bigcubes" : self.bigcubes,
-                "animation_count" : self.animation_count,
-                "animations" : self.animations,
-                "env_count" : self.env_count,
-                "env_list" : self.env_list
-        }
+        dic = {"mesh_count": self.mesh_count,
+               "meshes": self.meshes,
+               "bigcube_count": self.bigcube_count,
+               "bigcubes": self.bigcubes,
+               "animation_count": self.animation_count,
+               "animations": self.animations,
+               "env_count": self.env_count,
+               "env_list": self.env_list
+               }
         return dic
 
     # Uses the to-string for dumping the whole .w structure
@@ -221,6 +221,12 @@ class Mesh:
 
     def __repr__(self):
         return "Mesh"
+
+    def from_prm(self, prm):
+        self.polygon_count = prm.polygon_count
+        self.vertex_count = prm.vertex_count
+        self.polygons = prm.polygons
+        self.vertices = prm.vertices
 
     def read(self, file):
         # Reads bounding "ball" center and the radius
@@ -519,9 +525,9 @@ class Vertex:
         self.normal.write(file)
 
     def as_dict(self):
-        dic = { "position" : self.position.as_dict(),
-                "normal" : self.normal.as_dict()
-        }
+        dic = {"position": self.position.as_dict(),
+               "normal": self.normal.as_dict()
+               }
         return dic
 
     def dump(self):
@@ -547,7 +553,7 @@ class UV:
             self.read(file)
 
     def __repr__(self):
-        return "UV"
+        return str(self.as_dict())
 
     def read(self, file):
         # Reads the uv coordinates
@@ -686,7 +692,10 @@ class Frame:
             self.read(file)
 
     def __repr__(self):
-        return "Frame"
+        return str(self.as_dict())
+
+    def __str__(self):
+        return str(self.as_dict())
 
     def read(self, file):
         # Reads the texture id

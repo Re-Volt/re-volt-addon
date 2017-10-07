@@ -18,6 +18,7 @@ from . import prm_in
 
 from .common import *
 
+
 def import_file(filepath, scene):
     """
     Imports a parameters.txt file and loads car body and wheels.
@@ -32,9 +33,7 @@ def import_file(filepath, scene):
         import_car(scene, params, filepath)
 
 
-
 def import_car(scene, params, filepath):
-
     body = params["model {}".format(params["body"]["modelnum"])]
     body_loc = to_blender_coord(params["body"]["offset"])
     wheel0loc = to_blender_coord(params["wheel 0"]["offset1"])
@@ -76,7 +75,6 @@ def import_car(scene, params, filepath):
                 wheel3path = os.sep.join([folder, wheel3.split(os.sep)[-1]])
     else:
         wheel3 = None
-
 
     # Checks if the body is in the same folder
     if body.split(os.sep)[-1] in os.listdir(folder):
