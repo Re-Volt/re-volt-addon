@@ -1,8 +1,4 @@
-"""Marv's Re-Volt Blender add-on.
-
-This Blender Add-On is inspired by the one for 2.73 made by Jigebren.
-I wrote a class (rvstruct) for handling Re-Volt files which I am using here.
-"""
+"""Marv's Re-Volt Blender add-on"""
 import bpy
 import os
 import os.path
@@ -12,12 +8,12 @@ from . import common, panels, properties
 bl_info = {
     "name": "Re-Volt",
     "author": "Marvin Thiel",
-    "version": (17, 9, 15),
-    "blender": (2, 78, 0),
+    "version": (17, 10, 07),
+    "blender": (2, 79, 0),
     "location": "File > Import-Export",
     "description": "Import and export Re-Volt file formats.",
-    "warning": "Experimental. Please disable any other Re-Volt add-on.",
-    "wiki_url": "http://learn.re-volt.io/blender-docs",
+    "warning": "Please disable any other Re-Volt add-on.",
+    "wiki_url": "https://yethiel.github.io/re-volt-addon/",
     "tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
                    "index.php?showtopic=2296",
     "support": 'COMMUNITY',
