@@ -19,17 +19,22 @@ from . import img_in
 from . import prm_out
 
 from .common import *
-from prm_out import export_mesh
+from .prm_out import export_mesh
 
 
 def export_file(filepath, scene):
     # Creates an empty world object to put the scene into
     world = rvstruct.World()
 
+    objs = [obj for obj in scene.objects if obj.data]
+
     # Goes through all objects from the scene and exports them to PRM/Mesh
-    for obj in scene.objects:
+    for obj in objs:
         me = obj.data
-        export_mesh(me, obj, scene, filepath, world=None)
+        print("Exporting mesh for {}".format(obj.name))
+        mesh = export_mesh(me, obj, scene, filepath, world=world)
+        world.meshes.append(mesh)
+        world.mesh_count = len(world.meshes)
 
     # Writes the world to a file
     with open(filepath, "wb") as file:

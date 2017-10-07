@@ -71,7 +71,6 @@ class World:
             self.animations.append(TexAnimation(file))
 
         # Reads the environment colors
-        # self.env_list = EnvList(file, self)
         for col in range(self.env_count):
             self.env_list.append(Color(file=file, alpha=True))
 
@@ -97,9 +96,9 @@ class World:
         for anim in self.animations:
             anim.write(file)
 
-        # Writes the env color list and its length as the final step
-        file.write(struct.pack("<l", self.env_count))
-        self.env_list.write(file)
+        # self.env_list.write(file)
+        for col in self.env_list:
+            col.write(file)
 
     def __repr__(self):
         return "World"
@@ -295,14 +294,17 @@ class BoundingBox:
     Reads and stores bounding boxes found in .w meshes
     They are probably used for culling optimization, similar to BigCube
     """
-    def __init__(self, file=None):
+    def __init__(self, file=None, data=None):
         # Lower and higher boundaries for each axis
-        self.xlo = 0
-        self.xhi = 0
-        self.ylo = 0
-        self.yhi = 0
-        self.zlo = 0
-        self.zhi = 0
+        if data is None:
+            self.xlo = 0
+            self.xhi = 0
+            self.ylo = 0
+            self.yhi = 0
+            self.zlo = 0
+            self.zhi = 0
+        else:
+            self.xlo, self.xhi, self.ylo, self.yhi, self.zlo, self.zhi = data
 
         if file:
             self.read(file)
@@ -734,40 +736,6 @@ class Frame:
                          self.delay,
                          '\n'.join([str(uv) for uv in self.uv]))
 
-
-class EnvList:
-    """
-    Reads and stores the list of environment vertex colors of a .w file
-    The game supports environment maps that make objects look shiny. With this
-    list, they can have individual reflection colors.
-    """
-    def __init__(self, file=None, w=None):
-        self.w = w              # World it belongs to
-
-        # list with length of the number of bit-11 polys
-        self.env_colors = []    # unsigned rvlongs
-
-        if file:
-            self.read(file)
-
-    def __repr__(self):
-        return "EnvList"
-
-    def read(self, file):
-        # Reads the colors times the amount of env-enabled polygons
-        for col in range(self.w.env_count):
-            self.env_colors.append(Color(file=file, alpha=True))
-
-    def write(self, file):
-        # Writes the colors times the amount of env-enabled polygons
-        for col in self.env_colors:
-            col.write(file)
-
-    def dump(self):
-        return ("====   ENVCOL LIST   ====\n"
-                "{}\n"
-                "==== ENVCOL LIST END ====\n"
-                ).format('\n'.join([str(col) for col in self.env_colors]))
 
 class Color:
     """

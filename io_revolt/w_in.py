@@ -18,6 +18,7 @@ if "bpy" in locals():
     import imp
     imp.reload(common)
     imp.reload(rvstruct)
+    print("reloaded rvstruct")
     imp.reload(img_in)
     imp.reload(prm_in)
 
@@ -28,6 +29,8 @@ def import_file(filepath, scene):
     """
 
     props = scene.revolt
+    # Resets the index of the current env color
+    props.envidx = 0
 
     with open(filepath, 'rb') as file:
         filename = os.path.basename(filepath)
@@ -82,7 +85,7 @@ def import_file(filepath, scene):
             bcube.parent = main_w
 
     props.texture_animations = str([a.as_dict() for a in world.animations])
-    props.ta_max_slots = len(world.animations)
+    props.ta_max_slots = world.animation_count
 
 
 def create_bound_box(scene, bbox, filename):

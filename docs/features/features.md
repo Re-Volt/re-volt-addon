@@ -58,13 +58,13 @@
 
 ### Export
 
-- [ ] Meshes
-- [ ] Bound Boxes
-- [ ] Bound Spheres
+- [x] Meshes
+- [x] Bound Boxes
+- [x] Bound Spheres
 - [ ] Big Boxes
-- [ ] UV
-- [ ] Vertex colors
-- [ ] Texture
-- [ ] Types
-- [ ] Environment Colors
+- [x] UV
+- [x] Vertex colors
+- [x] Texture
+- [x] Types
+- [x] Environment Colors
 - [ ] Texture Animation

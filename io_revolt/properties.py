@@ -105,16 +105,6 @@ def get_face_env(self):
     return [*col, selected_faces[0][env_alpha_layer]]
 
 
-def get_average_vcol(faces, layer):
-    """ Gets the average vertex color of all loops of given faces """
-    for face in faces:
-        cols = [loop[layer] for loop in face.loops]
-        r = sum([c[0] for c in cols]) / 4
-        g = sum([c[1] for c in cols]) / 4
-        b = sum([c[2] for c in cols]) / 4
-        return (r, g, b)
-
-
 def set_vcol(faces, layer, color):
     for face in faces:
         for loop in face.loops:
@@ -446,6 +436,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default=(0, 0, 1.0),
         min=0.0, max=1.0,
         description="Color picker for painting custom vertex colors."
+    )
+    envidx = IntProperty(
+        name="envidx",
+        default=0,
+        min=0,
+        description="Current env color index for importing. Internal only."
     )
 
     # Export properties

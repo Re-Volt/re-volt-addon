@@ -13,10 +13,11 @@ from . import tools
 from .common import *
 from .properties import *
 
-"""
-Import Operator for all file types
-"""
+
 class ImportRV(bpy.types.Operator):
+    """
+    Import Operator for all file types
+    """
     bl_idname = "import_scene.revolt"
     bl_label = "Import Re-Volt Files"
     bl_description = "Import Re-Volt game files"
@@ -31,7 +32,6 @@ class ImportRV(bpy.types.Operator):
         start_time = time.time()
 
         context.window.cursor_set("WAIT")
-
 
         print("Importing {}".format(self.filepath))
 
@@ -68,6 +68,7 @@ class ImportRV(bpy.types.Operator):
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
         return {"RUNNING_MODAL"}
+
 
 class ExportRV(bpy.types.Operator):
     bl_idname = "export_scene.revolt"
@@ -107,8 +108,12 @@ class ExportRV(bpy.types.Operator):
                 from . import prm_out
                 prm_out.export_file(self.filepath, scene)
 
+            elif frmt == FORMAT_W:
+                from . import w_out
+                print("Exporting to .w...")
+                w_out.export_file(self.filepath, scene)
             else:
-                print("Format is not PRM {}".format(file_formats[frmt]))
+                print("Format not yet supported {}".format(file_formats[frmt]))
 
             # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo

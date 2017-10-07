@@ -17,8 +17,8 @@ bl_info = {
     "tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
                    "index.php?showtopic=2296",
     "support": 'COMMUNITY',
-    "category": "Import-Export",
-    }
+    "category": "Import-Export"
+}
 
 # Reloads potentially changed modules on reload (F8 in Blender)
 if "bpy" in locals():
@@ -28,6 +28,7 @@ if "bpy" in locals():
     imp.reload(panels)
     imp.reload(properties)
 
+    # Reloaded here because it's used in a class which is instanced here
     if "prm_in" in locals():
         imp.reload(prm_in)
     if "prm_out" in locals():
@@ -36,6 +37,8 @@ if "bpy" in locals():
         imp.reload(parameters_in)
     if "w_in" in locals():
         imp.reload(w_in)
+    if "w_out" in locals():
+        imp.reload(w_out)
 
 # Makes common variables and classes directly accessible
 from .common import *

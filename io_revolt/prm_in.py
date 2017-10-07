@@ -89,6 +89,7 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
     """
     Adds PRM data to an existing bmesh. Returns the resulting bmesh.
     """
+    props = bpy.context.scene.revolt
     uv_layer = bm.loops.layers.uv.new("UVMap")
     tex_layer = bm.faces.layers.tex.new("UVMap")
     vc_layer = bm.loops.layers.color.new("Col")
@@ -148,8 +149,8 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
         face[texnum_layer] = poly.texture
 
         # Assigns env alpha to face. Colors are on a vcol layer
-        if envlist:
-            env_col_alpha = envlist[prm.polygons.index(poly)].alpha
+        if envlist and (poly.type & FACE_ENV):
+            env_col_alpha = envlist[props.envidx].alpha
             face[env_alpha_layer] = float(env_col_alpha) / 255
 
         # Assigns the UV mapping, colors and alpha
@@ -157,9 +158,8 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
             # Converts the colors to float (req. by Blender)
             alpha = float(colors[l].alpha) / 255
             color = [float(c) / 255 for c in colors[l].color]
-            if envlist:
-                env_col = [float(c) / 255
-                           for c in envlist[prm.polygons.index(poly)].color]
+            if envlist and (poly.type & FACE_ENV):
+                env_col = [float(c) / 255 for c in envlist[props.envidx].color]
                 face.loops[l][env_layer] = env_col
 
             face.loops[l][uv_layer].uv = (uvs[l].u, 1 - uvs[l].v)
@@ -168,3 +168,5 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
 
         # Enables smooth shading for that face
         face.smooth = True
+        if envlist and (poly.type & FACE_ENV):
+            props.envidx += 1

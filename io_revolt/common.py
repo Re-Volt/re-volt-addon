@@ -7,7 +7,7 @@ import bpy
 import bmesh
 import os
 import mathutils
-
+from math import sqrt
 from .parameters import read_parameters
 
 # Scale used for importing (multiplicative)
@@ -165,6 +165,38 @@ def to_revolt_axis(vec):
     return (vec[0], -vec[2], vec[1])
 
 
+def rvbbox_from_bm(bm):
+    """ The bbox of Blender objects has all edge coordinates. RV just stores the
+    mins and max for each axis. """
+    # bbox = obj.bound_box
+    xlo = min(v.co[0] for v in bm.verts) * EXPORT_SCALE
+    xhi = max(v.co[0] for v in bm.verts) * EXPORT_SCALE
+    ylo = -min(v.co[2] for v in bm.verts) * EXPORT_SCALE
+    yhi = -max(v.co[2] for v in bm.verts) * EXPORT_SCALE
+    zlo = min(v.co[1] for v in bm.verts) * EXPORT_SCALE
+    zhi = max(v.co[1] for v in bm.verts) * EXPORT_SCALE
+    return(xlo, xhi, ylo, yhi, zlo, zhi)
+
+
+def get_distance(v1, v2):
+    print(v1, v2)
+    return sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2 + (v1[2] - v2[2])**2)
+
+
+def center_from_rvbbox(rvbbox):
+    return (
+        (rvbbox[0] + rvbbox[1]) / 2,
+        (rvbbox[2] + rvbbox[3]) / 2,
+        (rvbbox[4] + rvbbox[5]) / 2,
+    )
+
+
+def radius_from_bmesh(bm, center):
+    """ Gets the radius measured from the furthest vertex."""
+    radius = max([get_distance(center, to_revolt_coord(v.co)) for v in bm.verts])
+    return radius
+
+
 def reverse_quad(quad, tri=False):
     if tri:
         return quad[2::-1]
@@ -195,6 +227,14 @@ def create_material(name, diffuse, alpha):
 """
 Blender helpers
 """
+def get_average_vcol(faces, layer):
+    """ Gets the average vertex color of all loops of given faces """
+    for face in faces:
+        cols = [loop[layer] for loop in face.loops]
+        r = sum([c[0] for c in cols]) / 4
+        g = sum([c[1] for c in cols]) / 4
+        b = sum([c[2] for c in cols]) / 4
+        return (r, g, b)
 
 
 def get_edit_bmesh(obj):

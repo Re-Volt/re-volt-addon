@@ -45,13 +45,20 @@ def export_file(filepath, scene):
 
 
 def export_mesh(me, obj, scene, filepath, world=None):
+    """
+    This exports an object to an rvstruct object. This is also used for .w
+    meshes since they're pretty much the same as PRM. The only additions are
+    boundaries and the per-face environment color.
+    If an rvstruct world object is provided, this will return an rvstruct.mesh
+    instead of an rvstruct.PRM.
+    """
     props = scene.revolt
     # Creates a bmesh from the supplied mesh
     bm = bmesh.new()
     bm.from_mesh(me)
 
     # Applies the object scale if enabled
-    if props.apply_scale:
+    if props.apply_scale or world is not None:
         bmesh.ops.scale(
             bm,
             vec=obj.scale,
@@ -60,7 +67,7 @@ def export_mesh(me, obj, scene, filepath, world=None):
         )
 
     # Applies the object rotation if enabled
-    if props.apply_rotation:
+    if props.apply_rotation or world is not None:
         bmesh.ops.rotate(
             bm,
             cent=obj.location,
@@ -77,13 +84,20 @@ def export_mesh(me, obj, scene, filepath, world=None):
     uv_layer = bm.loops.layers.uv.get("UVMap")
     tex_layer = bm.faces.layers.tex.get("UVMap")
     vc_layer = bm.loops.layers.color.get("Col")
+    env_layer = bm.loops.layers.color.get("Env")
+    env_alpha_layer = bm.faces.layers.float.get("EnvAlpha")
     va_layer = bm.loops.layers.color.get("Alpha")
     texnum_layer = bm.faces.layers.int.get("Texture Number")
     type_layer = (bm.faces.layers.int.get("Type") or
                   bm.faces.layers.int.new("Type"))
 
-    # Creates an empty PRM structure
-    prm = rvstruct.PRM()
+    # Creates an empty PRM or Mesh structure
+    if world is None:
+        prm = rvstruct.PRM()
+    else:
+        prm = rvstruct.Mesh()
+        # Applies the translation
+        bmesh.ops.translate(bm, vec=obj.location, verts=bm.verts)
 
     prm.polygon_count = len(bm.faces)
     prm.vertex_count = len(bm.verts)
@@ -143,6 +157,14 @@ def export_mesh(me, obj, scene, filepath, world=None):
             else:
                 poly.uv.append(rvstruct.UV())
 
+        if world is not None:
+            if poly.type & FACE_ENV:
+                rgb = [int(c * 255) for c in get_average_vcol([face], env_layer)]
+                alpha = int(face[env_alpha_layer] * 255)
+                col = rvstruct.Color(color=rgb, alpha=alpha)
+                world.env_list.append(col)
+
+
         prm.polygons.append(poly)
 
     # export vertex positions and normals
@@ -157,5 +179,14 @@ def export_mesh(me, obj, scene, filepath, world=None):
         rvvert.position = rvstruct.Vector(data=coord)
         rvvert.normal = rvstruct.Vector(data=normal)
         prm.vertices.append(rvvert)
+
+    # World extras
+    if world is not None:
+        rvbbox = rvbbox_from_bm(bm)
+        center = center_from_rvbbox(rvbbox)
+        radius = radius_from_bmesh(bm, center)
+        prm.bound_ball_center = rvstruct.Vector(data=center)
+        prm.bound_ball_radius = radius
+        prm.bbox = rvstruct.BoundingBox(data=rvbbox)
 
     return prm
