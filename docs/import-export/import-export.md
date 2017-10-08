@@ -69,6 +69,9 @@ The alpha value of the color is only accessible via the face property editing pa
 
 Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.
 
+#### Texture Animation
+Animations are stored in a dictionary that can be accessed in the Properties editor (Object section).
+
 #### Debug
 Bounding boxes, bounding spheres and "big cubes" (spheres) can be imported to selected layers. They are for debug purposes only and they will not affect the export in any way.
 

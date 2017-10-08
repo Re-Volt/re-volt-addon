@@ -189,4 +189,5 @@ def export_mesh(me, obj, scene, filepath, world=None):
         prm.bound_ball_radius = radius
         prm.bbox = rvstruct.BoundingBox(data=rvbbox)
 
+    bm.free()
     return prm

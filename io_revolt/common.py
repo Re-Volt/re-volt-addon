@@ -179,7 +179,6 @@ def rvbbox_from_bm(bm):
 
 
 def get_distance(v1, v2):
-    print(v1, v2)
     return sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2 + (v1[2] - v2[2])**2)
 
 
@@ -211,7 +210,9 @@ def texture_to_int(string):
         num = ord(string[-5]) - 97
         if num > 9 or num < 0:
             return 0
-    return 0
+        return num
+    else:
+        return 0
 
 
 def create_material(name, diffuse, alpha):

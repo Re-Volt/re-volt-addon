@@ -23,6 +23,7 @@ from .prm_out import export_mesh
 
 
 def export_file(filepath, scene):
+    props = scene.revolt
     # Creates an empty world object to put the scene into
     world = rvstruct.World()
 
@@ -35,6 +36,18 @@ def export_file(filepath, scene):
         mesh = export_mesh(me, obj, scene, filepath, world=world)
         world.meshes.append(mesh)
         world.mesh_count = len(world.meshes)
+
+        # Generates one big cube (sphere) around the scene
+        world.generate_bigcubes()
+
+    # Exports the texture animation
+    animations = eval(props.texture_animations)
+    print(animations)
+    for animdict in eval(props.texture_animations):
+        anim = rvstruct.TexAnimation()
+        anim.from_dict(animdict)
+        world.animations.append(anim)
+    world.animation_count = props.ta_max_slots
 
     # Writes the world to a file
     with open(filepath, "wb") as file:
