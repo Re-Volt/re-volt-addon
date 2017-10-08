@@ -8,6 +8,7 @@ if "bpy" in locals():
 import bpy
 from ast import literal_eval
 from . import common
+from . import rvstruct
 from bpy.props import (
     BoolProperty,
     BoolVectorProperty,
@@ -146,39 +147,56 @@ def select_faces(context, prop):
     redraw()
 
 
+def update_ta_current_slot(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+
+    # Resets the number if it's out of bounds
+    if slot > props.ta_max_slots - 1:
+        props.ta_current_slot = props.ta_max_slots - 1
+        return
+
+    # Creates a new texture animation if there is none in the slot
+    while len(ta) - 1 < slot:
+        dprint("Creating new animation slot... ({}/{})".format(len(ta), slot))
+        ta.append(rvstruct.TexAnimation().as_dict())
+
+    props.ta_max_frames = len(ta[slot]["frames"])
+    props.texture_animations = str(ta)
+    update_ta_current_frame(self, context)
+
+
 # Texture Animation
 def update_ta_current_frame(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
+
+    # Converts the texture animations from string to dict
+    ta = eval(props.texture_animations)
+
+    # Resets the number if it's out of bounds
     if frame > props.ta_max_frames - 1:
         props.ta_current_frame = props.ta_max_frames - 1
         return
-    # Converts the texture animations from string to dict
-    ta = eval(props.texture_animations)
+
+    # Creates a new empty frame if there is none for the current slot
+    while len(ta[slot]["frames"]) - 1 < frame:
+        dprint("Creating new animation frame... ({}/{})".format(
+            len(ta[slot]["frames"]), frame))
+
+        new_frame = rvstruct.Frame().as_dict()
+        ta[slot]["frames"].append(new_frame)
+
+    # Saves the changed animation
+    props.texture_animations = str(ta)
 
     props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
     props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
-    uv = ta[slot]["frames"][frame]["uv"]
-    props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
-    props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
-    props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
-    props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
-
-
-def update_ta_current_slot(self, context):
-    props = context.scene.revolt
-    slot = props.ta_current_slot
-    frame = props.ta_current_frame
-    if slot > props.ta_max_slots - 1:
-        props.ta_current_slot = props.ta_max_slots - 1
-        return
-    # Converts the texture animations from string to dict
-    ta = eval(props.texture_animations)
-
-    props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
-    props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
-    props.ta_max_frames = len(ta[slot]["frames"])
     uv = ta[slot]["frames"][frame]["uv"]
     props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
     props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])

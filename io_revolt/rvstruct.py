@@ -741,9 +741,9 @@ class Frame:
     Reads and stores exactly one texture animation frame
     """
     def __init__(self, file=None):
-        self.texture = 0    # texture id of the animated texture
-        self.delay = 0      # delay in milliseconds
-        self.uv = []        # list of 4 UV coordinates
+        self.texture = 0                    # texture id of the animated tex
+        self.delay = 0                      # delay in milliseconds
+        self.uv = [UV(), UV(), UV(), UV()]  # list of 4 UV coordinates
 
         if file:
             self.read(file)
@@ -762,7 +762,7 @@ class Frame:
 
         # Reads the UV coordinates for this frame
         for uv in range(4):
-            self.uv.append(UV(file))
+            self.uv[uv] = UV(file)
 
     def write(self, file):
         # Writes the texture id
@@ -777,7 +777,7 @@ class Frame:
     def as_dict(self):
         dic = { "texture" : self.texture,
                 "delay" : self.delay,
-                "uv" : self.uv
+                "uv" : [uv.as_dict() for uv in self.uv]
         }
         return dic
 
@@ -785,7 +785,8 @@ class Frame:
         self.texture = dic["texture"]
         self.delay = dic["delay"]
         uvs = []
-        for uvdict in dic["uv"]:
+        for x in range(0, 4):
+            uvdict = dic["uv"][x]
             uv = UV()
             uv.from_dict(uvdict)
             uvs.append(uv)
