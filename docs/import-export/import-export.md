@@ -1,4 +1,4 @@
-[$\leftarrow$ Back](..)
+[$\leftarrow$ Back](../index.html)
 
 ---
 
@@ -69,10 +69,18 @@ The alpha value of the color is only accessible via the face property editing pa
 
 Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.
 
+#### Texture Animation
+Animations are stored in a dictionary that can be accessed in the *Properties* editor (*Scene* section).
+
 #### Debug
 Bounding boxes, bounding spheres and "big cubes" (spheres) can be imported to selected layers. They are for debug purposes only and they will not affect the export in any way.
 
+## Export
+
+Nothing noteworthy. Exports files the way they have been imported.
+
 ## parameters.txt (Car)
+
 ### Import
 The add-on currently imports the car's body and wheels and their positions.  
 If a wheel file cannot be found, it will be represented with an empty object.

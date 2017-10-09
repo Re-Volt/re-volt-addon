@@ -1,4 +1,4 @@
-[$\leftarrow$ Back](..)
+[$\leftarrow$ Back](../index.html)
 
 ---
 
@@ -58,13 +58,13 @@
 
 ### Export
 
-- [ ] Meshes
-- [ ] Bound Boxes
-- [ ] Bound Spheres
-- [ ] Big Boxes
-- [ ] UV
-- [ ] Vertex colors
-- [ ] Texture
-- [ ] Types
-- [ ] Environment Colors
-- [ ] Texture Animation
+- [x] Meshes
+- [x] Bound Boxes
+- [x] Bound Spheres
+- [x] Big Boxes
+- [x] UV
+- [x] Vertex colors
+- [x] Texture
+- [x] Types
+- [x] Environment Colors
+- [x] Texture Animation

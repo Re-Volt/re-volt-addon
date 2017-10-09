@@ -1,4 +1,4 @@
-[$\leftarrow$ Back](..)
+[$\leftarrow$ Back](../index.html)
 
 ---
 
@@ -43,6 +43,8 @@ Deselecting this might result in broken exports.
 
 Instead of using the texture file to determine the texture number, the number
 set in the face properties panel will be used for exporting.
+
+#### Export PRM (.prm/.m)
 
 ##### Apply Scale
 
@@ -229,6 +231,16 @@ The texture page number this animation frame uses.
 The duration of the frame or the delay until the next frame shows up.
 
 #### UV
+
+##### UV to Frame
+
+Takes the UV coordinates of the currently selected face and applies them to the texture animation frame.
+
+##### Frame to UV
+
+Takes the UV coordinates of the current frame and applies them to the currently selected face.
+
+##### Coordinates
 
 The UV mapping for the currently displayed frame. For triangular faces, UV3 will
 be ignored.

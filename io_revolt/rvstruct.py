@@ -21,6 +21,10 @@ Missing Formats:
 """
 
 import struct
+from math import sqrt
+
+from . import common
+from .common import *
 
 
 class World:
@@ -71,7 +75,6 @@ class World:
             self.animations.append(TexAnimation(file))
 
         # Reads the environment colors
-        # self.env_list = EnvList(file, self)
         for col in range(self.env_count):
             self.env_list.append(Color(file=file, alpha=True))
 
@@ -97,9 +100,35 @@ class World:
         for anim in self.animations:
             anim.write(file)
 
-        # Writes the env color list and its length as the final step
-        file.write(struct.pack("<l", self.env_count))
-        self.env_list.write(file)
+        # self.env_list.write(file)
+        for col in self.env_list:
+            col.write(file)
+
+    def generate_bigcubes(self):
+        bb = BoundingBox()
+        for mesh in self.meshes:
+            for v in mesh.vertices:
+                bb.xlo = v.position.x if v.position.x < bb.xlo else bb.xlo
+                bb.xhi = v.position.x if v.position.x > bb.xhi else bb.xhi
+                bb.ylo = v.position.y if v.position.y < bb.ylo else bb.ylo
+                bb.yhi = v.position.y if v.position.y > bb.yhi else bb.yhi
+                bb.zlo = v.position.z if v.position.z < bb.zlo else bb.zlo
+                bb.zhi = v.position.z if v.position.z > bb.zhi else bb.zhi
+
+        bcube = BigCube()
+        bcube.center = Vector(data=(
+            (bb.xlo + bb.xhi) / 2,
+            (bb.ylo + bb.yhi) / 2,
+            (bb.zlo + bb.zhi) / 2)
+        )
+        max_vert = Vector(data=(bb.xhi, bb.yhi, bb.zhi))
+        bcube.size = bcube.center.get_distance_to(max_vert)
+
+        bcube.mesh_count = len(self.meshes)
+        bcube.mesh_indices = [n for n in range(0, bcube.mesh_count)]
+
+        self.bigcube_count = 1
+        self.bigcubes = [bcube]
 
     def __repr__(self):
         return "World"
@@ -295,14 +324,17 @@ class BoundingBox:
     Reads and stores bounding boxes found in .w meshes
     They are probably used for culling optimization, similar to BigCube
     """
-    def __init__(self, file=None):
+    def __init__(self, file=None, data=None):
         # Lower and higher boundaries for each axis
-        self.xlo = 0
-        self.xhi = 0
-        self.ylo = 0
-        self.yhi = 0
-        self.zlo = 0
-        self.zhi = 0
+        if data is None:
+            self.xlo = 0
+            self.xhi = 0
+            self.ylo = 0
+            self.yhi = 0
+            self.zlo = 0
+            self.zhi = 0
+        else:
+            self.xlo, self.xhi, self.ylo, self.yhi, self.zlo, self.zhi = data
 
         if file:
             self.read(file)
@@ -322,25 +354,24 @@ class BoundingBox:
                         self.yhi, self.zlo, self.zhi))
 
     def as_dict(self):
-        dic = { "xlo" : self.xlo,
-                "xhi" : self.xhi,
-                "ylo" : self.ylo,
-                "yhi" : self.yhi,
-                "zlo" : self.zlo,
-                "zhi" : self.zhi
+        dic = { "xlo": self.xlo,
+                "xhi": self.xhi,
+                "ylo": self.ylo,
+                "yhi": self.yhi,
+                "zlo": self.zlo,
+                "zhi": self.zhi
         }
         return dic
 
     def dump(self):
-        return (
-                "xlo {}\n"
+        return ("xlo {}\n"
                 "xhi {}\n"
                 "ylo {}\n"
                 "yhi {}\n"
                 "zlo {}\n"
                 "zhi {}\n"
-               ).format(self.xlo, self.xhi, self.ylo,
-                        self.yhi, self.zlo, self.zhi)
+                ).format(self.xlo, self.xhi, self.ylo,
+                         self.yhi, self.zlo, self.zhi)
 
 
 class Vector:
@@ -359,6 +390,21 @@ class Vector:
     def __repr__(self):
         return "Vector"
 
+    @property
+    def x(self):
+        return self.data[0]
+
+    @property
+    def y(self):
+        return self.data[1]
+
+    @property
+    def z(self):
+        return self.data[2]
+
+    def get_distance_to(self, v):
+        return sqrt((self.x - v.x)**2 + (self.y - v.y)**2 + (self.z - v.z)**2)
+
     def read(self, file):
         # Reads the coordinates
         self.data = struct.unpack("<3f", file.read(12))
@@ -368,10 +414,10 @@ class Vector:
         file.write(struct.pack("<3f", *self.data))
 
     def as_dict(self):
-        dic = { "x" : self.data[0],
-                "y" : self.data[1],
-                "z" : self.data[2]
-        }
+        dic = {"x": self.data[0],
+               "y": self.data[1],
+               "z": self.data[2]
+               }
         return dic
 
     def dump(self):
@@ -571,6 +617,10 @@ class UV:
         }
         return dic
 
+    def from_dict(self, dic):
+        self.u = dic["u"]
+        self.v = dic["v"]
+
     def dump(self):
         return "({}, {})".format(self.u, self.v)
 
@@ -670,6 +720,13 @@ class TexAnimation:
         }
         return dic
 
+    def from_dict(self, dic):
+        self.frame_count = dic["frame_count"]
+        for framedic in dic["frames"]:
+            frame = Frame()
+            frame.from_dict(framedic)
+            self.frames.append(frame)
+
     def dump(self):
         return ("====   ANIMATION   ====\n"
                 "Frame Count: {}\n"
@@ -684,9 +741,9 @@ class Frame:
     Reads and stores exactly one texture animation frame
     """
     def __init__(self, file=None):
-        self.texture = 0    # texture id of the animated texture
-        self.delay = 0      # delay in milliseconds
-        self.uv = []        # list of 4 UV coordinates
+        self.texture = 0                    # texture id of the animated tex
+        self.delay = 0                      # delay in milliseconds
+        self.uv = [UV(), UV(), UV(), UV()]  # list of 4 UV coordinates
 
         if file:
             self.read(file)
@@ -705,7 +762,7 @@ class Frame:
 
         # Reads the UV coordinates for this frame
         for uv in range(4):
-            self.uv.append(UV(file))
+            self.uv[uv] = UV(file)
 
     def write(self, file):
         # Writes the texture id
@@ -714,15 +771,26 @@ class Frame:
         file.write(struct.pack("<f", self.delay))
 
         # Writes the UV coordinates for this frame
-        for uv in self.uv:
+        for uv in self.uv[:4]:
             uv.write(file)
 
     def as_dict(self):
         dic = { "texture" : self.texture,
                 "delay" : self.delay,
-                "uv" : self.uv
+                "uv" : [uv.as_dict() for uv in self.uv]
         }
         return dic
+
+    def from_dict(self, dic):
+        self.texture = dic["texture"]
+        self.delay = dic["delay"]
+        uvs = []
+        for x in range(0, 4):
+            uvdict = dic["uv"][x]
+            uv = UV()
+            uv.from_dict(uvdict)
+            uvs.append(uv)
+        self.uv = uvs
 
     def dump(self):
         return ("====   FRAME   ====\n"
@@ -734,40 +802,6 @@ class Frame:
                          self.delay,
                          '\n'.join([str(uv) for uv in self.uv]))
 
-
-class EnvList:
-    """
-    Reads and stores the list of environment vertex colors of a .w file
-    The game supports environment maps that make objects look shiny. With this
-    list, they can have individual reflection colors.
-    """
-    def __init__(self, file=None, w=None):
-        self.w = w              # World it belongs to
-
-        # list with length of the number of bit-11 polys
-        self.env_colors = []    # unsigned rvlongs
-
-        if file:
-            self.read(file)
-
-    def __repr__(self):
-        return "EnvList"
-
-    def read(self, file):
-        # Reads the colors times the amount of env-enabled polygons
-        for col in range(self.w.env_count):
-            self.env_colors.append(Color(file=file, alpha=True))
-
-    def write(self, file):
-        # Writes the colors times the amount of env-enabled polygons
-        for col in self.env_colors:
-            col.write(file)
-
-    def dump(self):
-        return ("====   ENVCOL LIST   ====\n"
-                "{}\n"
-                "==== ENVCOL LIST END ====\n"
-                ).format('\n'.join([str(col) for col in self.env_colors]))
 
 class Color:
     """

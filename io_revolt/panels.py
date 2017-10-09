@@ -31,6 +31,17 @@ class RevoltObjectPanel(bpy.types.Panel):
             layout.label("BigCube Properties:")
             layout.prop(obj.revolt, "bcube_mesh_indices")
 
+class RevoltScenePanel(bpy.types.Panel):
+    """ Panel for .w properties """
+    bl_label = "Re-Volt .w Properties"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "scene"
+
+    def draw(self, context):
+        props = context.scene.revolt
+        layout = self.layout
+        layout.prop(props, "texture_animations")
 
 class RevoltIOToolPanel(bpy.types.Panel):
     """
@@ -60,18 +71,21 @@ class RevoltIOToolPanel(bpy.types.Panel):
         )
         if not fold_s:
             box = self.layout.box()
-            box.label("Import")
+            box.label("Import:")
             box.prop(props, "enable_tex_mode")
 
-            box = self.layout.box()
-            box.label("Export")
+            # box = self.layout.box()
+            box.label("Export:")
             box.prop(props, "triangulate_ngons")
             box.prop(props, "use_tex_num")
+
+            # box = self.layout.box()
+            box.label("Export PRM (.prm/.m):")
             box.prop(props, "apply_scale")
             box.prop(props, "apply_rotation")
 
-            box = self.layout.box()
-            box.label("Import World (.w)")
+            # box = self.layout.box()
+            box.label("Import World (.w):")
             box.prop(props, "w_parent_meshes")
             box.prop(props, "w_import_bound_boxes")
             if props.w_import_bound_boxes:
@@ -251,7 +265,7 @@ class RevoltLightPanel(bpy.types.Panel):
         widget_texture_mode(self)
 
         if obj and obj.select:
-            # Cheks if the object has a vertex color layer
+            # Checks if the object has a vertex color layer
             if widget_vertex_color_channel(self, obj):
                 pass
             else:
@@ -339,9 +353,21 @@ class RevoltAnimationPanel(bpy.types.Panel):
 
         row = self.layout.row()
         row.active = (props.ta_max_slots > 0)
+        row.label("UV Coordinates:")
+
+        row = self.layout.row(align=True)
+        row.active = (props.ta_max_slots > 0)
+        # row.prop(props, "ta_sync_with_face") can't do that just yet
+        row.operator("texanim.copy_uv_to_frame")
+        row.operator("texanim.copy_frame_to_uv")
+
+        row = self.layout.row()
+        row.active = (props.ta_max_slots > 0)
+
         column = row.column()
         column.prop(props, "ta_current_frame_uv0")
         column.prop(props, "ta_current_frame_uv1")
+
         column = row.column()
         column.prop(props, "ta_current_frame_uv2")
         column.prop(props, "ta_current_frame_uv3")

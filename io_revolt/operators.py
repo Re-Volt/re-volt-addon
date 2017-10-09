@@ -13,10 +13,11 @@ from . import tools
 from .common import *
 from .properties import *
 
-"""
-Import Operator for all file types
-"""
+
 class ImportRV(bpy.types.Operator):
+    """
+    Import Operator for all file types
+    """
     bl_idname = "import_scene.revolt"
     bl_label = "Import Re-Volt Files"
     bl_description = "Import Re-Volt game files"
@@ -31,7 +32,6 @@ class ImportRV(bpy.types.Operator):
         start_time = time.time()
 
         context.window.cursor_set("WAIT")
-
 
         print("Importing {}".format(self.filepath))
 
@@ -68,6 +68,7 @@ class ImportRV(bpy.types.Operator):
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
         return {"RUNNING_MODAL"}
+
 
 class ExportRV(bpy.types.Operator):
     bl_idname = "export_scene.revolt"
@@ -107,8 +108,12 @@ class ExportRV(bpy.types.Operator):
                 from . import prm_out
                 prm_out.export_file(self.filepath, scene)
 
+            elif frmt == FORMAT_W:
+                from . import w_out
+                print("Exporting to .w...")
+                w_out.export_file(self.filepath, scene)
             else:
-                print("Format is not PRM {}".format(file_formats[frmt]))
+                print("Format not yet supported {}".format(file_formats[frmt]))
 
             # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo
@@ -131,6 +136,26 @@ class ExportRV(bpy.types.Operator):
 
         layout.prop(props, "triangulate_ngons")
         layout.prop(props, "use_tex_num")
+
+class ButtonCopyUvToFrame(bpy.types.Operator):
+    bl_idname = "texanim.copy_uv_to_frame"
+    bl_label = "UV to Frame"
+    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame."
+
+    def execute(self, context):
+        copy_uv_to_frame(context)
+        redraw()
+        return{"FINISHED"}
+
+class ButtonCopyFrameToUv(bpy.types.Operator):
+    bl_idname = "texanim.copy_frame_to_uv"
+    bl_label = "Frame to UV"
+    bl_description = "Copies the UV coordinates of the frame to the currently selected face."
+
+    def execute(self, context):
+        copy_frame_to_uv(context)
+        redraw()
+        return{"FINISHED"}
 
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
