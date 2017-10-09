@@ -39,11 +39,14 @@ if "bpy" in locals():
         imp.reload(w_in)
     if "w_out" in locals():
         imp.reload(w_out)
+    if "operators" in locals():
+        imp.reload(operators)
 
 # Makes common variables and classes directly accessible
 from .common import *
 from .properties import *
 
+print("---\n\n\n\n")
 
 @persistent
 def edit_object_change_handler(scene):

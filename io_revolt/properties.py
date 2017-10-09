@@ -147,10 +147,55 @@ def select_faces(context, prop):
     redraw()
 
 
+def update_ta_max_slots(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    frame = props.ta_current_frame
+
+    if props.ta_max_slots > 0:
+        dprint("TexAnim: Updating max slots...")
+
+        # Converts the texture animations from string to dict
+        ta = eval(props.texture_animations)
+
+        # Creates a new texture animation if there is none in the slot
+        while len(ta) < props.ta_max_slots:
+            dprint("TexAnim: Creating new animation slot... ({}/{})".format(len(ta) + 1, props.ta_max_slots))
+            ta.append(rvstruct.TexAnimation().as_dict())
+
+        # Saves the texture animation
+        props.texture_animations = str(ta)
+
+        # Updates the rest of the UI
+        update_ta_current_slot(self, context)
+
+
+def update_ta_max_frames(self, context):
+    props = context.scene.revolt
+    slot = props.ta_current_slot
+    # frame = props.ta_current_frame
+
+    dprint("TexAnim: Updating max frames...")
+    ta = eval(props.texture_animations)
+    ta[slot]["frame_count"] = props.ta_max_frames
+
+    # Creates new empty frames if there are none for the current slot
+    while len(ta[slot]["frames"]) < props.ta_max_frames:
+        dprint("Creating new animation frame... ({}/{})".format(
+            len(ta[slot]["frames"]) + 1, props.ta_max_frames))
+
+        new_frame = rvstruct.Frame().as_dict()
+        ta[slot]["frames"].append(new_frame)
+
+    props.texture_animations = str(ta)
+
+
 def update_ta_current_slot(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
+
+    dprint("TexAnim: Updating current slot...")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -160,13 +205,12 @@ def update_ta_current_slot(self, context):
         props.ta_current_slot = props.ta_max_slots - 1
         return
 
-    # Creates a new texture animation if there is none in the slot
-    while len(ta) - 1 < slot:
-        dprint("Creating new animation slot... ({}/{})".format(len(ta), slot))
-        ta.append(rvstruct.TexAnimation().as_dict())
-
-    props.ta_max_frames = len(ta[slot]["frames"])
+    # Saves the texture animations
     props.texture_animations = str(ta)
+
+    # Updates the rest of the UI
+    props.ta_max_frames = len(ta[slot]["frames"])
+    update_ta_max_frames(self, context)
     update_ta_current_frame(self, context)
 
 
@@ -176,6 +220,8 @@ def update_ta_current_frame(self, context):
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
+    dprint("TexAnim: Updating current frame...")
+
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
 
@@ -184,30 +230,21 @@ def update_ta_current_frame(self, context):
         props.ta_current_frame = props.ta_max_frames - 1
         return
 
-    # Creates a new empty frame if there is none for the current slot
-    while len(ta[slot]["frames"]) - 1 < frame:
-        dprint("Creating new animation frame... ({}/{})".format(
-            len(ta[slot]["frames"]), frame))
-
-        new_frame = rvstruct.Frame().as_dict()
-        ta[slot]["frames"].append(new_frame)
-
-    # Saves the changed animation
-    props.texture_animations = str(ta)
-
     props.ta_current_frame_tex = ta[slot]["frames"][frame]["texture"]
     props.ta_current_frame_delay = ta[slot]["frames"][frame]["delay"]
     uv = ta[slot]["frames"][frame]["uv"]
-    props.ta_current_frame_uv0 = (uv[0]["u"], uv[0]["v"])
-    props.ta_current_frame_uv1 = (uv[1]["u"], uv[1]["v"])
-    props.ta_current_frame_uv2 = (uv[2]["u"], uv[2]["v"])
-    props.ta_current_frame_uv3 = (uv[3]["u"], uv[3]["v"])
+    props.ta_current_frame_uv0 = (uv[3]["u"], 1 - uv[3]["v"])
+    props.ta_current_frame_uv1 = (uv[2]["u"], 1 - uv[2]["v"])
+    props.ta_current_frame_uv2 = (uv[1]["u"], 1 - uv[1]["v"])
+    props.ta_current_frame_uv3 = (uv[0]["u"], 1 - uv[0]["v"])
 
 
 def update_ta_current_frame_tex(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
+
+    dprint("TexAnim: Updating current frame texture...")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -221,6 +258,8 @@ def update_ta_current_frame_delay(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
     frame = props.ta_current_frame
+
+    dprint("TexAnim: Updating current frame delay...")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -236,11 +275,71 @@ def update_ta_current_frame_uv(context, num):
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
+    # Reverses the accessor since they're saved in reverse order
+    num = [0, 1, 2, 3][::-1][num]
+
+    dprint("TexAnim: Updating current frame UV for {}...".format(num))
+
     ta = literal_eval(props.texture_animations)
     ta[slot]["frames"][frame]["uv"][num]["u"] = getattr(props, prop_str)[0]
-    ta[slot]["frames"][frame]["uv"][num]["v"] = getattr(props, prop_str)[1]
+    ta[slot]["frames"][frame]["uv"][num]["v"] = 1 - getattr(props, prop_str)[1]
     props.texture_animations = str(ta)
 
+
+def copy_uv_to_frame(context):
+    props = context.scene.revolt
+    # Copies over UV coordinates from the mesh
+    if context.object.data:
+        bm = get_edit_bmesh(context.object)
+        uv_layer = bm.loops.layers.uv.get("UVMap")
+        sel_face = get_active_face(bm)
+        if not sel_face:
+            msg_box("Please select a face first.")
+            return
+        if not uv_layer:
+            msg_box("Please create a UV layer first.")
+            return
+        for lnum in range(len(sel_face.loops)):
+            uv = sel_face.loops[lnum][uv_layer].uv
+            if lnum == 0:
+                props.ta_current_frame_uv0 = (uv[0], uv[1])
+            elif lnum == 1:
+                props.ta_current_frame_uv1 = (uv[0], uv[1])
+            elif lnum == 2:
+                props.ta_current_frame_uv2 = (uv[0], uv[1])
+            elif lnum == 3:
+                props.ta_current_frame_uv3 = (uv[0], uv[1])
+    else:
+        dprint("No object for UV anim.")
+
+
+def copy_frame_to_uv(context):
+    props = context.scene.revolt
+    if context.object.data:
+        bm = get_edit_bmesh(context.object)
+        uv_layer = bm.loops.layers.uv.get("UVMap")
+        sel_face = get_active_face(bm)
+        if not sel_face:
+            msg_box("Please select a face first.")
+            return
+        if not uv_layer:
+            msg_box("Please create a UV layer first.")
+            return
+        for lnum in range(len(sel_face.loops)):
+            uv0 = props.ta_current_frame_uv0
+            uv1 = props.ta_current_frame_uv1
+            uv2 = props.ta_current_frame_uv2
+            uv3 = props.ta_current_frame_uv3
+            if lnum == 0:
+                sel_face.loops[lnum][uv_layer].uv = uv0
+            elif lnum == 1:
+                sel_face.loops[lnum][uv_layer].uv = uv1
+            elif lnum == 2:
+                sel_face.loops[lnum][uv_layer].uv = uv2
+            elif lnum == 3:
+                sel_face.loops[lnum][uv_layer].uv = uv3
+    else:
+        dprint("No object for UV anim.")
 
 """
 Re-Volt object and mesh properties
@@ -493,7 +592,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     # World Import properties
     w_parent_meshes = BoolProperty(
         name = "Parent .w meshes to Empty",
-        default = True,
+        default = False,
         description = "Parents all .w meshes to an Empty object, resulting in "
                       "less clutter in the object outliner."
     )
@@ -554,6 +653,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = 0,
         max = 9,
         default = 0,
+        update = update_ta_max_slots,
         description = "Total number of texture animation slots. "
                       "All higher slots will be ignored on export."
     )
@@ -569,6 +669,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Frames",
         min = 2,
         default = 2,
+        update = update_ta_max_frames,
         description = "Total number of frames of the current slot. "
                       "All higher frames will be ignored on export."
     )
@@ -629,4 +730,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 3),
         description = "UV coordinate of the fourth vertex."
+    )
+    ta_sync_with_face = BoolProperty(
+        name="Sync UV with Selection",
+        default=False,
+        description="Updates the UV mapping of the currently selected face "
+                    "with the UV coordinates of the texture animation frame.\n"
+                    "Texture animation needs to be enabled for the selected "
+                    " face."
     )

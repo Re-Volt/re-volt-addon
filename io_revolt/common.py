@@ -10,6 +10,9 @@ import mathutils
 from math import sqrt
 from .parameters import read_parameters
 
+# If True, more debug messages will be printed
+DEBUG = False
+
 # Scale used for importing (multiplicative)
 IMPORT_SCALE = 0.01
 EXPORT_SCALE = 100
@@ -117,7 +120,8 @@ COL_BCUBE = mathutils.Color((0, 0.7, 0.08))
 
 
 def dprint(str):
-    print(str)
+    if DEBUG:
+        print(str)
 
 
 """
@@ -243,6 +247,14 @@ def get_average_vcol(faces, layer):
         return (r, g, b)
 
 
+def get_active_face(bm):
+    if bm.select_history:
+        elem = bm.select_history[-1]
+        if isinstance(elem, bmesh.types.BMFace):
+            return elem
+    return None
+
+
 def get_edit_bmesh(obj):
     try:
         bm = dic[obj.name]
@@ -254,9 +266,10 @@ def get_edit_bmesh(obj):
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
         return bm
 
+
 class DialogOperator(bpy.types.Operator):
     bl_idname = 'revolt.dialog'
-    bl_label = 'Oh noes!'
+    bl_label = 'Re-Volt Add-On Notification'
 
     def execute(self, context):
         return {'FINISHED'}
@@ -280,7 +293,27 @@ def msg_box(message):
 
 
 def redraw():
-    bpy.context.area.tag_redraw()
+    # bpy.context.area.tag_redraw()
+    redraw_3d()
+    redraw_uvedit()
+
+
+def redraw_3d():
+    for window in bpy.context.window_manager.windows:
+        screen = window.screen
+        for area in screen.areas:
+            if area.type == 'VIEW_3D':
+                area.tag_redraw()
+                break
+
+
+def redraw_uvedit():
+    for window in bpy.context.window_manager.windows:
+        screen = window.screen
+        for area in screen.areas:
+            if area.type == 'IMAGE_EDITOR':
+                area.tag_redraw()
+                break
 
 
 def enable_texture_mode():

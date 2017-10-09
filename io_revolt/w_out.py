@@ -42,7 +42,6 @@ def export_file(filepath, scene):
 
     # Exports the texture animation
     animations = eval(props.texture_animations)
-    print(animations)
     for animdict in eval(props.texture_animations):
         anim = rvstruct.TexAnimation()
         anim.from_dict(animdict)

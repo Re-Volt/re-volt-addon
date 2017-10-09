@@ -1,4 +1,4 @@
-[$\leftarrow$ Back](..)
+[$\leftarrow$ Back](../index.html)
 
 ---
 
@@ -61,10 +61,10 @@
 - [x] Meshes
 - [x] Bound Boxes
 - [x] Bound Spheres
-- [ ] Big Boxes
+- [x] Big Boxes
 - [x] UV
 - [x] Vertex colors
 - [x] Texture
 - [x] Types
 - [x] Environment Colors
-- [ ] Texture Animation
+- [x] Texture Animation

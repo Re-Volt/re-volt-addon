@@ -1,4 +1,4 @@
-[$\leftarrow$ Back](..)
+[$\leftarrow$ Back](../index.html)
 
 ---
 

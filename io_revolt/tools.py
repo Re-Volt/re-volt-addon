@@ -110,7 +110,6 @@ def bake_shadow(self, context):
     scale = max(dim_x, dim_y)
     shadow_plane.scale[0] = scale/1.5
     shadow_plane.scale[1] = scale/1.5
-    print(shadow_plane.scale)
 
     # unwrap the shadow plane
     for uv_face in context.object.data.uv_textures.active.data:
@@ -133,13 +132,13 @@ def bake_shadow(self, context):
     sphor = (shadow_plane.location[0] - (shadow_plane.dimensions[0]/2))
     spver = ((shadow_plane.dimensions[1]/2) - shadow_plane.location[1])
 
-    # generate shadowtable
+    # generateImport .prm completedImport .prm completed shadowtable
     sleft = (sphor - shade_obj.location[0]) * 100
     sright = (shade_obj.location[0] - sphor) * 100
     sfront = (spver - shade_obj.location[1]) * 100
     sback = (shade_obj.location[1] - spver) * 100
     sheight = (far_bottom - shade_obj.location[2]) * 100
-    shtable = ";)SHADOWTABLE {:4f} {:4f} {:4f} {:4f} {:4f}".format(sleft, sright, sfront, sback, sheight)
+    shtable = ";)SHADOWTABLE {:.4f} {:.4f} {:.4f} {:.4f} {:.4f}".format(sleft, sright, sfront, sback, sheight)
     shade_obj.revolt.shadow_table = shtable
 
 def bake_vertex(self, context):
