@@ -8,8 +8,9 @@
 
 Version `rva_17.1010`
 
-* **Light Baking Tool**
-  * Reverse horizontal X direction
+* **Fixes**
+  * **Light Baking Tool**: Reverse horizontal X direction
+  * **Export .w**, **export .prm**: Apply scale and rotation correctly
 * **Debug**
   * Rename bound spheres to cubes
   * Import cubes instead of spheres
