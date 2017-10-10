@@ -72,9 +72,7 @@ Imports the bound ball for every single mesh of the .w file.
 
 ##### Import Big Cubes
 
-Imports the larger boundary spheres (not cubes) surrounding multiple meshes of
-the .w file.  
-The term _Big Cubes_ has been established in the community.
+Imports the big cubes surrounding multiple meshes of the .w file.  
 
 ##### \* Import Layers
 

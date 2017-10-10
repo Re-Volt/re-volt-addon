@@ -629,8 +629,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     w_import_big_cubes = BoolProperty(
         name = "Import Big Cubes",
         default = False,
-        description = "Imports Big Cubes (actually spheres) for debugging "
-                      "purposes."
+        description = "Imports Big Cubes for debugging purposes."
     )
     w_big_cube_layers = BoolVectorProperty(
         name = "Big Cube Layers",
