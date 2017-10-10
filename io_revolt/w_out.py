@@ -27,7 +27,18 @@ def export_file(filepath, scene):
     # Creates an empty world object to put the scene into
     world = rvstruct.World()
 
-    objs = [obj for obj in scene.objects if obj.data]
+    objs = []
+    # Goes through all objects and adds the exportable ones to the list
+    for obj in scene.objects:
+        conditions = (
+            obj.data and
+            obj.type == "MESH" and
+            not obj.revolt.is_cube and
+            not obj.revolt.is_bcube and
+            not obj.revolt.is_bbox
+        )
+        if conditions:
+            objs.append(obj)
 
     # Goes through all objects from the scene and exports them to PRM/Mesh
     for obj in objs:
@@ -35,14 +46,14 @@ def export_file(filepath, scene):
         print("Exporting mesh for {}".format(obj.name))
         mesh = export_mesh(me, obj, scene, filepath, world=world)
         world.meshes.append(mesh)
-        world.mesh_count = len(world.meshes)
 
-        # Generates one big cube (sphere) around the scene
-        world.generate_bigcubes()
+    world.mesh_count = len(world.meshes)
+    # Generates one big cube (sphere) around the scene
+    world.generate_bigcubes()
 
     # Exports the texture animation
     animations = eval(props.texture_animations)
-    for animdict in eval(props.texture_animations):
+    for animdict in animations:
         anim = rvstruct.TexAnimation()
         anim.from_dict(animdict)
         world.animations.append(anim)

@@ -3,7 +3,7 @@
 This is the documentation for Marv's Add-On for Re-Volt files.  
 It is intended to be used with **Blender 2.79**.
 
-[**Download** (rva_17.1009)](https://github.com/Yethiel/re-volt-addon/archive/master.zip)
+[**Download** (rva_17.1010)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1010)
 
 [**Changelog**](changelog/index.html)
 
@@ -28,8 +28,11 @@ Explanations to the tools panel located on the left hand side of the 3D view.
 ‣ [**Scene Properties**](scene-properties/index.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;Re-Volt scene (.w) properties.
 
-‣ [**Import and Export**](import-export/index.html)  
-&nbsp;&nbsp;&nbsp;&nbsp;Read how the add-on handles import and export (advanced).
+[**Import and Export**](import-export/index.html)  
+Read how the add-on handles import and export (advanced).
+
+[**Re-Volt File Structure**](structure/index.html)  
+Overview of Re-Volt's binary files and their structure.
 
 ## Known Issues
 
@@ -37,4 +40,4 @@ Explanations to the tools panel located on the left hand side of the 3D view.
 Not an issue with this add-on directly, however, there is a bug in Blender that is caused by a feature used by the add-on. I reported this bug and it has recently been fixed. The fix sadly didn't make it into 2.79 yet. **To obtain a version with the fix included, download Blender from [builder.blender.org](http://builder.blender.org)**.
 
 **<u>Only one BigCube</u>**  
-Only one sphere (BigCube) is written around the entire level. This shouldn't impact performance too much, _other add-ons_ didn't do this any better but a fix should come eventually.
+Only one sphere (BigCube) is written around the entire level. This shouldn't impact performance too much, a fix should come eventually.

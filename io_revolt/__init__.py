@@ -1,4 +1,4 @@
-"""Marv's Re-Volt Blender add-on"""
+""" Marv's Add-On for Re-Volt """
 import bpy
 import os
 import os.path
@@ -8,11 +8,10 @@ from . import common, panels, properties
 bl_info = {
     "name": "Re-Volt",
     "author": "Marvin Thiel",
-    "version": (17, 10, 9),
+    "version": (17, 10, 10),
     "blender": (2, 79, 0),
     "location": "File > Import-Export",
     "description": "Import and export Re-Volt file formats.",
-    "warning": "Please disable any other Re-Volt add-on.",
     "wiki_url": "https://yethiel.github.io/re-volt-addon/",
     "tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
                    "index.php?showtopic=2296",
@@ -46,7 +45,7 @@ if "bpy" in locals():
 from .common import *
 from .properties import *
 
-print("---\n\n\n\n")
+dprint("---\n\n\n\n")
 
 @persistent
 def edit_object_change_handler(scene):

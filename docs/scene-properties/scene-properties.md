@@ -1,6 +1,6 @@
 [$\leftarrow$ Back](../index.html)
 
-------
+---
 
 # Scene Properties
 

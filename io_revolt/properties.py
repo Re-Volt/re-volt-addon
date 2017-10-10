@@ -422,6 +422,16 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = False,
         description = "Makes BigCube properties visible for this object."
     )
+    is_cube = BoolProperty(
+        name = "Object is a Cube",
+        default = False,
+        description = "Makes Cube properties visible for this object."
+    )
+    is_bbox = BoolProperty(
+        name = "Object is a Boundary Box",
+        default = False,
+        description = "Makes BoundBox properties visible for this object."
+    )
     bcube_mesh_indices = StringProperty(
         name = "Mesh indices",
         default = "",
@@ -611,14 +621,14 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "Select multiple by dragging or holding down Shift.\n"
                       "Activate multiple layers by pressing Shift + numbers."
     )
-    w_import_bound_balls = BoolProperty(
-        name = "Import Bound Balls",
+    w_import_cubes = BoolProperty(
+        name = "Import Cubes",
         default = False,
-        description = "Imports the boundary ball of each .w mesh for debugging "
+        description = "Imports the cube of each .w mesh for debugging "
                       "purposes."
     )
-    w_bound_ball_layers = BoolVectorProperty(
-        name = "Bound Ball Layers",
+    w_cube_layers = BoolVectorProperty(
+        name = "Cube Layers",
         subtype = "LAYER",
         size = 20,
         default = [True]+[False for x in range(0, 19)],

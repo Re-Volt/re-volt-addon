@@ -11,7 +11,7 @@ if "bpy" in locals():
 import os
 import bpy
 import bmesh
-from mathutils import Color, Vector
+from mathutils import Color, Vector, Matrix
 from . import common
 from . import rvstruct
 from . import img_in
@@ -57,24 +57,58 @@ def export_mesh(me, obj, scene, filepath, world=None):
     bm = bmesh.new()
     bm.from_mesh(me)
 
-    # Applies the object scale if enabled
-    if props.apply_scale or world is not None:
+    if world is None:
+        # Applies the object scale if enabled
+        if props.apply_scale:
+            bmesh.ops.scale(
+                bm,
+                vec=obj.scale,
+                verts=bm.verts
+            )
+        # Applies the object rotation if enabled
+        if props.apply_rotation:
+            bmesh.ops.rotate(
+                bm,
+                cent=obj.location,
+                matrix=obj.rotation_euler.to_matrix(),
+                space=obj.matrix_basis,
+                verts=bm.verts
+            )
+    else:
+
+        # Removes the parent for exporting
+        parent = obj.parent
+        if parent:
+            mat = obj.matrix_world.copy()
+            old_mat = obj.matrix_basis.copy()
+            obj.parent = None
+            obj.matrix_world = mat
+
+        spc = obj.matrix_basis
         bmesh.ops.scale(
             bm,
             vec=obj.scale,
-            space=obj.matrix_world,
+            space=spc,
             verts=bm.verts
         )
-
-    # Applies the object rotation if enabled
-    if props.apply_rotation or world is not None:
+        bmesh.ops.transform(
+            bm,
+            matrix=Matrix.Translation(obj.location),
+            space=spc,
+            verts=bm.verts
+        )
         bmesh.ops.rotate(
             bm,
             cent=obj.location,
             matrix=obj.rotation_euler.to_matrix(),
-            space=obj.matrix_world,
+            space=spc,
             verts=bm.verts
         )
+
+        # Restores the parent relationship
+        if parent and not obj.parent:
+            obj.parent = parent
+            obj.matrix_basis = old_mat
 
     num_ngons = triangulate_ngons(bm)
     if scene.revolt.triangulate_ngons > 0:
@@ -96,8 +130,6 @@ def export_mesh(me, obj, scene, filepath, world=None):
         prm = rvstruct.PRM()
     else:
         prm = rvstruct.Mesh()
-        # Applies the translation
-        bmesh.ops.translate(bm, vec=obj.location, verts=bm.verts)
 
     prm.polygon_count = len(bm.faces)
     prm.vertex_count = len(bm.verts)

@@ -66,9 +66,9 @@ cluttered.
 
 Imports the bound box for every single mesh of the .w file.
 
-##### Import Bound Balls
+##### Import Cubes
 
-Imports the bound ball for every single mesh of the .w file.
+Imports the cubes for every single mesh of the .w file.
 
 ##### Import Big Cubes
 
