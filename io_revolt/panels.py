@@ -90,9 +90,9 @@ class RevoltIOToolPanel(bpy.types.Panel):
             box.prop(props, "w_import_bound_boxes")
             if props.w_import_bound_boxes:
                 box.prop(props, "w_bound_box_layers")
-            box.prop(props, "w_import_bound_balls")
-            if props.w_import_bound_balls:
-                box.prop(props, "w_bound_ball_layers")
+            box.prop(props, "w_import_cubes")
+            if props.w_import_cubes:
+                box.prop(props, "w_cube_layers")
             box.prop(props, "w_import_big_cubes")
             if props.w_import_big_cubes:
                 box.prop(props, "w_big_cube_layers")

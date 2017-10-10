@@ -61,28 +61,29 @@ def import_file(filepath, scene):
             bbox.parent = ob
 
         # Imports bound ball for each mesh if enabled in settings
-        if props.w_import_bound_balls:
+        if props.w_import_cubes:
             radius = rvmesh.bound_ball_radius
             center = rvmesh.bound_ball_center.data
-            bsphere = create_sphere(
-                scene, "BOUNDBALL", center, radius, filename
+            bsphere = create_cube(
+                scene, "CUBE", center, radius, filename
             )
-            bsphere.layers = props.w_bound_ball_layers
+            bsphere.layers = props.w_cube_layers
             bsphere.parent = ob
 
-    # Creates the big cubes (spheres) around multiple meshes if enabled
+    # Creates the big cubes around multiple meshes if enabled
     if props.w_import_big_cubes:
         for cube in world.bigcubes:
             radius = cube.size
             center = cube.center.data
-            bcube = create_sphere(
+            bcube = create_cube(
                 scene, "BIGCUBE", center, radius, filename
             )
             m_indices = ", ".join([str(c) for c in cube.mesh_indices])
             bcube.revolt.bcube_mesh_indices = m_indices
             bcube.revolt.is_bcube = True
             bcube.layers = props.w_big_cube_layers
-            bcube.parent = main_w
+            if props.w_parent_meshes:
+                bcube.parent = main_w
 
     props.texture_animations = str([a.as_dict() for a in world.animations])
     props.ta_max_slots = world.animation_count
@@ -152,7 +153,7 @@ def create_sphere(scene, sptype, center, radius, filename):
         mname = "RVBoundSphere"
         col = COL_BSPHERE
     elif sptype == "BIGCUBE":
-        mname = "RVBigCube"
+        mname = "RVBigCube_sphere"
         col = COL_BCUBE
 
     center = to_blender_coord(center)
@@ -182,5 +183,44 @@ def create_sphere(scene, sptype, center, radius, filename):
     ob.show_transparent = True
     ob.draw_type = "SOLID"
     # ob.show_wire = True
+
+    return ob
+
+
+def create_cube(scene, sptype, center, radius, filename):
+    if sptype == "CUBE":
+        mname = "RVCube"
+        col = COL_CUBE
+    elif sptype == "BIGCUBE":
+        mname = "RVBigCube"
+        col = COL_BCUBE
+
+    center = to_blender_coord(center)
+    radius = to_blender_scale(radius)
+    if mname not in bpy.data.meshes:
+        me = bpy.data.meshes.new(mname)
+        bm = bmesh.new()
+        # Creates a box
+        bmesh.ops.create_cube(bm, size=2, calc_uvs=True)
+        bm.to_mesh(me)
+        bm.free()
+        # Creates a transparent material for the object
+        me.materials.append(create_material(mname, col, 0.3))
+        # Makes polygons smooth
+        for poly in me.polygons:
+            poly.use_smooth = True
+    else:
+        me = bpy.data.meshes[mname]
+
+    # Links the object and sets position and scale
+    ob = bpy.data.objects.new("{}_{}".format(mname, filename), me)
+    scene.objects.link(ob)
+    ob.location = center
+    ob.scale = (radius, radius, radius)
+
+    # Makes the object transparent
+    ob.show_transparent = True
+    ob.draw_type = "SOLID"
+    ob.show_wire = True
 
     return ob

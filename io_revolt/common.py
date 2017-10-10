@@ -114,7 +114,7 @@ file_formats = {
 }
 
 # Colors for debug objects
-COL_BSPHERE = mathutils.Color((0.7, 0.08, 0))
+COL_CUBE = mathutils.Color((0.7, 0.08, 0))
 COL_BBOX = mathutils.Color((0, 0, 0.05))
 COL_BCUBE = mathutils.Color((0, 0.7, 0.08))
 
