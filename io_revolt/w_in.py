@@ -12,13 +12,12 @@ from .common import *
 from .prm_in import import_mesh
 """
 WORLD IMPORT
-Imports level files which include meshes and other structures for optimization.s
+Imports level files which include meshes and other structures for optimization.
 """
 if "bpy" in locals():
     import imp
     imp.reload(common)
     imp.reload(rvstruct)
-    print("reloaded rvstruct")
     imp.reload(img_in)
     imp.reload(prm_in)
 
