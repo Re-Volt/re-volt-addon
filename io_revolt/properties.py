@@ -422,6 +422,16 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = False,
         description = "Makes BigCube properties visible for this object."
     )
+    is_cube = BoolProperty(
+        name = "Object is a Cube",
+        default = False,
+        description = "Makes Cube properties visible for this object."
+    )
+    is_bbox = BoolProperty(
+        name = "Object is a Boundary Box",
+        default = False,
+        description = "Makes BoundBox properties visible for this object."
+    )
     bcube_mesh_indices = StringProperty(
         name = "Mesh indices",
         default = "",

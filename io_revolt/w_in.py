@@ -58,17 +58,19 @@ def import_file(filepath, scene):
         if props.w_import_bound_boxes:
             bbox = create_bound_box(scene, rvmesh.bbox, filename)
             bbox.layers = props.w_bound_box_layers
+            bbox.revolt.is_bbox = True
             bbox.parent = ob
 
-        # Imports bound ball for each mesh if enabled in settings
+        # Imports bound cube for each mesh if enabled in settings
         if props.w_import_cubes:
             radius = rvmesh.bound_ball_radius
             center = rvmesh.bound_ball_center.data
-            bsphere = create_cube(
+            cube = create_cube(
                 scene, "CUBE", center, radius, filename
             )
-            bsphere.layers = props.w_cube_layers
-            bsphere.parent = ob
+            cube.layers = props.w_cube_layers
+            cube.revolt.is_cube = True
+            cube.parent = ob
 
     # Creates the big cubes around multiple meshes if enabled
     if props.w_import_big_cubes:
@@ -144,45 +146,6 @@ def create_bound_box(scene, bbox, filename):
     ob.show_transparent = True
     ob.draw_type = "SOLID"
     ob.show_wire = True
-
-    return ob
-
-
-def create_sphere(scene, sptype, center, radius, filename):
-    if sptype == "BOUNDBALL":
-        mname = "RVBoundSphere"
-        col = COL_BSPHERE
-    elif sptype == "BIGCUBE":
-        mname = "RVBigCube_sphere"
-        col = COL_BCUBE
-
-    center = to_blender_coord(center)
-    radius = to_blender_scale(radius)
-    if mname not in bpy.data.meshes:
-        me = bpy.data.meshes.new(mname)
-        bm = bmesh.new()
-        # Creates a sphere with the given radius
-        bmesh.ops.create_icosphere(bm, subdivisions=3, diameter=1)
-        bm.to_mesh(me)
-        bm.free()
-        # Creates a transparent material for the object
-        me.materials.append(create_material(mname, col, 0.3))
-        # Makes polygons smooth
-        for poly in me.polygons:
-            poly.use_smooth = True
-    else:
-        me = bpy.data.meshes[mname]
-
-    # Links the object and sets position and scale
-    ob = bpy.data.objects.new("{}_{}".format(mname, filename), me)
-    scene.objects.link(ob)
-    ob.location = center
-    ob.scale = (radius, radius, radius)
-
-    # Makes the object transparent
-    ob.show_transparent = True
-    ob.draw_type = "SOLID"
-    # ob.show_wire = True
 
     return ob
 

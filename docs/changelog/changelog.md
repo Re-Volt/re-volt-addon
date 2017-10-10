@@ -4,6 +4,16 @@
 
 # Changelog
 
+## 2017-10-10
+
+Version `rva_17.1010`
+
+* **Light Baking Tool**
+  * Reverse horizontal X direction
+* **Debug**
+  * Rename bound spheres to cubes
+  * Import cubes instead of spheres
+
 ## 2017-10-09
 
 Version `rva_17.1009`

@@ -161,8 +161,8 @@ def bake_vertex(self, context):
 
         # Rotates light
         if shade_obj.revolt.light_orientation == "X":
-            lamp_object1.location = (1.0, 0, 0)
-            lamp_object1.rotation_euler = (0, pi/2, 0)
+            lamp_object1.location = (-1.0, 0, 0)
+            lamp_object1.rotation_euler = (0, -pi/2, 0)
         elif shade_obj.revolt.light_orientation == "Y":
             lamp_object1.location = (0, 1.0, 0)
             lamp_object1.rotation_euler = (-pi/2, 0, 0)
@@ -177,8 +177,8 @@ def bake_vertex(self, context):
 
         # rotate light
         if shade_obj.revolt.light_orientation == "X":
-            lamp_object2.location = (-1.0, 0, 0)
-            lamp_object2.rotation_euler = (0, -pi/2, 0)
+            lamp_object2.location = (1.0, 0, 0)
+            lamp_object2.rotation_euler = (0, pi/2, 0)
         elif shade_obj.revolt.light_orientation == "Y":
             lamp_object2.location = (0, -1.0, 0)
             lamp_object2.rotation_euler = (pi/2, 0, 0)
