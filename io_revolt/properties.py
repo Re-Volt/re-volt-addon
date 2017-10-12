@@ -22,6 +22,8 @@ from bpy.props import (
     PointerProperty
 )
 
+from . import common
+
 from .common import *
 
 """
@@ -35,8 +37,8 @@ behavior.
 def get_face_material(self):
     eo = bpy.context.edit_object
     bm = get_edit_bmesh(eo)
-    layer = (bm.faces.layers.int.get("revolt_material") or
-             bm.faces.layers.int.new("revolt_material"))
+    layer = (bm.faces.layers.int.get("Material") or
+             bm.faces.layers.int.new("Material"))
     selected_faces = [face for face in bm.faces if face.select]
     if len(selected_faces) == 0 or any([face[layer] != selected_faces[0][layer] for face in selected_faces]):
         return -1
@@ -47,8 +49,8 @@ def get_face_material(self):
 def set_face_material(self, value):
     eo = bpy.context.edit_object
     bm = get_edit_bmesh(eo)
-    layer = (bm.faces.layers.int.get("revolt_material") or
-             bm.faces.layers.int.new("revolt_material"))
+    layer = (bm.faces.layers.int.get("Material") or
+             bm.faces.layers.int.new("Material"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
@@ -442,9 +444,10 @@ class RVObjectProperties(bpy.types.PropertyGroup):
 class RVMeshProperties(bpy.types.PropertyGroup):
     face_material = EnumProperty(
         name = "Material",
-        items = materials,
+        items = MATERIALS,
         get = get_face_material,
-        set = set_face_material
+        set = set_face_material,
+        description = "Surface Material"
     )
     face_texture = IntProperty(
         name = "Texture",
@@ -543,9 +546,18 @@ class RVMeshProperties(bpy.types.PropertyGroup):
 
 class RVSceneProperties(bpy.types.PropertyGroup):
     # User interface and misc.
+    face_edit_mode = EnumProperty(
+        name="Face Edit Mode",
+        description="Select the Edit Mode",
+        items=(
+            ("prm", "PRM/World", "Meshes (.prm/.m, .w)"),
+            ("ncp", "NCP", "Collision (.ncp)")
+        ),
+        default="prm"
+    )
     last_exported_filepath = StringProperty(
-        name = "Last Exported Filepath",
-        default = ""
+        name="Last Exported Filepath",
+        default=""
     )
     ui_fold_export_settings = BoolProperty(
         name = "Export Settings",

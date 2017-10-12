@@ -36,19 +36,26 @@ class ImportRV(bpy.types.Operator):
         print("Importing {}".format(self.filepath))
 
         if frmt == FORMAT_UNK:
-            msg_box("Unsupported format: {}".format(frmt))
+            msg_box("Unsupported format.")
+
         elif frmt == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
             # Enables texture mode after import
             if props.enable_tex_mode:
                 enable_texture_mode()
+
         elif frmt == FORMAT_CAR:
             from . import parameters_in
             parameters_in.import_file(self.filepath, scene)
             # Enables texture mode after import
             if props.enable_tex_mode:
                 enable_texture_mode()
+
+        elif frmt == FORMAT_NCP:
+            from . import ncp_in
+            ncp_in.import_file(self.filepath, scene)
+
         elif frmt == FORMAT_W:
             from . import w_in
             w_in.import_file(self.filepath, scene)
@@ -56,7 +63,7 @@ class ImportRV(bpy.types.Operator):
             if props.enable_tex_mode:
                 enable_texture_mode()
         else:
-            msg_box("Not yet supported: {}".format(frmt))
+            msg_box("Not yet supported: {}".format(FORMATS[frmt]))
 
         end_time = time.time() - start_time
         print("Import done in {0:.3f} seconds.".format(end_time))
@@ -88,7 +95,7 @@ class ExportRV(bpy.types.Operator):
         frmt = get_format(self.filepath)
 
         if frmt == FORMAT_UNK:
-            msg_box("Not supported for export: {}".format(file_formats[frmt]))
+            msg_box("Not supported for export: {}".format(FORMATS[frmt]))
         else:
             # Turns off undo for better performance
             use_global_undo = bpy.context.user_preferences.edit.use_global_undo
@@ -113,7 +120,7 @@ class ExportRV(bpy.types.Operator):
                 print("Exporting to .w...")
                 w_out.export_file(self.filepath, scene)
             else:
-                print("Format not yet supported {}".format(file_formats[frmt]))
+                print("Format not yet supported {}".format(FORMATS[frmt]))
 
             # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo

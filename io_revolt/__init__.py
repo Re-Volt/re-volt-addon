@@ -32,6 +32,8 @@ if "bpy" in locals():
         imp.reload(prm_in)
     if "prm_out" in locals():
         imp.reload(prm_out)
+    if "ncp_in" in locals():
+        imp.reload(ncp_in)
     if "parameters_in" in locals():
         imp.reload(parameters_in)
     if "w_in" in locals():

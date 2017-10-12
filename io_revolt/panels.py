@@ -109,82 +109,104 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
     selected_face_count = None
 
     def draw(self, context):
-        obj = context.object
-        mesh = obj.data
-        bm = get_edit_bmesh(obj)
-        flags = (bm.faces.layers.int.get("Type")
-                 or bm.faces.layers.int.new("Type"))
-        if (self.selected_face_count is None
-            or self.selected_face_count != mesh.total_face_sel):
-            self.selected_face_count = mesh.total_face_sel
-            self.selection = [face for face in bm.faces if face.select]
+        props = context.scene.revolt
 
-        # count the number of faces the flags are set for
-        count = [0] * len(FACE_PROPS)
-        # if len(self.selection) > 1:
-        for face in self.selection:
-            for x in range(len(FACE_PROPS)):
-                if face[flags] & FACE_PROPS[x]:
-                    count[x] += 1
-
-        # self.layout.prop(context.object.data.revolt, "face_material",
-        #     text="Material".format(""))
         row  = self.layout.row()
-        col = row.column(align=True)
-        col.prop(context.object.data.revolt, "face_double_sided",
-            text="{}: Double sided".format(count[1]))
-        col.prop(context.object.data.revolt, "face_translucent",
-            text="{}: Translucent".format(count[2]))
-        col.prop(context.object.data.revolt, "face_mirror",
-            text="{}: Mirror".format(count[3]))
-        col.prop(context.object.data.revolt, "face_additive",
-            text="{}: Additive blending".format(count[4]))
-        col.prop(context.object.data.revolt, "face_texture_animation",
-            text="{}: Texture animation".format(count[5]))
-        col.prop(context.object.data.revolt, "face_no_envmapping",
-            text="{}: No EnvMap".format(count[6]))
-        if context.object.data.revolt.face_envmapping:
-            split = col.split(percentage=.7)
-            scol = split.column(align=True)
-            scol.prop(context.object.data.revolt, "face_envmapping",
-            text="{}: EnvMap".format(count[7]))
-            scol = split.column(align=True)
-            scol.prop(context.object.data.revolt, "face_env", text="")
-        else:
-            col.prop(context.object.data.revolt, "face_envmapping",
-            text="{}: EnvMap".format(count[7]))
+        row.prop(props, "face_edit_mode", expand=True)
 
-        col.prop(context.object.data.revolt, "face_cloth",
-            text="{}: Cloth effect".format(count[8]))
-        col.prop(context.object.data.revolt, "face_skip",
-            text="{}: Do not export".format(count[9]))
-        col = row.column(align=True)
-        col.scale_x = 0.15
-        col.operator("faceprops.select", text="sel").prop = FACE_DOUBLE
-        col.operator("faceprops.select", text="sel").prop = FACE_TRANSLUCENT
-        col.operator("faceprops.select", text="sel").prop = FACE_MIRROR
-        col.operator("faceprops.select", text="sel").prop = FACE_TRANSL_TYPE
-        col.operator("faceprops.select", text="sel").prop = FACE_TEXANIM
-        col.operator("faceprops.select", text="sel").prop = FACE_NOENV
-        col.operator("faceprops.select", text="sel").prop = FACE_ENV
-        col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
-        col.operator("faceprops.select", text="sel").prop = FACE_SKIP
+        if props.face_edit_mode == "prm":
+            prm_edit_panel(self, context)
+        elif props.face_edit_mode == "ncp":
+            ncp_edit_panel(self, context)
 
-        row = self.layout.row()
-        if len(self.selection) > 1:
-            if context.object.data.revolt.face_texture == -2:
-                row.prop(context.object.data.revolt, "face_texture",
-                    text="Texture (different numbers)")
-            else:
-                row.prop(context.object.data.revolt, "face_texture",
-                    text="Texture (set for all)")
-        elif len(self.selection) == 0:
+
+def prm_edit_panel(self, context):
+    """  """
+    obj = context.object
+
+    mesh = obj.data
+    bm = get_edit_bmesh(obj)
+    flags = (bm.faces.layers.int.get("Type") or
+             bm.faces.layers.int.new("Type"))
+    if (self.selected_face_count is None or
+            self.selected_face_count != mesh.total_face_sel):
+        self.selected_face_count = mesh.total_face_sel
+        self.selection = [face for face in bm.faces if face.select]
+
+    # count the number of faces the flags are set for
+    count = [0] * len(FACE_PROPS)
+    # if len(self.selection) > 1:
+    for face in self.selection:
+        for x in range(len(FACE_PROPS)):
+            if face[flags] & FACE_PROPS[x]:
+                count[x] += 1
+
+    row  = self.layout.row()
+    col = row.column(align=True)
+    col.prop(context.object.data.revolt, "face_double_sided",
+        text="{}: Double sided".format(count[1]))
+    col.prop(context.object.data.revolt, "face_translucent",
+        text="{}: Translucent".format(count[2]))
+    col.prop(context.object.data.revolt, "face_mirror",
+        text="{}: Mirror".format(count[3]))
+    col.prop(context.object.data.revolt, "face_additive",
+        text="{}: Additive blending".format(count[4]))
+    col.prop(context.object.data.revolt, "face_texture_animation",
+        text="{}: Texture animation".format(count[5]))
+    col.prop(context.object.data.revolt, "face_no_envmapping",
+        text="{}: No EnvMap".format(count[6]))
+    if context.object.data.revolt.face_envmapping:
+        split = col.split(percentage=.7)
+        scol = split.column(align=True)
+        scol.prop(context.object.data.revolt, "face_envmapping",
+        text="{}: EnvMap".format(count[7]))
+        scol = split.column(align=True)
+        scol.prop(context.object.data.revolt, "face_env", text="")
+    else:
+        col.prop(context.object.data.revolt, "face_envmapping",
+        text="{}: EnvMap".format(count[7]))
+
+    col.prop(context.object.data.revolt, "face_cloth",
+        text="{}: Cloth effect".format(count[8]))
+    col.prop(context.object.data.revolt, "face_skip",
+        text="{}: Do not export".format(count[9]))
+    col = row.column(align=True)
+    col.scale_x = 0.15
+    col.operator("faceprops.select", text="sel").prop = FACE_DOUBLE
+    col.operator("faceprops.select", text="sel").prop = FACE_TRANSLUCENT
+    col.operator("faceprops.select", text="sel").prop = FACE_MIRROR
+    col.operator("faceprops.select", text="sel").prop = FACE_TRANSL_TYPE
+    col.operator("faceprops.select", text="sel").prop = FACE_TEXANIM
+    col.operator("faceprops.select", text="sel").prop = FACE_NOENV
+    col.operator("faceprops.select", text="sel").prop = FACE_ENV
+    col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
+    col.operator("faceprops.select", text="sel").prop = FACE_SKIP
+
+    row = self.layout.row()
+    if len(self.selection) > 1:
+        if context.object.data.revolt.face_texture == -2:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture (no selection)")
+                text="Texture (different numbers)")
         else:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture".format(""))
-        row.active = context.object.data.revolt.face_texture != -3
+                text="Texture (set for all)")
+    elif len(self.selection) == 0:
+        row.prop(context.object.data.revolt, "face_texture",
+            text="Texture (no selection)")
+    else:
+        row.prop(context.object.data.revolt, "face_texture",
+            text="Texture".format(""))
+    row.active = context.object.data.revolt.face_texture != -3
+
+
+def ncp_edit_panel(self, context):
+    props = context.scene.revolt
+    meshprops = context.object.data.revolt
+    layout = self.layout
+
+    row = layout.row()
+    row.prop(meshprops, "face_material")
+
 
 """
 Panel for setting vertex colors in Edit Mode.

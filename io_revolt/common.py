@@ -11,11 +11,9 @@ from math import sqrt
 from .parameters import read_parameters
 
 # If True, more debug messages will be printed
-DEBUG = False
+DEBUG = True
 
-# Scale used for importing (multiplicative)
-IMPORT_SCALE = 0.01
-EXPORT_SCALE = 100
+SCALE = 0.01
 
 FACE_QUAD = 1               # 0x1
 FACE_DOUBLE = 2             # 0x2
@@ -27,6 +25,16 @@ FACE_NOENV = 1024           # 0x400
 FACE_ENV = 2048             # 0x800
 FACE_CLOTH = 4096           # 0x1000
 FACE_SKIP = 8192            # 0x2000
+
+NCP_QUAD = 1
+NCP_TWOSIDED = 2
+NCP_OBJECT_ONLY = 4
+NCP_CAMERA_ONLY = 8
+NCP_NON_PLANAR = 16
+NCP_NO_SKID = 32
+NCP_OIL = 64
+
+NCP_PROP_MASK = NCP_TWOSIDED | NCP_OBJECT_ONLY | NCP_CAMERA_ONLY | NCP_NON_PLANAR | NCP_NO_SKID | NCP_OIL
 
 # Used to unmask unsupported flags (FACE_SKIP)
 FACE_PROP_MASK = (
@@ -45,36 +53,58 @@ FACE_PROPS = [FACE_QUAD,
               FACE_CLOTH,
               FACE_SKIP]
 
-materials = [
-    ("MATERIAL_NONE", "None", "None", "", -1),
-    ("MATERIAL_DEFAULT", "Default", "None", "", 0),
-    ("MATERIAL_MARBLE", "Marble", "None", "", 1),
-    ("MATERIAL_STONE", "Stone", "None", "", 2),
-    ("MATERIAL_WOOD", "Wood", "None", "", 3),
-    ("MATERIAL_SAND", "Sand", "None", "", 4),
-    ("MATERIAL_PLASTIC", "Plastic", "None", "", 5),
-    ("MATERIAL_CARPETTILE", "Carpet tile", "None", "", 6),
-    ("MATERIAL_CARPETSHAG", "Carpet shag", "None", "", 7),
-    ("MATERIAL_BOUNDARY", "Boundary", "None", "", 8),
-    ("MATERIAL_GLASS", "Glass", "None", "", 9),
-    ("MATERIAL_ICE1", "Ice 1", "None", "", 10),
-    ("MATERIAL_METAL", "Metal", "None", "", 11),
-    ("MATERIAL_GRASS", "Grass", "None", "", 12),
-    ("MATERIAL_BUMPMETAL", "Bump metal", "None", "", 13),
-    ("MATERIAL_PEBBLES", "Pebbles", "None", "", 14),
-    ("MATERIAL_GRAVEL", "Gravel", "None", "", 15),
-    ("MATERIAL_CONVEYOR1", "Conveyor 1", "None", "", 16),
-    ("MATERIAL_CONVEYOR2", "Conveyor 2", "None", "", 17),
-    ("MATERIAL_DIRT1", "Dirt 1", "None", "", 18),
-    ("MATERIAL_DIRT2", "Dirt 2", "None", "", 19),
-    ("MATERIAL_DIRT3", "Dirt 3", "None", "", 20),
-    ("MATERIAL_ICE2", "Ice 2", "None", "", 21),
-    ("MATERIAL_ICE3", "Ice 3", "None", "", 22),
-    ("MATERIAL_WOOD2", "Wood 2", "None", "", 23),
-    ("MATERIAL_CONVEYOR_MARKET1", "Conveyor Market 1", "None", "", 24),
-    ("MATERIAL_CONVEYOR_MARKET2", "Conveyor Market 2", "None", "", 25),
-    ("MATERIAL_PAVING", "Paving", "None", "", 26)
-]
+MATERIALS = (
+    ("-1", "NONE",              "No material.", "POTATO", -1),
+    ("0", "DEFAULT",            "Default material.", "POTATO", 0),
+    ("1", "MARBLE",             "Marble material.", "POTATO", 1),
+    ("2", "STONE",              "Stone material.", "POTATO", 2),
+    ("3", "WOOD",               "Wood material.", "POTATO", 3),
+    ("4", "SAND",               "Sand material.", "POTATO", 4),
+    ("5", "PLASTIC",            "Plastic material.", "POTATO", 5),
+    ("6", "CARPETTILE" ,        "Carpet Tile material.", "POTATO", 6),
+    ("7", "CARPETSHAG" ,        "Carpet Shag material.", "POTATO", 7),
+    ("8", "BOUNDARY",           "Boundary material.", "POTATO", 8),
+    ("9", "GLASS",              "Glass material.", "POTATO", 9),
+    ("10", "ICE1",              "Most slipper ice material.", "POTATO", 10),
+    ("11", "METAL",             "Metal material.", "POTATO", 11),
+    ("12", "GRASS",             "Grass material.", "POTATO", 12),
+    ("13", "BUMPMETAL",         "Bump metal material.", "POTATO", 13),
+    ("14", "PEBBLES",           "Pebbles material.", "POTATO", 14),
+    ("15", "GRAVEL",            "Gravel material.", "POTATO", 15),
+    ("16", "CONVEYOR1",         "First conveyor material.", "POTATO", 16),
+    ("17", "CONVEYOR2",         "Second conveyor material.", "POTATO", 17),
+    ("18", "DIRT1",             "First dirt material.", "POTATO", 18),
+    ("19", "DIRT2",             "Second dirt material.", "POTATO", 19),
+    ("20", "DIRT3",             "Third dirt material.", "POTATO", 20),
+    ("21", "ICE2",              "Medium slippery ice material.", "POTATO", 21),
+    ("22", "ICE3",              "Least slippery ice material.", "POTATO", 22),
+    ("23", "WOOD2",             "Second wood material.", "POTATO", 23),
+    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor material.", "POTATO", 24),
+    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor material.", "POTATO", 25),
+    ("26", "PAVING",            "Paving material.", "POTATO", 26),
+)
+
+
+def vec3(r, g, b):
+    """Workaround so I can use my color picker """
+    return (r, g, b)
+
+COLORS  = (
+    vec3(1.0, 0.0, 1.0),     # NONE
+    vec3(0.6, 0.6, 0.6),     # DEFAULT
+    vec3(0.32, 0.2, 0.16),   # MARBLE
+    vec3(0.17, 0.17, 0.17),  # STONE
+    vec3(0.39, 0.26, 0.1),   # WOOD
+    vec3(0.93, 0.73, 0.42),  # SAND
+    vec3(0.27, 0.27, 0.27),  # PLASTIC
+    vec3(0.91, 0.08, 0.0),   # CARPETTILE
+    vec3(0.64, 0.07, 0.01),  # CARPETSHAG
+    vec3(0.59, 0.0, 1.0),    # BOUNDARY
+
+
+
+
+)
 
 """
 Supported File Formats
@@ -95,7 +125,7 @@ FORMAT_TAZ = 11
 FORMAT_VIS = 12
 FORMAT_W = 13
 
-file_formats = {
+FORMATS = {
     FORMAT_UNK: "Unknown Format",
     FORMAT_BMP: "BMP",
     FORMAT_CAR: "parameters.txt",
@@ -155,19 +185,19 @@ def to_blender_axis(vec):
 
 
 def to_blender_coord(vec):
-    return (vec[0] * IMPORT_SCALE,
-            vec[2] * IMPORT_SCALE,
-            -vec[1] * IMPORT_SCALE)
+    return (vec[0] * SCALE,
+            vec[2] * SCALE,
+            -vec[1] * SCALE)
 
 
 def to_blender_scale(num):
-    return num * IMPORT_SCALE
+    return num * SCALE
 
 
 def to_revolt_coord(vec):
-    return (vec[0] * EXPORT_SCALE,
-            -vec[2] * EXPORT_SCALE,
-            vec[1] * EXPORT_SCALE)
+    return (vec[0] / SCALE,
+            -vec[2] / SCALE,
+            vec[1] / SCALE)
 
 
 def to_revolt_axis(vec):
@@ -178,12 +208,12 @@ def rvbbox_from_bm(bm):
     """ The bbox of Blender objects has all edge coordinates. RV just stores the
     mins and max for each axis. """
     # bbox = obj.bound_box
-    xlo = min(v.co[0] for v in bm.verts) * EXPORT_SCALE
-    xhi = max(v.co[0] for v in bm.verts) * EXPORT_SCALE
-    ylo = -min(v.co[2] for v in bm.verts) * EXPORT_SCALE
-    yhi = -max(v.co[2] for v in bm.verts) * EXPORT_SCALE
-    zlo = min(v.co[1] for v in bm.verts) * EXPORT_SCALE
-    zhi = max(v.co[1] for v in bm.verts) * EXPORT_SCALE
+    xlo = min(v.co[0] for v in bm.verts) / SCALE
+    xhi = max(v.co[0] for v in bm.verts) / SCALE
+    ylo = -min(v.co[2] for v in bm.verts) / SCALE
+    yhi = -max(v.co[2] for v in bm.verts) / SCALE
+    zlo = min(v.co[1] for v in bm.verts) / SCALE
+    zhi = max(v.co[1] for v in bm.verts) / SCALE
     return(xlo, xhi, ylo, yhi, zlo, zhi)
 
 
@@ -201,7 +231,9 @@ def center_from_rvbbox(rvbbox):
 
 def radius_from_bmesh(bm, center):
     """ Gets the radius measured from the furthest vertex."""
-    radius = max([get_distance(center, to_revolt_coord(v.co)) for v in bm.verts])
+    radius = max(
+        [get_distance(center, to_revolt_coord(v.co)) for v in bm.verts]
+    )
     return radius
 
 
@@ -237,6 +269,8 @@ def create_material(name, diffuse, alpha):
 """
 Blender helpers
 """
+
+
 def get_average_vcol(faces, layer):
     """ Gets the average vertex color of all loops of given faces """
     for face in faces:
@@ -399,6 +433,8 @@ def get_format(fstr):
         return FORMAT_BMP
     elif ext == ".txt":
         return FORMAT_CAR
+    elif ext in [".ncp"]:
+        return FORMAT_NCP
     elif ext in [".prm", ".m"]:
         return FORMAT_PRM
     elif ext == ".w":
