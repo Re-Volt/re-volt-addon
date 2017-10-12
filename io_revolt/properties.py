@@ -656,7 +656,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Select Material",
         items = MATERIALS,
         update = select_ncp_material,
-        description = "Selects all faces with the selected material."
+        description = "Selects all faces with the selected material"
     )
     last_exported_filepath = StringProperty(
         name="Last Exported Filepath",

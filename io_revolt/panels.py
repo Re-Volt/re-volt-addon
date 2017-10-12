@@ -175,7 +175,7 @@ def prm_edit_panel(self, context):
     col.prop(meshprops, "face_skip",
         text="{}: Do not export".format(count[9]))
     col = row.column(align=True)
-    col.scale_x = 0.17
+    col.scale_x = 0.15
     col.operator("faceprops.select", text="sel").prop = FACE_DOUBLE
     col.operator("faceprops.select", text="sel").prop = FACE_TRANSLUCENT
     col.operator("faceprops.select", text="sel").prop = FACE_MIRROR
@@ -259,15 +259,13 @@ def ncp_edit_panel(self, context):
     row.label("Material:")
 
     row = layout.row()
-    col = row.column(align=True)
-    col.prop(meshprops, "face_material", text="")
-    col = row.column()
-    col.scale_x = 0.17
-    col.prop_menu_enum(props, "select_material", text="sel")
-    # col.operator("ncpfaceprops.select", text="sel")
+    # col = row.column(align=True)
+    row.prop(meshprops, "face_material", text="Set")
     row = layout.row()
+    row.prop(props, "select_material", text="Select")
     # row.alignment="RIGHT"
     # row.prop_menu_enum(props, "select_material", text="Select")
+    row = layout.row()
     # row.prop_enum(props, "select_material", value="2",  text="Select")
 
 
