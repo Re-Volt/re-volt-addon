@@ -87,8 +87,8 @@ MATERIALS = (
     ("21", "ICE2",              "Medium slippery ice material", "POTATO", 21),
     ("22", "ICE3",              "Least slippery ice material", "POTATO", 22),
     ("23", "WOOD2",             "Second wood material", "POTATO", 23),
-    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor material", "POTATO", 24),
-    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor material", "POTATO", 25),
+    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor", "POTATO", 24),
+    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor", "POTATO", 25),
     ("26", "PAVING",            "Paving material", "POTATO", 26),
 )
 
