@@ -147,7 +147,7 @@ class ExportRV(bpy.types.Operator):
 class ButtonCopyUvToFrame(bpy.types.Operator):
     bl_idname = "texanim.copy_uv_to_frame"
     bl_label = "UV to Frame"
-    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame."
+    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame"
 
     def execute(self, context):
         copy_uv_to_frame(context)
@@ -157,7 +157,7 @@ class ButtonCopyUvToFrame(bpy.types.Operator):
 class ButtonCopyFrameToUv(bpy.types.Operator):
     bl_idname = "texanim.copy_frame_to_uv"
     bl_label = "Frame to UV"
-    bl_description = "Copies the UV coordinates of the frame to the currently selected face."
+    bl_description = "Copies the UV coordinates of the frame to the currently selected face"
 
     def execute(self, context):
         copy_frame_to_uv(context)
@@ -167,11 +167,21 @@ class ButtonCopyFrameToUv(bpy.types.Operator):
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
     bl_label = "sel"
-    bl_description = "Select or delesect all polygons with this property."
+    bl_description = "Select or delesect all polygons with this property"
     prop = bpy.props.IntProperty()
 
     def execute(self, context):
         select_faces(context, self.prop)
+        return{"FINISHED"}
+
+class ButtonSelectNCPFaceProp(bpy.types.Operator):
+    bl_idname = "ncpfaceprops.select"
+    bl_label = "sel"
+    bl_description = "Select or delesect all polygons with this property"
+    prop = bpy.props.IntProperty()
+
+    def execute(self, context):
+        select_ncp_faces(context, self.prop)
         return{"FINISHED"}
 
 # VERTEX COLORS
@@ -179,7 +189,7 @@ class ButtonSelectFaceProp(bpy.types.Operator):
 class ButtonVertexColorSet(bpy.types.Operator):
     bl_idname = "vertexcolor.set"
     bl_label = "Set Color"
-    bl_description = "Apply color to selected faces."
+    bl_description = "Apply color to selected faces"
     number = bpy.props.IntProperty()
 
     def execute(self, context):
@@ -189,7 +199,7 @@ class ButtonVertexColorSet(bpy.types.Operator):
 class ButtonVertexColorCreateLayer(bpy.types.Operator):
     bl_idname = "vertexcolor.create_layer"
     bl_label = "Create Vertex Color Layer"
-    bl_description = "Creates a vertex color layer."
+    bl_description = "Creates a vertex color layer"
 
     def execute(self, context):
         create_color_layer(context)
@@ -206,7 +216,7 @@ class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
 class ButtonEnableTextureMode(bpy.types.Operator):
     bl_idname = "helpers.enable_texture_mode"
     bl_label = "Enable Texture Mode"
-    bl_description = "Enables texture mode so textures can be seen."
+    bl_description = "Enables texture mode so textures can be seen"
 
     def execute(self, context):
         enable_texture_mode()
@@ -215,7 +225,7 @@ class ButtonEnableTextureMode(bpy.types.Operator):
 class ButtonBakeShadow(bpy.types.Operator):
     bl_idname = "lighttools.bakeshadow"
     bl_label = "Bake Shadow"
-    bl_description = "Creates a shadow plane beneath the selected object."
+    bl_description = "Creates a shadow plane beneath the selected object"
 
     def execute(self, context):
         tools.bake_shadow(self, context)
@@ -224,7 +234,7 @@ class ButtonBakeShadow(bpy.types.Operator):
 class ButtonBakeLightToVertex(bpy.types.Operator):
     bl_idname = "lighttools.bakevertex"
     bl_label = "Bake light"
-    bl_description = "Bakes the light to the active vertex color layer."
+    bl_description = "Bakes the light to the active vertex color layer"
 
     def execute(self, context):
         tools.bake_vertex(self, context)

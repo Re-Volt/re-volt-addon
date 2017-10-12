@@ -27,14 +27,14 @@ FACE_CLOTH = 4096           # 0x1000
 FACE_SKIP = 8192            # 0x2000
 
 NCP_QUAD = 1
-NCP_TWOSIDED = 2
+NCP_DOUBLE = 2
 NCP_OBJECT_ONLY = 4
 NCP_CAMERA_ONLY = 8
 NCP_NON_PLANAR = 16
 NCP_NO_SKID = 32
 NCP_OIL = 64
 
-NCP_PROP_MASK = NCP_TWOSIDED | NCP_OBJECT_ONLY | NCP_CAMERA_ONLY | NCP_NON_PLANAR | NCP_NO_SKID | NCP_OIL
+NCP_PROP_MASK = NCP_DOUBLE | NCP_OBJECT_ONLY | NCP_CAMERA_ONLY | NCP_NON_PLANAR | NCP_NO_SKID | NCP_OIL
 
 # Used to unmask unsupported flags (FACE_SKIP)
 FACE_PROP_MASK = (
@@ -53,57 +53,85 @@ FACE_PROPS = [FACE_QUAD,
               FACE_CLOTH,
               FACE_SKIP]
 
+NCP_PROPS = [NCP_QUAD,
+            NCP_DOUBLE,
+            NCP_OBJECT_ONLY,
+            NCP_CAMERA_ONLY,
+            NCP_NON_PLANAR,
+            NCP_NO_SKID,
+            NCP_OIL]
+
 MATERIALS = (
-    ("-1", "NONE",              "No material.", "POTATO", -1),
-    ("0", "DEFAULT",            "Default material.", "POTATO", 0),
-    ("1", "MARBLE",             "Marble material.", "POTATO", 1),
-    ("2", "STONE",              "Stone material.", "POTATO", 2),
-    ("3", "WOOD",               "Wood material.", "POTATO", 3),
-    ("4", "SAND",               "Sand material.", "POTATO", 4),
-    ("5", "PLASTIC",            "Plastic material.", "POTATO", 5),
-    ("6", "CARPETTILE" ,        "Carpet Tile material.", "POTATO", 6),
-    ("7", "CARPETSHAG" ,        "Carpet Shag material.", "POTATO", 7),
-    ("8", "BOUNDARY",           "Boundary material.", "POTATO", 8),
-    ("9", "GLASS",              "Glass material.", "POTATO", 9),
-    ("10", "ICE1",              "Most slipper ice material.", "POTATO", 10),
-    ("11", "METAL",             "Metal material.", "POTATO", 11),
-    ("12", "GRASS",             "Grass material.", "POTATO", 12),
-    ("13", "BUMPMETAL",         "Bump metal material.", "POTATO", 13),
-    ("14", "PEBBLES",           "Pebbles material.", "POTATO", 14),
-    ("15", "GRAVEL",            "Gravel material.", "POTATO", 15),
-    ("16", "CONVEYOR1",         "First conveyor material.", "POTATO", 16),
-    ("17", "CONVEYOR2",         "Second conveyor material.", "POTATO", 17),
-    ("18", "DIRT1",             "First dirt material.", "POTATO", 18),
-    ("19", "DIRT2",             "Second dirt material.", "POTATO", 19),
-    ("20", "DIRT3",             "Third dirt material.", "POTATO", 20),
-    ("21", "ICE2",              "Medium slippery ice material.", "POTATO", 21),
-    ("22", "ICE3",              "Least slippery ice material.", "POTATO", 22),
-    ("23", "WOOD2",             "Second wood material.", "POTATO", 23),
-    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor material.", "POTATO", 24),
-    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor material.", "POTATO", 25),
-    ("26", "PAVING",            "Paving material.", "POTATO", 26),
+    ("-1", "NONE",              "No material", "POTATO", -1),
+    ("0", "DEFAULT",            "Default material", "POTATO", 0),
+    ("1", "MARBLE",             "Marble material", "POTATO", 1),
+    ("2", "STONE",              "Stone material", "POTATO", 2),
+    ("3", "WOOD",               "Wood material", "POTATO", 3),
+    ("4", "SAND",               "Sand material", "POTATO", 4),
+    ("5", "PLASTIC",            "Plastic material", "POTATO", 5),
+    ("6", "CARPETTILE" ,        "Carpet Tile material", "POTATO", 6),
+    ("7", "CARPETSHAG" ,        "Carpet Shag material", "POTATO", 7),
+    ("8", "BOUNDARY",           "Boundary material", "POTATO", 8),
+    ("9", "GLASS",              "Glass material", "POTATO", 9),
+    ("10", "ICE1",              "Most slipper ice material", "POTATO", 10),
+    ("11", "METAL",             "Metal material", "POTATO", 11),
+    ("12", "GRASS",             "Grass material", "POTATO", 12),
+    ("13", "BUMPMETAL",         "Bump metal material", "POTATO", 13),
+    ("14", "PEBBLES",           "Pebbles material", "POTATO", 14),
+    ("15", "GRAVEL",            "Gravel material", "POTATO", 15),
+    ("16", "CONVEYOR1",         "First conveyor material", "POTATO", 16),
+    ("17", "CONVEYOR2",         "Second conveyor material", "POTATO", 17),
+    ("18", "DIRT1",             "First dirt material", "POTATO", 18),
+    ("19", "DIRT2",             "Second dirt material", "POTATO", 19),
+    ("20", "DIRT3",             "Third dirt material", "POTATO", 20),
+    ("21", "ICE2",              "Medium slippery ice material", "POTATO", 21),
+    ("22", "ICE3",              "Least slippery ice material", "POTATO", 22),
+    ("23", "WOOD2",             "Second wood material", "POTATO", 23),
+    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor material", "POTATO", 24),
+    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor material", "POTATO", 25),
+    ("26", "PAVING",            "Paving material", "POTATO", 26),
 )
 
 
+def dprint(str):
+    if DEBUG:
+        print(str)
+
+
 def vec3(r, g, b):
-    """Workaround so I can use my color picker """
+    """ Workaround so I can use my color picker """
     return (r, g, b)
 
+
 COLORS  = (
-    vec3(1.0, 0.0, 1.0),     # NONE
     vec3(0.6, 0.6, 0.6),     # DEFAULT
-    vec3(0.32, 0.2, 0.16),   # MARBLE
-    vec3(0.17, 0.17, 0.17),  # STONE
-    vec3(0.39, 0.26, 0.1),   # WOOD
-    vec3(0.93, 0.73, 0.42),  # SAND
-    vec3(0.27, 0.27, 0.27),  # PLASTIC
-    vec3(0.91, 0.08, 0.0),   # CARPETTILE
-    vec3(0.64, 0.07, 0.01),  # CARPETSHAG
-    vec3(0.59, 0.0, 1.0),    # BOUNDARY
-
-
-
-
+    vec3(0.51, 0.36, 0.36),  # MARBLE
+    vec3(0.22, 0.22, 0.22),  # STONE
+    vec3(0.47, 0.3, 0.14),   # WOOD
+    vec3(0.96, 0.76, 0.5),   # SAND
+    vec3(0.09, 0.09, 0.09),  # PLASTIC
+    vec3(0.67, 0.08, 0.0),   # CARPETTILE
+    vec3(0.53, 0.18, 0.13),  # CARPETSHAG
+    vec3(1.0, 0.0, 1.0),     # BOUNDARY
+    vec3(1.0, 1.0, 1.0),     # GLASS
+    vec3(0.72, 1.0, 0.95),   # ICE1
+    vec3(0.53, 0.6, 0.64),   # METAL
+    vec3(0.18, 0.36, 0.05),  # GRASS
+    vec3(0.22, 0.24, 0.2),   # BUMPMETAL
+    vec3(0.55, 0.55, 0.49),  # PEBBLES
+    vec3(0.79, 0.77, 0.76),  # GRAVEL
+    vec3(0.22, 0.0, 0.5),    # CONVEYOR1
+    vec3(0.2, 0.15, 0.24),   # CONVEYOR2
+    vec3(0.53, 0.39, 0.29),  # DIRT1
+    vec3(0.36, 0.26, 0.19),  # DIRT2
+    vec3(0.26, 0.16, 0.1),   # DIRT3
+    vec3(0.52, 0.71, 0.7),   # ICE2
+    vec3(0.4, 0.54, 0.53),   # ICE3
+    vec3(0.47, 0.3, 0.17),   # WOOD2
+    vec3(0.0, 0.08, 0.22),   # CONVEYOR_MARKET1
+    vec3(0.1, 0.13, 0.2),    # CONVEYOR_MARKET2
+    vec3(0.56, 0.5, 0.45),   # PAVING
+    vec3(1.0, 0.0, 0.0)      # NONE (-1)
 )
 
 """
@@ -147,11 +175,6 @@ FORMATS = {
 COL_CUBE = mathutils.Color((0.7, 0.08, 0))
 COL_BBOX = mathutils.Color((0, 0, 0.05))
 COL_BCUBE = mathutils.Color((0, 0.7, 0.08))
-
-
-def dprint(str):
-    if DEBUG:
-        print(str)
 
 
 """

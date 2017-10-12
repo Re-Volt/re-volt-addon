@@ -51,9 +51,15 @@ def set_face_material(self, value):
     bm = get_edit_bmesh(eo)
     layer = (bm.faces.layers.int.get("Material") or
              bm.faces.layers.int.new("Material"))
+    vc_layer = (bm.loops.layers.color.get("NCPPreview") or
+                bm.loops.layers.color.new("NCPPreview"))
     for face in bm.faces:
         if face.select:
             face[layer] = value
+            for loop in face.loops:
+                loop[vc_layer] = COLORS[value]
+    redraw_3d()
+
 
 def get_face_texture(self):
     eo = bpy.context.edit_object
@@ -136,6 +142,29 @@ def set_face_property(self, value, mask):
             face[layer] = face[layer] | mask if value else face[layer] & ~mask
 
 
+def get_face_ncp_property(self):
+    eo = bpy.context.edit_object
+    bm = get_edit_bmesh(eo)
+    layer = (bm.faces.layers.int.get("NCPType") or
+             bm.faces.layers.int.new("NCPType"))
+    selected_faces = [face for face in bm.faces if face.select]
+    if len(selected_faces) == 0:
+        return 0
+    prop = selected_faces[0][layer]
+    for face in selected_faces:
+        prop = prop & face[layer]
+    return prop
+
+
+def set_face_ncp_property(self, value, mask):
+    eo = bpy.context.edit_object
+    bm = get_edit_bmesh(eo)
+    layer = (bm.faces.layers.int.get("NCPType") or
+             bm.faces.layers.int.new("NCPType"))
+    for face in bm.faces:
+        if face.select:
+            face[layer] = face[layer] | mask if value else face[layer] & ~mask
+
 def select_faces(context, prop):
     eo = bpy.context.edit_object
     bm = get_edit_bmesh(eo)
@@ -144,8 +173,34 @@ def select_faces(context, prop):
 
     for face in bm.faces:
         if face[flag_layer] & prop:
-            print(face[flag_layer], prop)
             face.select = not face.select
+    redraw()
+
+def select_ncp_faces(context, prop):
+    eo = bpy.context.edit_object
+    bm = get_edit_bmesh(eo)
+    flag_layer = (bm.faces.layers.int.get("NCPType") or
+                  bm.faces.layers.int.new("NCPType"))
+
+    for face in bm.faces:
+        if face[flag_layer] & prop:
+            face.select = not face.select
+    redraw()
+
+def select_ncp_material(self, context):
+    eo = bpy.context.edit_object
+    bm = get_edit_bmesh(eo)
+    mat = int(self.select_material)
+
+    material_layer = (bm.faces.layers.int.get("Material") or
+                      bm.faces.layers.int.new("Material"))
+    count = 0
+    for face in bm.faces:
+        if face[material_layer] == mat:
+            count += 1
+            face.select = True
+    if count == 0:
+        msg_box("No {} materials found.".format(MATERIALS[mat+1][1]))
     redraw()
 
 
@@ -155,7 +210,7 @@ def update_ta_max_slots(self, context):
     frame = props.ta_current_frame
 
     if props.ta_max_slots > 0:
-        dprint("TexAnim: Updating max slots...")
+        dprint("TexAnim: Updating max slots..")
 
         # Converts the texture animations from string to dict
         ta = eval(props.texture_animations)
@@ -177,7 +232,7 @@ def update_ta_max_frames(self, context):
     slot = props.ta_current_slot
     # frame = props.ta_current_frame
 
-    dprint("TexAnim: Updating max frames...")
+    dprint("TexAnim: Updating max frames..")
     ta = eval(props.texture_animations)
     ta[slot]["frame_count"] = props.ta_max_frames
 
@@ -197,7 +252,7 @@ def update_ta_current_slot(self, context):
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
-    dprint("TexAnim: Updating current slot...")
+    dprint("TexAnim: Updating current slot..")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -222,7 +277,7 @@ def update_ta_current_frame(self, context):
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
-    dprint("TexAnim: Updating current frame...")
+    dprint("TexAnim: Updating current frame..")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -246,7 +301,7 @@ def update_ta_current_frame_tex(self, context):
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
-    dprint("TexAnim: Updating current frame texture...")
+    dprint("TexAnim: Updating current frame texture..")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -261,7 +316,7 @@ def update_ta_current_frame_delay(self, context):
     slot = props.ta_current_slot
     frame = props.ta_current_frame
 
-    dprint("TexAnim: Updating current frame delay...")
+    dprint("TexAnim: Updating current frame delay..")
 
     # Converts the texture animations from string to dict
     ta = eval(props.texture_animations)
@@ -280,7 +335,7 @@ def update_ta_current_frame_uv(context, num):
     # Reverses the accessor since they're saved in reverse order
     num = [0, 1, 2, 3][::-1][num]
 
-    dprint("TexAnim: Updating current frame UV for {}...".format(num))
+    dprint("TexAnim: Updating current frame UV for {}..".format(num))
 
     ta = literal_eval(props.texture_animations)
     ta[slot]["frames"][frame]["uv"][num]["u"] = getattr(props, prop_str)[0]
@@ -296,10 +351,10 @@ def copy_uv_to_frame(context):
         uv_layer = bm.loops.layers.uv.get("UVMap")
         sel_face = get_active_face(bm)
         if not sel_face:
-            msg_box("Please select a face first.")
+            msg_box("Please select a face first")
             return
         if not uv_layer:
-            msg_box("Please create a UV layer first.")
+            msg_box("Please create a UV layer first")
             return
         for lnum in range(len(sel_face.loops)):
             uv = sel_face.loops[lnum][uv_layer].uv
@@ -312,7 +367,7 @@ def copy_uv_to_frame(context):
             elif lnum == 3:
                 props.ta_current_frame_uv3 = (uv[0], uv[1])
     else:
-        dprint("No object for UV anim.")
+        dprint("No object for UV anim")
 
 
 def copy_frame_to_uv(context):
@@ -322,10 +377,10 @@ def copy_frame_to_uv(context):
         uv_layer = bm.loops.layers.uv.get("UVMap")
         sel_face = get_active_face(bm)
         if not sel_face:
-            msg_box("Please select a face first.")
+            msg_box("Please select a face first")
             return
         if not uv_layer:
-            msg_box("Please create a UV layer first.")
+            msg_box("Please create a UV layer first")
             return
         for lnum in range(len(sel_face.loops)):
             uv0 = props.ta_current_frame_uv0
@@ -341,7 +396,7 @@ def copy_frame_to_uv(context):
             elif lnum == 3:
                 sel_face.loops[lnum][uv_layer].uv = uv3
     else:
-        dprint("No object for UV anim.")
+        dprint("No object for UV anim")
 
 """
 Re-Volt object and mesh properties
@@ -385,7 +440,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         description = "Default (Adaptive QMC):\nFaster option, recommended "
                       "for testing the shadow settings.\n\n"
                       "High Quality:\nSlower and less grainy option, "
-                      "recommended for creating the final shadow."
+                      "recommended for creating the final shadow"
     )
     shadow_quality = IntProperty(
         name = "Quality",
@@ -393,7 +448,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         max = 32,
         default = 15,
         description = "The amount of samples the shadow is rendered with "
-                      "(number of samples taken extra)."
+                      "(number of samples taken extra)"
     )
     shadow_resolution = IntProperty(
         name = "Resolution",
@@ -401,7 +456,7 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         max = 8192,
         default = 128,
         description = "Texture resolution of the shadow.\n"
-                      "Default: 128x128 pixels."
+                      "Default: 128x128 pixels"
     )
     shadow_softness = FloatProperty(
         name = "Softness",
@@ -409,35 +464,35 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         max = 100.0,
         default = 1,
         description = "Softness of the shadow "
-                      "(Light size for ray shadow sampling)."
+                      "(Light size for ray shadow sampling)"
     )
     shadow_table = StringProperty(
         name = "Shadowtable",
         default = "",
         description = "Shadow coordinates for use in parameters.txt of cars.\n"
-                      "Click to select all, then CTRL C to copy."
+                      "Click to select all, then CTRL C to copy"
     )
 
     # Debug Objects
     is_bcube = BoolProperty(
         name = "Object is a BigCube",
         default = False,
-        description = "Makes BigCube properties visible for this object."
+        description = "Makes BigCube properties visible for this object"
     )
     is_cube = BoolProperty(
         name = "Object is a Cube",
         default = False,
-        description = "Makes Cube properties visible for this object."
+        description = "Makes Cube properties visible for this object"
     )
     is_bbox = BoolProperty(
         name = "Object is a Boundary Box",
         default = False,
-        description = "Makes BoundBox properties visible for this object."
+        description = "Makes BoundBox properties visible for this object"
     )
     bcube_mesh_indices = StringProperty(
         name = "Mesh indices",
         default = "",
-        description = "Indices of child meshes."
+        description = "Indices of child meshes"
     )
 
 
@@ -469,67 +524,67 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         "9 is texture page J\n"
         "For this number to have an effect, "
         "the \"Use Texture Number\" export settings needs to be "
-        "enabled."
+        "enabled"
     )
     face_double_sided = BoolProperty(
         name = "Double sided",
         get = lambda s: bool(get_face_property(s) & FACE_DOUBLE),
-        set = lambda s,v: set_face_property(s, v, FACE_DOUBLE),
-        description = "The polygon will be visible from both sides in-game."
+        set = lambda s, v: set_face_property(s, v, FACE_DOUBLE),
+        description = "The polygon will be visible from both sides in-game"
     )
     face_translucent = BoolProperty(
         name = "Translucent",
         get = lambda s: bool(get_face_property(s) & FACE_TRANSLUCENT),
-        set = lambda s,v: set_face_property(s, v, FACE_TRANSLUCENT),
+        set = lambda s, v: set_face_property(s, v, FACE_TRANSLUCENT),
         description = "Renders the polyon transparent\n(takes transparency "
                       "from the \"Alpha\" vertex color layer or the alpha "
-                      "layer of the texture."
+                      "layer of the texture"
     )
     face_mirror = BoolProperty(
         name = "Mirror",
         get = lambda s: bool(get_face_property(s) & FACE_MIRROR),
-        set = lambda s,v: set_face_property(s, v, FACE_MIRROR),
+        set = lambda s, v: set_face_property(s, v, FACE_MIRROR),
         description = "This polygon covers a mirror area. (?)"
     )
     face_additive = BoolProperty(
         name = "Additive blending",
         get = lambda s: bool(get_face_property(s) & FACE_TRANSL_TYPE),
-        set = lambda s,v: set_face_property(s, v, FACE_TRANSL_TYPE),
+        set = lambda s, v: set_face_property(s, v, FACE_TRANSL_TYPE),
         description = "Renders the polygon with additive blending (black "
                       "becomes transparent, bright colors are added to colors "
-                      "beneath)."
+                      "beneath)"
     )
     face_texture_animation = BoolProperty(
         name = "Animated",
         get = lambda s: bool(get_face_property(s) & FACE_TEXANIM),
-        set = lambda s,v: set_face_property(s, v, FACE_TEXANIM),
-        description = "Uses texture animation for this poly (only in .w files)."
+        set = lambda s, v: set_face_property(s, v, FACE_TEXANIM),
+        description = "Uses texture animation for this poly (only in .w files)"
     )
     face_no_envmapping = BoolProperty(
         name = "No EnvMap (.prm)",
         get = lambda s: bool(get_face_property(s) & FACE_NOENV),
-        set = lambda s,v: set_face_property(s, v, FACE_NOENV),
-        description = "Disables the environment map for this poly (.prm only)."
+        set = lambda s, v: set_face_property(s, v, FACE_NOENV),
+        description = "Disables the environment map for this poly (.prm only)"
     )
     face_envmapping = BoolProperty(
         name = "EnvMapping (.w)",
         get = lambda s: bool(get_face_property(s) & FACE_ENV),
-        set = lambda s,v: set_face_property(s, v, FACE_ENV),
+        set = lambda s, v: set_face_property(s, v, FACE_ENV),
         description = "Enables the environment map for this poly (.w only).\n\n"
                       "If enabled on pickup.m, sparks will appear"
-                      "around the poly."
+                      "around the poly"
     )
     face_cloth = BoolProperty(
         name = "Cloth effect (.prm)",
         get = lambda s: bool(get_face_property(s) & FACE_CLOTH),
-        set = lambda s,v: set_face_property(s, v, FACE_CLOTH),
-        description = "Enables the cloth effect used on the Mystery car."
+        set = lambda s, v: set_face_property(s, v, FACE_CLOTH),
+        description = "Enables the cloth effect used on the Mystery car"
     )
     face_skip = BoolProperty(
         name = "Do not export",
         get = lambda s: bool(get_face_property(s) & FACE_SKIP),
-        set = lambda s,v: set_face_property(s, v, FACE_SKIP),
-        description = "Skips the polygon when exporting (not Re-Volt related)."
+        set = lambda s, v: set_face_property(s, v, FACE_SKIP),
+        description = "Skips the polygon when exporting (not Re-Volt related)"
     )
     face_env = FloatVectorProperty(
         name = "Environment Color",
@@ -541,8 +596,45 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         soft_max = 1.0,
         get = get_face_env,
         set = set_face_env,
-        description = "Color of the environment map for World meshes."
+        description = "Color of the environment map for World meshes"
     )
+    face_ncp_double = BoolProperty(
+        name="Double-sided",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_DOUBLE),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_DOUBLE),
+        description="Enables double-sided collision"
+    )
+    face_ncp_object_only = BoolProperty(
+        name="Object Only",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_OBJECT_ONLY),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_OBJECT_ONLY),
+        description="Enable collision for objects only (ignores camera)"
+    )
+    face_ncp_camera_only = BoolProperty(
+        name="Camera Only",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_CAMERA_ONLY),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_CAMERA_ONLY),
+        description="Enable collision for camera only"
+    )
+    face_ncp_non_planar = BoolProperty(
+        name="Non-planar",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_NON_PLANAR),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_NON_PLANAR),
+        description="Face is non-planar"
+    )
+    face_ncp_no_skid = BoolProperty(
+        name="No Skid Marks",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_NO_SKID),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_NO_SKID),
+        description="Disable skid marks"
+    )
+    face_ncp_oil = BoolProperty(
+        name="Oil",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_OIL),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_OIL),
+        description="Ground is oil"
+    )
+
 
 class RVSceneProperties(bpy.types.PropertyGroup):
     # User interface and misc.
@@ -554,6 +646,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
             ("ncp", "NCP", "Collision (.ncp)")
         ),
         default="prm"
+    )
+    select_material = EnumProperty(
+        name = "Select Material",
+        items = MATERIALS,
+        update = select_ncp_material,
+        description = "Selects all faces with the selected material."
     )
     last_exported_filepath = StringProperty(
         name="Last Exported Filepath",
@@ -567,20 +665,20 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     enable_tex_mode = BoolProperty(
         name = "Texture Mode after Import",
         default = True,
-        description = "Enables Texture Mode after mesh import."
+        description = "Enables Texture Mode after mesh import"
     )
     vertex_color_picker = FloatVectorProperty(
         name="Object Color",
         subtype='COLOR',
         default=(0, 0, 1.0),
         min=0.0, max=1.0,
-        description="Color picker for painting custom vertex colors."
+        description="Color picker for painting custom vertex colors"
     )
     envidx = IntProperty(
         name="envidx",
         default=0,
         min=0,
-        description="Current env color index for importing. Internal only."
+        description="Current env color index for importing. Internal only"
     )
 
     # Export properties
@@ -597,17 +695,17 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = False,
         description = "Uses the texture number from the texture layer "
                       "accessible in the tool shelf in Edit mode.\n"
-                      "Otherwise, it uses the texture from the texture file."
+                      "Otherwise, it uses the texture from the texture file"
     )
     apply_scale = BoolProperty(
         name = "Apply Scale",
         default = True,
-        description = "Applies the object scale on export."
+        description = "Applies the object scale on export"
     )
     apply_rotation = BoolProperty(
         name = "Apply Rotation",
         default = True,
-        description = "Applies the object rotation on export."
+        description = "Applies the object rotation on export"
     )
 
 
@@ -616,13 +714,13 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Parent .w meshes to Empty",
         default = False,
         description = "Parents all .w meshes to an Empty object, resulting in "
-                      "less clutter in the object outliner."
+                      "less clutter in the object outliner"
     )
     w_import_bound_boxes = BoolProperty(
         name = "Import Bound Boxes",
         default = False,
         description = "Imports the boundary box of each .w mesh for debugging "
-                      "purposes."
+                      "purposes"
     )
     w_bound_box_layers = BoolVectorProperty(
         name = "Bound Box Layers",
@@ -631,13 +729,13 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = [True]+[False for x in range(0, 19)],
         description = "Sets the layers the objecs will be be imported to. "
                       "Select multiple by dragging or holding down Shift.\n"
-                      "Activate multiple layers by pressing Shift + numbers."
+                      "Activate multiple layers by pressing Shift + numbers"
     )
     w_import_cubes = BoolProperty(
         name = "Import Cubes",
         default = False,
         description = "Imports the cube of each .w mesh for debugging "
-                      "purposes."
+                      "purposes"
     )
     w_cube_layers = BoolVectorProperty(
         name = "Cube Layers",
@@ -646,12 +744,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = [True]+[False for x in range(0, 19)],
         description = "Sets the layers the objecs will be be imported to. "
                       "Select multiple by dragging or holding down Shift.\n"
-                      "Activate multiple layers by pressing Shift + numbers."
+                      "Activate multiple layers by pressing Shift + numbers"
     )
     w_import_big_cubes = BoolProperty(
         name = "Import Big Cubes",
         default = False,
-        description = "Imports Big Cubes for debugging purposes."
+        description = "Imports Big Cubes for debugging purposes"
     )
     w_big_cube_layers = BoolVectorProperty(
         name = "Big Cube Layers",
@@ -660,14 +758,14 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = [True]+[False for x in range(0, 19)],
         description = "Sets the layers the objecs will be be imported to. "
                       "Select multiple by dragging or holding down Shift.\n"
-                      "Activate multiple layers by pressing Shift + numbers."
+                      "Activate multiple layers by pressing Shift + numbers"
     )
     # Texture Animation
     texture_animations = StringProperty(
         name = "Texture Animations",
         default = "[]",
         description = "Storage for Texture animations. Should not be changed "
-                      "by hand."
+                      "by hand"
     )
     ta_max_slots = IntProperty(
         name = "Slots",
@@ -676,7 +774,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = 0,
         update = update_ta_max_slots,
         description = "Total number of texture animation slots. "
-                      "All higher slots will be ignored on export."
+                      "All higher slots will be ignored on export"
     )
     ta_current_slot = IntProperty(
         name = "Animation",
@@ -684,7 +782,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = 0,
         max = 9,
         update = update_ta_current_slot,
-        description = "Texture animation slot."
+        description = "Texture animation slot"
     )
     ta_max_frames = IntProperty(
         name = "Frames",
@@ -692,14 +790,14 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = 2,
         update = update_ta_max_frames,
         description = "Total number of frames of the current slot. "
-                      "All higher frames will be ignored on export."
+                      "All higher frames will be ignored on export"
     )
     ta_current_frame = IntProperty(
         name = "Frame",
         default = 0,
         min = 0,
         update = update_ta_current_frame,
-        description = "Current frame."
+        description = "Current frame"
     )
     ta_current_frame_tex = IntProperty(
         name = "Texture",
@@ -707,14 +805,14 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = -1,
         max = 9,
         update = update_ta_current_frame_tex,
-        description = "Texture of the current frame."
+        description = "Texture of the current frame"
     )
     ta_current_frame_delay = FloatProperty(
         name = "Duration",
         default = 0.01,
         min = 0,
         update = update_ta_current_frame_delay,
-        description = "Duration of the current frame."
+        description = "Duration of the current frame"
     )
     ta_current_frame_uv0 = FloatVectorProperty(
         name = "UV 0",
@@ -723,7 +821,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = 0.0,
         max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 0),
-        description = "UV coordinate of the first vertex."
+        description = "UV coordinate of the first vertex"
     )
     ta_current_frame_uv1 = FloatVectorProperty(
         name = "UV 1",
@@ -732,7 +830,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = 0.0,
         max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 1),
-        description = "UV coordinate of the second vertex."
+        description = "UV coordinate of the second vertex"
     )
     ta_current_frame_uv2 = FloatVectorProperty(
         name = "UV 2",
@@ -741,7 +839,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = 0.0,
         max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 2),
-        description = "UV coordinate of the third vertex."
+        description = "UV coordinate of the third vertex"
     )
     ta_current_frame_uv3 = FloatVectorProperty(
         name = "UV 3",
@@ -750,7 +848,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         min = 0.0,
         max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 3),
-        description = "UV coordinate of the fourth vertex."
+        description = "UV coordinate of the fourth vertex"
     )
     ta_sync_with_face = BoolProperty(
         name="Sync UV with Selection",
@@ -758,5 +856,5 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description="Updates the UV mapping of the currently selected face "
                     "with the UV coordinates of the texture animation frame.\n"
                     "Texture animation needs to be enabled for the selected "
-                    " face."
+                    " face"
     )

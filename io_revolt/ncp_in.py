@@ -17,6 +17,7 @@ from . import rvstruct
 
 from .rvstruct import NCP, Vector
 from .common import *
+from mathutils import Color
 
 
 def intersect(d1, n1, d2, n2, d3, n3):
@@ -51,6 +52,7 @@ def import_file(filepath, scene):
 
     material_layer = bm.faces.layers.int.new("Material")
     type_layer = bm.faces.layers.int.new("NCPType")
+    vc_layer = bm.loops.layers.color.new("NCPPreview")
 
     # Goes through all polyhedra and creates faces from them
     for polyhedron in ncp.polyhedra:
@@ -85,6 +87,10 @@ def import_file(filepath, scene):
         face[material_layer] = polyhedron.material
         face[type_layer] = polyhedron.type
 
+        # Sets preview colors
+        for lnum in range(len(face.loops)):
+            face.loops[lnum][vc_layer] = Color(COLORS[polyhedron.material])
+
         bm.verts.ensure_lookup_table()
 
     # Converts the bmesh back to a mesh and frees resources
@@ -94,7 +100,7 @@ def import_file(filepath, scene):
 
     print("Creating Blender object for {}...".format(filename))
     ob = bpy.data.objects.new(filename, me)
-    ob.show_wire = True
-    ob.show_all_edges = True
+    # ob.show_wire = True
+    # ob.show_all_edges = True
     scene.objects.link(ob)
     scene.objects.active = ob
