@@ -455,6 +455,30 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column.prop(props, "ta_current_frame_uv2")
         column.prop(props, "ta_current_frame_uv3")
 
+class RevoltHelpersPanel():
+    bl_label = "Helpers"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+
+        layout = self.layout
+
+        box = layout.box()
+        box.label("3D View:")
+        col = box.column(align=True)
+        col.operator("helpers.enable_texture_mode", icon="POTATO", text="Texture")
+        # col = box.col(align=True)
+        col.operator("helpers.enable_textured_solid_mode", icon="SOLID", text="Textured Solid")
+
+class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
+    bl_context = "mesh_edit"
+
+class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
+    bl_context = "objectmode"
+
+
 
 """
 Widgets are little panel snippets that generally warn users if something isn't
