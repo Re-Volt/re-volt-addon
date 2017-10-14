@@ -222,6 +222,15 @@ class ButtonEnableTextureMode(bpy.types.Operator):
         enable_texture_mode()
         return{"FINISHED"}
 
+class ButtonEnableTexturedSolidMode(bpy.types.Operator):
+    bl_idname = "helpers.enable_textured_solid_mode"
+    bl_label = "Enable Textured Solid Mode"
+    bl_description = "Enables texture mode so textures can be seen"
+
+    def execute(self, context):
+        enable_textured_solid_mode()
+        return{"FINISHED"}
+
 class ButtonBakeShadow(bpy.types.Operator):
     bl_idname = "lighttools.bakeshadow"
     bl_label = "Bake Shadow"

@@ -73,7 +73,7 @@ MATERIALS = (
     ("7", "CARPETSHAG" ,        "Carpet Shag material", "POTATO", 7),
     ("8", "BOUNDARY",           "Boundary material", "POTATO", 8),
     ("9", "GLASS",              "Glass material", "POTATO", 9),
-    ("10", "ICE1",              "Most slipper ice material", "POTATO", 10),
+    ("10", "ICE1",              "Most slippery ice material", "POTATO", 10),
     ("11", "METAL",             "Metal material", "POTATO", 11),
     ("12", "GRASS",             "Grass material", "POTATO", 12),
     ("13", "BUMPMETAL",         "Bump metal material", "POTATO", 13),
@@ -87,8 +87,8 @@ MATERIALS = (
     ("21", "ICE2",              "Medium slippery ice material", "POTATO", 21),
     ("22", "ICE3",              "Least slippery ice material", "POTATO", 22),
     ("23", "WOOD2",             "Second wood material", "POTATO", 23),
-    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor material", "POTATO", 24),
-    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor material", "POTATO", 25),
+    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor", "POTATO", 24),
+    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor", "POTATO", 25),
     ("26", "PAVING",            "Paving material", "POTATO", 26),
 )
 
@@ -318,7 +318,7 @@ def get_edit_bmesh(obj):
         bm.faces.layers.int.get("Type")
         return bm
     except Exception as e:
-        # print("Bmesh is gone, creating new one...")
+        dprint("Bmesh is gone, creating new one...")
         del dic[obj.name]
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
         return bm
@@ -350,7 +350,6 @@ def msg_box(message):
 
 
 def redraw():
-    # bpy.context.area.tag_redraw()
     redraw_3d()
     redraw_uvedit()
 
@@ -381,6 +380,14 @@ def enable_texture_mode():
                     space.viewport_shade = 'TEXTURED'
     return
 
+def enable_textured_solid_mode():
+    for area in bpy.context.screen.areas:
+        if area.type == 'VIEW_3D':
+            for space in area.spaces:
+                if space.type == 'VIEW_3D':
+                    space.viewport_shade = 'SOLID'
+                    space.show_textured_solid = True
+    return
 
 def texture_mode_enabled():
     for area in bpy.context.screen.areas:
@@ -388,6 +395,8 @@ def texture_mode_enabled():
             for space in area.spaces:
                 if space.type == 'VIEW_3D':
                     if space.viewport_shade == 'TEXTURED':
+                        return True
+                    elif space.show_textured_solid == True:
                         return True
     return False
 

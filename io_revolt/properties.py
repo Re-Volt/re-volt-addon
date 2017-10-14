@@ -195,10 +195,15 @@ def select_ncp_material(self, context):
     material_layer = (bm.faces.layers.int.get("Material") or
                       bm.faces.layers.int.new("Material"))
     count = 0
+    count_sel = 0
     for face in bm.faces:
         if face[material_layer] == mat:
             count += 1
-            face.select = True
+            if not face.select:
+                face.select = True
+            else:
+                count_sel += 1
+
     if count == 0:
         msg_box("No {} materials found.".format(MATERIALS[mat+1][1]))
     redraw()
@@ -651,7 +656,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Select Material",
         items = MATERIALS,
         update = select_ncp_material,
-        description = "Selects all faces with the selected material."
+        description = "Selects all faces with the selected material"
     )
     last_exported_filepath = StringProperty(
         name="Last Exported Filepath",

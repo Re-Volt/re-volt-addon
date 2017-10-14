@@ -259,9 +259,14 @@ def ncp_edit_panel(self, context):
     row.label("Material:")
 
     row = layout.row()
-    row.prop(meshprops, "face_material", text="Active")
+    # col = row.column(align=True)
+    row.prop(meshprops, "face_material", text="Set")
     row = layout.row()
     row.prop(props, "select_material", text="Select")
+    # row.alignment="RIGHT"
+    # row.prop_menu_enum(props, "select_material", text="Select")
+    row = layout.row()
+    # row.prop_enum(props, "select_material", value="2",  text="Select")
 
 
 """
@@ -449,6 +454,30 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column = row.column()
         column.prop(props, "ta_current_frame_uv2")
         column.prop(props, "ta_current_frame_uv3")
+
+class RevoltHelpersPanel():
+    bl_label = "Helpers"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+
+        layout = self.layout
+
+        box = layout.box()
+        box.label("3D View:")
+        col = box.column(align=True)
+        col.operator("helpers.enable_texture_mode", icon="POTATO", text="Texture")
+        # col = box.col(align=True)
+        col.operator("helpers.enable_textured_solid_mode", icon="SOLID", text="Textured Solid")
+
+class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
+    bl_context = "mesh_edit"
+
+class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
+    bl_context = "objectmode"
+
 
 
 """
