@@ -7,6 +7,7 @@ import bpy
 import bmesh
 import os
 import mathutils
+from mathutils import Matrix
 from math import sqrt
 from .parameters import read_parameters
 
@@ -227,18 +228,22 @@ def to_revolt_axis(vec):
     return (vec[0], -vec[2], vec[1])
 
 
+def to_revolt_scale(num):
+    return num / SCALE
+
 def rvbbox_from_bm(bm):
     """ The bbox of Blender objects has all edge coordinates. RV just stores the
     mins and max for each axis. """
-    # bbox = obj.bound_box
-    xlo = min(v.co[0] for v in bm.verts) / SCALE
-    xhi = max(v.co[0] for v in bm.verts) / SCALE
-    ylo = -min(v.co[2] for v in bm.verts) / SCALE
-    yhi = -max(v.co[2] for v in bm.verts) / SCALE
-    zlo = min(v.co[1] for v in bm.verts) / SCALE
-    zhi = max(v.co[1] for v in bm.verts) / SCALE
-    return(xlo, xhi, ylo, yhi, zlo, zhi)
+    return rvbbox_from_verts(bm.verts)
 
+def rvbbox_from_verts(verts):
+    xlo = min(v.co[0] for v in verts) / SCALE
+    xhi = max(v.co[0] for v in verts) / SCALE
+    ylo = -min(v.co[2] for v in verts) / SCALE
+    yhi = -max(v.co[2] for v in verts) / SCALE
+    zlo = min(v.co[1] for v in verts) / SCALE
+    zhi = max(v.co[1] for v in verts) / SCALE
+    return(xlo, xhi, ylo, yhi, zlo, zhi)
 
 def get_distance(v1, v2):
     return sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2 + (v1[2] - v2[2])**2)
@@ -322,6 +327,66 @@ def get_edit_bmesh(obj):
         del dic[obj.name]
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
         return bm
+
+
+def objects_to_bmesh(objs):
+
+    # Creates the mesh used to merge the entire scene
+    bm_all = bmesh.new()
+
+    # Adds the objects' meshes to the bmesh
+    for obj in objs:
+        dprint("Preparing object {} for export...".format(obj.name))
+        # Creates a bmesh from the supplied object
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+
+        # Removes the parent for exporting and applies transformation
+        parent = obj.parent
+        if parent:
+            mat = obj.matrix_world.copy()
+            old_mat = obj.matrix_basis.copy()
+            obj.parent = None
+            obj.matrix_world = mat
+
+        spc = obj.matrix_basis
+        bmesh.ops.scale(
+            bm,
+            vec=obj.scale,
+            space=spc,
+            verts=bm.verts
+        )
+        bmesh.ops.transform(
+            bm,
+            matrix=Matrix.Translation(obj.location),
+            space=spc,
+            verts=bm.verts
+        )
+        bmesh.ops.rotate(
+            bm,
+            cent=obj.location,
+            matrix=obj.rotation_euler.to_matrix(),
+            space=spc,
+            verts=bm.verts
+        )
+
+        # Restores the parent relationship
+        if parent and not obj.parent:
+            obj.parent = parent
+            obj.matrix_basis = old_mat
+
+        # Converts the transformed bmesh to mesh
+        new_mesh = bpy.data.meshes.new("ncp_export_temp")
+        bm.to_mesh(new_mesh)
+
+        # Adds the transformed mesh to the big bmesh
+        bm_all.from_mesh(new_mesh)
+
+        # Removes unused meshes
+        bpy.data.meshes.remove(new_mesh, do_unlink=True)
+        bm.free()
+
+    return bm_all
 
 
 class DialogOperator(bpy.types.Operator):

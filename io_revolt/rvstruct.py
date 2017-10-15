@@ -319,9 +319,9 @@ class Vector:
     """
     def __init__(self, file=None, data=None):
         if data:
-            self.data = data
+            self.data = [data[0], data[1], data[2]]
         else:
-            self.data = (0, 0, 0)
+            self.data = [0, 0, 0]
 
         if file:
             self.read(file)
@@ -340,9 +340,11 @@ class Vector:
     def scalar(self, v):
         """ Returns the dot/scalar product with v """
         if len(v.data) != len(self.data):
-            print("Vectors are of different lengths.")
+            print("RVSTRUCT ERROR: Vectors are of different lengths.")
             return None
         return sum([v[x] * self[x] for x in range(len(self.data))])
+
+    dot = scalar
 
     def cross(self, v):
         """ Returns the cross product with v """
@@ -354,7 +356,14 @@ class Vector:
         return Vector(data=(s1, s2, s3))
 
     def scale(self, a):
-        self.data = (self.x * a, self.y * a, self.z * a)
+        return Vector(data=(self.x * a, self.y * a, self.z * a))
+
+    def magnitude(self):
+        return sqrt(sum([self[i] * self[i] for i in range(len(self))]))
+
+    def normalize(self):
+        for i in range(len(self)):
+            self[i] /= self.magnitude()
         return self
 
     def as_dict(self):
@@ -367,13 +376,14 @@ class Vector:
     def __add__(self, v):
         return Vector(data=(self[0] + v[0], self[1] + v[1], self[2] + v[2]))
 
+    def __sub__(self, v):
+        return Vector(data=(self[0] - v[0], self[1] - v[1], self[2] - v[2]))
+
     def __truediv__(self, a):
-        self.data = (self.x / a, self.y / a, self.z / a)
-        return self
+        return Vector(data=(self.x / a, self.y / a, self.z / a))
 
     def __mul__(self, a):
-        self.data = (self.x * a, self.y * a, self.z * a)
-        return self
+        return Vector(data=(self.x * a, self.y * a, self.z * a))
 
     __rmul__ = __mul__
 
@@ -387,17 +397,20 @@ class Vector:
     def __repr__(self):
         return "Vector"
 
+    def __len__(self):
+        return len(self.data)
+
+    def __setitem__(self, i, value):
+        self.data[i] = value
+
     @property
     def x(self):
-
         return self[0]
     @property
     def y(self):
-
         return self[1]
     @property
     def z(self):
-
         return self[2]
 
 class Matrix:
@@ -967,8 +980,16 @@ class NCP:
         else:
             self.lookup_grid = None
 
-    def write(self):
-        pass
+    def write(self, file):
+        # Writes the polyhedron count
+        file.write(struct.pack("<H", self.polyhedron_count))
+
+        # Writes all polyhedra
+        for p in range(self.polyhedron_count):
+            self.polyhedra[p].write(file)
+
+        if self.lookup_grid:
+            self.lookup_grid.write(file)
 
     def as_dict(self):
         if not self.lookup_grid:
@@ -1002,7 +1023,14 @@ class Polyhedron:
         self.bbox = BoundingBox(file)
 
     def write(self, file):
-        pass
+        # Writes the type
+        file.write(struct.pack("<L", self.type))
+        # Writes the surface material
+        file.write(struct.pack("<L", self.material))
+        # Writes the 5 planes
+        [p.write(file) for p in self.planes[:5]]
+        # Writes the BBOX
+        self.bbox.write(file)
 
     def as_dict(self):
         dic = {"type": self.type,
@@ -1014,9 +1042,16 @@ class Polyhedron:
 
 
 class Plane:
-    def __init__(self, file=None):
-        self.normal = Vector()
-        self.distance = 0.0
+    def __init__(self, file=None, n=None, d=None):
+        if n is not None:
+            self.normal = n
+        else:
+            self.normal = Vector()
+
+        if d is not None:
+            self.distance = d
+        else:
+            self.distance = 0.0
 
         if file:
             self.read(file)
@@ -1026,7 +1061,10 @@ class Plane:
         self.distance = struct.unpack("<f", file.read(4))[0]
 
     def write(self, file):
-        pass
+        # Writes the normal vector
+        self.normal.write(file)
+        # Writes the plane distance
+        file.write(struct.pack("<f", self.distance))
 
     def as_dict(self):
         dic = {"normal": self.normal.as_dict(),
@@ -1062,7 +1100,15 @@ class LookupGrid:
         self.lists = [LookupList(file) for x in range(self.xsize * self.zsize)]
 
     def write(self, file):
-        pass
+        # Writes the lookup grid data
+        file.write(struct.pack("<f", self.x0))
+        file.write(struct.pack("<f", self.z0))
+        file.write(struct.pack("<f", self.xsize))
+        file.write(struct.pack("<f", self.zsize))
+        file.write(struct.pack("<f", self.raster_size))
+        # Writes the lists
+        for x in range(int(self.xsize) * int(self.zsize)):
+            self.lists[x].write(file)
 
     def as_dict(self):
         dic = {"x0": self.x0,
@@ -1089,7 +1135,10 @@ class LookupList:
             self.polyhedron_idcs.append(struct.unpack("<L", file.read(4))[0])
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<L", self.length))
+        # Writes the polyhedron indices
+        for x in range(self.length):
+            file.write(struct.pack("<L", self.polyhedron_idcs[x]))
 
     def as_dict(self):
         dic = {"length": self.length,

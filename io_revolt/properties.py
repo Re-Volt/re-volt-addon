@@ -494,6 +494,11 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = False,
         description = "Makes BoundBox properties visible for this object"
     )
+    ignore_ncp = BoolProperty(
+        name = "Ignore Collision (.ncp)",
+        default = False,
+        description = "Ignores the object when exporting to NCP"
+    )
     bcube_mesh_indices = StringProperty(
         name = "Mesh indices",
         default = "",

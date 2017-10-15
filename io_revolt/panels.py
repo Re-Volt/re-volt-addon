@@ -27,9 +27,20 @@ class RevoltObjectPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.object
+
+        # NCP Properties
+        box = layout.box()
+        box.label("NCP Properties:")
+        row = box.row()
+        row.prop(obj.revolt, "ignore_ncp")
+
+        # Debug properties
         if obj.revolt.is_bcube:
-            layout.label("BigCube Properties:")
-            layout.prop(obj.revolt, "bcube_mesh_indices")
+            box = layout.box()
+            box.label("BigCube Properties:")
+            row = box.row()
+            row.prop(obj.revolt, "bcube_mesh_indices")
+
 
 class RevoltScenePanel(bpy.types.Panel):
     """ Panel for .w properties """
@@ -258,15 +269,15 @@ def ncp_edit_panel(self, context):
     row = layout.row()
     row.label("Material:")
 
+    row = layout.row(align=True)
+    col = row.column(align=True)
+    col.prop(meshprops, "face_material", text="Set")
+    col = row.column(align=True)
+    col.scale_x = 0.15
+    col.operator("ncpmaterial.select")
+
     row = layout.row()
-    # col = row.column(align=True)
-    row.prop(meshprops, "face_material", text="Set")
-    row = layout.row()
-    row.prop(props, "select_material", text="Select")
-    # row.alignment="RIGHT"
-    # row.prop_menu_enum(props, "select_material", text="Select")
-    row = layout.row()
-    # row.prop_enum(props, "select_material", value="2",  text="Select")
+    row.prop(props, "select_material", text="Select all")
 
 
 """

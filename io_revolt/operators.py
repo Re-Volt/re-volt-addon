@@ -62,6 +62,7 @@ class ImportRV(bpy.types.Operator):
             # Enables texture mode after import
             if props.enable_tex_mode:
                 enable_texture_mode()
+
         else:
             msg_box("Not yet supported: {}".format(FORMATS[frmt]))
 
@@ -115,10 +116,16 @@ class ExportRV(bpy.types.Operator):
                 from . import prm_out
                 prm_out.export_file(self.filepath, scene)
 
+            elif frmt == FORMAT_NCP:
+                from . import ncp_out
+                print("Exporting to .ncp...")
+                ncp_out.export_file(self.filepath, scene)
+
             elif frmt == FORMAT_W:
                 from . import w_out
                 print("Exporting to .w...")
                 w_out.export_file(self.filepath, scene)
+
             else:
                 print("Format not yet supported {}".format(FORMATS[frmt]))
 
@@ -143,6 +150,12 @@ class ExportRV(bpy.types.Operator):
 
         layout.prop(props, "triangulate_ngons")
         layout.prop(props, "use_tex_num")
+
+
+""" BUTTONS
+    Button operators for the user interface
+"""
+
 
 class ButtonCopyUvToFrame(bpy.types.Operator):
     bl_idname = "texanim.copy_uv_to_frame"
@@ -182,6 +195,17 @@ class ButtonSelectNCPFaceProp(bpy.types.Operator):
 
     def execute(self, context):
         select_ncp_faces(context, self.prop)
+        return{"FINISHED"}
+
+class ButtonSelectNCPMaterial(bpy.types.Operator):
+    bl_idname = "ncpmaterial.select"
+    bl_label = "sel"
+    bl_description = "Select all faces of the same material"
+
+    def execute(self, context):
+        props = context.scene.revolt
+        meshprops = context.object.data.revolt
+        props.select_material = meshprops.face_material
         return{"FINISHED"}
 
 # VERTEX COLORS

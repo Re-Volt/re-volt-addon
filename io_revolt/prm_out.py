@@ -110,9 +110,10 @@ def export_mesh(me, obj, scene, filepath, world=None):
             obj.parent = parent
             obj.matrix_basis = old_mat
 
-    num_ngons = triangulate_ngons(bm)
-    if scene.revolt.triangulate_ngons > 0:
-        print("Triangulated {} n-gons".format(num_ngons))
+    if props.triangulate_ngons:
+        num_ngons = triangulate_ngons(bm)
+        if scene.revolt.triangulate_ngons > 0:
+            print("Triangulated {} n-gons".format(num_ngons))
 
     # Gets layers
     uv_layer = bm.loops.layers.uv.get("UVMap")
