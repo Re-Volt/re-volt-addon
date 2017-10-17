@@ -18,14 +18,14 @@ Missing Formats:
 - .fld (ForceFields)
 - .lit (Lights)
 - .tri (Triggers)
+- .ncp (Collision)
+- .rim (Mirrors)
+- .hul (Hull collision)
 """
 
+import os
 import struct
 from math import sqrt
-
-from . import common
-from .common import *
-
 
 class World:
     """
@@ -145,27 +145,6 @@ class World:
                }
         return dic
 
-    # Uses the to-string for dumping the whole .w structure
-    def dump(self):
-        return ("====   WORLD   ====\n"
-                "Mesh count: {}\n"
-                "Meshes:\n{}\n"
-                "BigCube count: {}\n"
-                "BigCubes:\n{}\n"
-                "Animation Count: {}\n"
-                "Animations:\n{}\n"
-                "ENV Count: {}\n"
-                "EnvList:\n{}\n"
-                "==== WORLD END ====\n"
-               ).format(self.mesh_count,
-               '\n'.join([str(mesh) for mesh in self.meshes]),
-               self.bigcube_count,
-               '\n'.join([str(bcube) for bcube in self.bigcubes]),
-               self.animation_count,
-               '\n'.join([str(anim) for anim in self.animations]),
-               self.env_count,
-               self.env_list)
-
 
 class PRM:
     """
@@ -205,24 +184,12 @@ class PRM:
             vertex.write(file)
 
     def as_dict(self):
-        dic = { "polygon_count" : self.polygon_count,
-                "vertex_count" : self.vertex_count,
-                "polygons" : self.polygons,
-                "vertices" : self.vertices
+        dic = { "polygon_count": self.polygon_count,
+                "vertex_count": self.vertex_count,
+                "polygons": self.polygons,
+                "vertices": self.vertices
         }
         return dic
-
-    def dump(self):
-        return ("====   PRM   ====\n"
-                "Polygon Count: {}\n"
-                "Vertex Count: {}\n"
-                "Polygons:\n{}"
-                "Vertices:\n{}"
-                "==== PRM END ====\n"
-               ).format(self.polygon_count,
-                        self.vertex_count,
-                        '\n'.join([str(polygon) for polygon in self.polygons]),
-                        '\n'.join([str(vertex) for vertex in self.vertices]))
 
 
 class Mesh:
@@ -290,33 +257,15 @@ class Mesh:
             vertex.write(file)
 
     def as_dict(self):
-        dic = { "bound_ball_center" : self.bound_ball_center,
-                "bound_ball_radius" : self.bound_ball_radius,
-                "bbox" : self.bbox,
-                "polygon_count" : self.polygon_count,
-                "vertex_count" : self.vertex_count,
-                "polygons" : self.polygons,
-                "vertices" : self.vertices,
+        dic = { "bound_ball_center": self.bound_ball_center,
+                "bound_ball_radius": self.bound_ball_radius,
+                "bbox": self.bbox,
+                "polygon_count": self.polygon_count,
+                "vertex_count": self.vertex_count,
+                "polygons": self.polygons,
+                "vertices": self.vertices,
         }
         return dic
-
-    def dump(self):
-        return ("====   MESH   ====\n"
-                "Bounding Ball Center: {}\n"
-                "Bounding Ball Radius: {}\n"
-                "Bounding Box:\n{}\n"
-                "Polygon Count: {}\n"
-                "Vertex Count: {}\n"
-                "Polygons:\n{}"
-                "Vertices:\n{}"
-                "==== MESH END ====\n"
-               ).format(self.bound_ball_center,
-                        self.bound_ball_radius,
-                        self.bbox,
-                        self.polygon_count,
-                        self.vertex_count,
-                        '\n'.join([str(polygon) for polygon in self.polygons]),
-                        '\n'.join([str(vertex) for vertex in self.vertices]))
 
 
 class BoundingBox:
@@ -363,16 +312,6 @@ class BoundingBox:
         }
         return dic
 
-    def dump(self):
-        return ("xlo {}\n"
-                "xhi {}\n"
-                "ylo {}\n"
-                "yhi {}\n"
-                "zlo {}\n"
-                "zhi {}\n"
-                ).format(self.xlo, self.xhi, self.ylo,
-                         self.yhi, self.zlo, self.zhi)
-
 
 class Vector:
     """
@@ -380,30 +319,12 @@ class Vector:
     """
     def __init__(self, file=None, data=None):
         if data:
-            self.data = data
+            self.data = [data[0], data[1], data[2]]
         else:
-            self.data = None
+            self.data = [0, 0, 0]
 
         if file:
             self.read(file)
-
-    def __repr__(self):
-        return "Vector"
-
-    @property
-    def x(self):
-        return self.data[0]
-
-    @property
-    def y(self):
-        return self.data[1]
-
-    @property
-    def z(self):
-        return self.data[2]
-
-    def get_distance_to(self, v):
-        return sqrt((self.x - v.x)**2 + (self.y - v.y)**2 + (self.z - v.z)**2)
 
     def read(self, file):
         # Reads the coordinates
@@ -413,15 +334,87 @@ class Vector:
         # Writes all coordinates
         file.write(struct.pack("<3f", *self.data))
 
+    def get_distance_to(self, v):
+        return sqrt((self.x - v.x)**2 + (self.y - v.y)**2 + (self.z - v.z)**2)
+
+    def scalar(self, v):
+        """ Returns the dot/scalar product with v """
+        if len(v.data) != len(self.data):
+            print("RVSTRUCT ERROR: Vectors are of different lengths.")
+            return None
+        return sum([v[x] * self[x] for x in range(len(self.data))])
+
+    dot = scalar
+
+    def cross(self, v):
+        """ Returns the cross product with v """
+        s1, s2, s3 = (
+            self[1] * v[2] - self[2] * v[1],
+            self[2] * v[0] - self[0] * v[2],
+            self[0] * v[1] - self[1] * v[0]
+        )
+        return Vector(data=(s1, s2, s3))
+
+    def scale(self, a):
+        return Vector(data=(self.x * a, self.y * a, self.z * a))
+
+    def magnitude(self):
+        return sqrt(sum([self[i] * self[i] for i in range(len(self))]))
+
+    def normalize(self):
+        mag = self.magnitude()
+        if mag == 0:
+            return self
+        for i in range(len(self)):
+            self[i] /= mag
+        return self
+
     def as_dict(self):
-        dic = {"x": self.data[0],
-               "y": self.data[1],
-               "z": self.data[2]
+        dic = {"x": self.x,
+               "y": self.y,
+               "z": self.z
                }
         return dic
 
-    def dump(self):
-        return str(self.data)
+    def __add__(self, v):
+        return Vector(data=(self[0] + v[0], self[1] + v[1], self[2] + v[2]))
+
+    def __sub__(self, v):
+        return Vector(data=(self[0] - v[0], self[1] - v[1], self[2] - v[2]))
+
+    def __truediv__(self, a):
+        return Vector(data=(self.x / a, self.y / a, self.z / a))
+
+    def __mul__(self, a):
+        return Vector(data=(self.x * a, self.y * a, self.z * a))
+
+    __rmul__ = __mul__
+
+    def __iter__(self):
+        for elem in self.data:
+            yield elem
+
+    def __getitem__(self, i):
+        return self.data[i]
+
+    def __repr__(self):
+        return "Vector"
+
+    def __len__(self):
+        return len(self.data)
+
+    def __setitem__(self, i, value):
+        self.data[i] = value
+
+    @property
+    def x(self):
+        return self[0]
+    @property
+    def y(self):
+        return self[1]
+    @property
+    def z(self):
+        return self[2]
 
 class Matrix:
     """
@@ -450,20 +443,17 @@ class Matrix:
         file.write(struct.pack("<3f", *self.data[:3][2]))
 
     def as_dict(self):
-        dic = { "(0, 0)" : self.data[0][0],
-                "(0, 1)" : self.data[0][1],
-                "(0, 2)" : self.data[0][2],
-                "(1, 0)" : self.data[1][0],
-                "(1, 1)" : self.data[1][1],
-                "(1, 2)" : self.data[1][2],
-                "(2, 0)" : self.data[2][0],
-                "(2, 1)" : self.data[2][1],
-                "(2, 2)" : self.data[2][2],
+        dic = {"(0, 0)": self.data[0][0],
+               "(0, 1)": self.data[0][1],
+               "(0, 2)": self.data[0][2],
+               "(1, 0)": self.data[1][0],
+               "(1, 1)": self.data[1][1],
+               "(1, 2)": self.data[1][2],
+               "(2, 0)": self.data[2][0],
+               "(2, 1)": self.data[2][1],
+               "(2, 2)": self.data[2][2],
         }
         return dic
-
-    def dump(self):
-        return "\n".join(str(vec) for vec in self.data)
 
 
 class Polygon:
@@ -494,10 +484,11 @@ class Polygon:
 
         # Reads indices of the polygon's vertices and their vertex colors
         self.vertex_indices = struct.unpack("<4h", file.read(8))
-        self.colors = [Color(file=file, alpha=True),
+        self.colors = [
+            Color(file=file, alpha=True),
             Color(file=file, alpha=True), Color(file=file, alpha=True),
-            Color(file=file, alpha=True)]
-
+            Color(file=file, alpha=True)
+        ]
         # Reads the UV mapping
         for x in range(4):
             self.uv.append(UV(file))
@@ -523,27 +514,13 @@ class Polygon:
             uv.write(file)
 
     def as_dict(self):
-        dic = { "type" : self.type,
-                "texture" : self.texture,
-                "vertex_indices" : self.vertex_indices,
-                "colors" : self.colors,
-                "uv" : self.uv
+        dic = { "type": self.type,
+                "texture": self.texture,
+                "vertex_indices": self.vertex_indices,
+                "colors": self.colors,
+                "uv": self.uv
         }
         return dic
-
-    def dump(self):
-        return ("====   POLYGON   ====\n"
-                "Type: {}\n"
-                "Texture: {}\n"
-                "Vertex Indices: {}\n"
-                "Colors:\n{}\n"
-                "UV: {}\n"
-                "==== POLYGON END ====\n"
-               ).format(self.type,
-                        self.texture,
-                        self.vertex_indices,
-                        '\n'.join([str(col) for col in self.colors]),
-                        '\n'.join([str(uv) for uv in self.uv]))
 
 
 class Vertex:
@@ -576,13 +553,6 @@ class Vertex:
                }
         return dic
 
-    def dump(self):
-        return ("====   VERTEX   ====\n"
-                "Position: {}\n"
-                "Normal: {}\n"
-                "==== VERTEX END ====\n"
-                ).format(self.position, self.normal)
-
 
 class UV:
     """
@@ -608,21 +578,18 @@ class UV:
 
     def write(self, file):
         # Writes the uv coordinates
-         file.write(struct.pack("<f", self.u))
-         file.write(struct.pack("<f", self.v))
+        file.write(struct.pack("<f", self.u))
+        file.write(struct.pack("<f", self.v))
 
     def as_dict(self):
-        dic = { "u" : self.u,
-                "v" : self.v
-        }
+        dic = {"u": self.u,
+               "v": self.v
+               }
         return dic
 
     def from_dict(self, dic):
         self.u = dic["u"]
         self.v = dic["v"]
-
-    def dump(self):
-        return "({}, {})".format(self.u, self.v)
 
 
 class BigCube:
@@ -664,24 +631,12 @@ class BigCube:
             file.write(struct.pack("<l", mesh))
 
     def as_dict(self):
-        dic = { "center" : self.center.as_dict(),
-                "size" : self.size,
-                "mesh_count" : self.mesh_count,
+        dic = { "center": self.center.as_dict(),
+                "size": self.size,
+                "mesh_count": self.mesh_count,
                 "mesh_indices": self.mesh_indices,
         }
         return dic
-
-    def dump(self):
-        return ("====   BIGCUBE   ====\n"
-                "Center: {}\n"
-                "Size: {}\n"
-                "Mesh Count: {}\n"
-                "Mesh Indices: {}\n"
-                "==== BIGCUBE END ====\n"
-                ).format(self.center,
-                         self.size,
-                         self.mesh_count,
-                         self.mesh_indices)
 
 
 class TexAnimation:
@@ -715,8 +670,8 @@ class TexAnimation:
             frame.write(file)
 
     def as_dict(self):
-        dic = { "frame_count" : self.frame_count,
-                "frames" : self.frames
+        dic = { "frame_count": self.frame_count,
+                "frames": self.frames
         }
         return dic
 
@@ -726,14 +681,6 @@ class TexAnimation:
             frame = Frame()
             frame.from_dict(framedic)
             self.frames.append(frame)
-
-    def dump(self):
-        return ("====   ANIMATION   ====\n"
-                "Frame Count: {}\n"
-                "Frames\n{}"
-                "==== ANIMATION END ====\n"
-                ).format(self.frame_count,
-                         '\n'.join([str(frame) for frame in self.frames]))
 
 
 class Frame:
@@ -775,9 +722,9 @@ class Frame:
             uv.write(file)
 
     def as_dict(self):
-        dic = { "texture" : self.texture,
-                "delay" : self.delay,
-                "uv" : [uv.as_dict() for uv in self.uv]
+        dic = { "texture": self.texture,
+                "delay": self.delay,
+                "uv": [uv.as_dict() for uv in self.uv]
         }
         return dic
 
@@ -791,16 +738,6 @@ class Frame:
             uv.from_dict(uvdict)
             uvs.append(uv)
         self.uv = uvs
-
-    def dump(self):
-        return ("====   FRAME   ====\n"
-                "Texture: {}\n"
-                "Delay: {}\n"
-                "UV:\n{}\n"
-                "==== FRAME END ====\n"
-                ).format(self.texture,
-                         self.delay,
-                         '\n'.join([str(uv) for uv in self.uv]))
 
 
 class Color:
@@ -829,16 +766,13 @@ class Color:
             file.write(struct.pack("<B", 255 - self.alpha))
 
     def as_dict(self):
-        dic = { "r" : self.color[0],
-                "g" : self.color[1],
-                "b" : self.color[2],
-                "alpha" : self.alpha
+        dic = { "r": self.color[0],
+                "g": self.color[1],
+                "b": self.color[2],
+                "alpha": self.alpha
         }
         return dic
 
-    def dump(self):
-        return str("Color(Red: {}, Green: {}, Blue: {}, Alpha: {})".format(
-                    self.color[0], self.color[1], self.color[2], self.alpha))
 
     def __repr__(self):
         return "Color"
@@ -875,18 +809,11 @@ class Instances:
             instance.write(file)
 
     def as_dict(self):
-        dic = { "instance_count" : self.instance_count,
-                "instances" : self.instances
+        dic = { "instance_count": self.instance_count,
+                "instances": self.instances
         }
         return dic
 
-    def dump(self):
-        return ("====   INSTANCES   ====\n"
-                "Instance Count: {}\n"
-                "Instances:\n{}"
-                "====   INSTANCES END   ====\n").format(
-                    self.instance_count,
-                    "\n".join([str(i) for i in self.instances]))
 
 class Instance:
     """
@@ -936,36 +863,22 @@ class Instance:
         self.or_matrix.write(file)
 
     def as_dict(self):
-        dic = { "name" : self.name,
-                "color" : self.color,
-                "env_color" : self.env_color,
-                "priority" : self.priority,
-                "flag" : self.flag,
-                "lod_bias" : self.lod_bias,
-                "position" : self.position,
-                "or_matrix" : self.or_matrix
+        dic = { "name": self.name,
+                "color": self.color,
+                "env_color": self.env_color,
+                "priority": self.priority,
+                "flag": self.flag,
+                "lod_bias": self.lod_bias,
+                "position": self.position,
+                "or_matrix": self.or_matrix
         }
         return dic
 
-    def dump(self):
-        return ("====   INSTANCE   ====\n"
-                "Name: {}\n"
-                "Color: {}\n"
-                "Env Color: {}\n"
-                "Priority: {}\n"
-                "Flag: {}\n"
-                "LoD Bias: {}\n"
-                "Position: {}\n"
-                "Orientation:\n{}\n"
-                "==== INSTANCE END ====\n"
-                ).format(self.name,
-                         str(self.color),
-                         str(self.env_color),
-                         str(self.priority),
-                         str(self.flag),
-                         str(self.lod_bias),
-                         str(self.position),
-                         str(self.or_matrix))
+
+""" POS NODES
+    Position nodes for track length determination
+"""
+
 
 class PosNodes:
     """
@@ -987,10 +900,10 @@ class PosNodes:
         self.nodes = [PosNode(file) for n in range(self.num_nodes)]
 
     def as_dict(self):
-        dic = { "num_nodes" : self.num_nodes,
-                "start_node" : self.start_node,
-                "total_dist" : self.total_dist,
-                "nodes" : self.nodes
+        dic = { "num_nodes": self.num_nodes,
+                "start_node": self.start_node,
+                "total_dist": self.total_dist,
+                "nodes": self.nodes
         }
         return dic
 
@@ -1026,12 +939,212 @@ class PosNode:
             self.next[x] = struct.unpack("<l", file.read(4))[0]
 
     def as_dict(self):
-        dic = { "position" : self.position,
-                "distance" : self.distance,
-                "next" : self.next,
+        dic = { "position": self.position,
+                "distance": self.distance,
+                "next": self.next,
                 "previous": self.prev,
         }
         return dic
 
     def __repr__(self):
         return "PosNode"
+
+
+""" NCP:
+    Collision for levels
+"""
+
+
+class NCP:
+    def __init__(self, file=None):
+        self.polyhedron_count = 0
+        self.polyhedra = []
+
+        if not file:
+            self.lookup_grid = LookupGrid()
+        else:
+            self.lookup_grid = None
+            self.read(file)
+
+    def read(self, file):
+        # Takes note of file start and end
+        file_start = file.tell()
+        file.seek(0, os.SEEK_END)
+        file_end = file.tell()
+        file.seek(file_start, os.SEEK_SET)
+
+        # Reads ncp information
+        self.polyhedron_count = struct.unpack("<H", file.read(2))[0]
+        self.polyhedra = [Polyhedron(file) for x in range(self.polyhedron_count)]
+
+        # If file has collision grid info
+        if file.tell() < file_end:
+            self.lookup_grid = LookupGrid(file)
+        else:
+            self.lookup_grid = None
+
+    def write(self, file):
+        # Writes the polyhedron count
+        file.write(struct.pack("<H", self.polyhedron_count))
+
+        # Writes all polyhedra
+        for p in range(self.polyhedron_count):
+            self.polyhedra[p].write(file)
+
+        if self.lookup_grid:
+            self.lookup_grid.write(file)
+
+    def as_dict(self):
+        if not self.lookup_grid:
+            lookup_grid = None
+        else:
+            lookup_grid = self.lookup_grid.as_dict()
+        dic = {"polyhedron_count": self.polyhedron_count,
+               "polyhedra": [p.as_dict() for p in self.polyhedra],
+               "lookup_grid": lookup_grid
+               }
+        return dic
+
+
+class Polyhedron:
+    def __init__(self, file=None):
+        self.type = 0
+        self.material = 0
+        self.planes = []
+        if not file:
+            self.bbox = BoundingBox()
+        if file:
+            self.bbox = None
+            self.read(file)
+
+    def read(self, file):
+        self.type = struct.unpack("<L", file.read(4))[0]
+        self.material = struct.unpack("<L", file.read(4))[0]
+
+        self.planes = [Plane(file) for x in range(5)]
+
+        self.bbox = BoundingBox(file)
+
+    def write(self, file):
+        # Writes the type
+        file.write(struct.pack("<L", self.type))
+        # Writes the surface material
+        file.write(struct.pack("<L", self.material))
+        # Writes the 5 planes
+        [p.write(file) for p in self.planes[:5]]
+        # Writes the BBOX
+        self.bbox.write(file)
+
+    def as_dict(self):
+        dic = {"type": self.type,
+               "material": self.material,
+               "planes": [p.as_dict() for p in self.planes],
+               "bbox": self.bbox.as_dict()
+               }
+        return dic
+
+
+class Plane:
+    def __init__(self, file=None, n=None, d=None):
+        if n is not None:
+            self.normal = n
+        else:
+            self.normal = Vector()
+
+        if d is not None:
+            self.distance = d
+        else:
+            self.distance = 0.0
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.normal = Vector(file=file)
+        self.distance = struct.unpack("<f", file.read(4))[0]
+
+    def write(self, file):
+        # Writes the normal vector
+        self.normal.write(file)
+        # Writes the plane distance
+        file.write(struct.pack("<f", self.distance))
+
+    def as_dict(self):
+        dic = {"normal": self.normal.as_dict(),
+               "distance": self.distance
+               }
+        return dic
+
+
+class LookupGrid:
+    def __init__(self, file=None):
+        self.x0 = 0.0
+        self.z0 = 0.0
+
+        self.xsize = 0.0
+        self.zsize = 0.0
+
+        self.size = 0.0
+
+        self.lists = []
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.x0, self.z0 = struct.unpack("<ff", file.read(8))
+
+        # Reads the size of the grid (stored as a float, hence casted)
+        sizes = [int(s) for s in struct.unpack("<ff", file.read(8))]
+        self.xsize, self.zsize = sizes
+
+        self.size = struct.unpack("<f", file.read(4))[0]
+
+        self.lists = [LookupList(file) for x in range(self.xsize * self.zsize)]
+
+    def write(self, file):
+        # Writes the lookup grid data
+        file.write(struct.pack("<f", self.x0))
+        file.write(struct.pack("<f", self.z0))
+        file.write(struct.pack("<f", self.xsize))
+        file.write(struct.pack("<f", self.zsize))
+        file.write(struct.pack("<f", self.size))
+        # Writes the lists
+        for x in range(int(self.xsize) * int(self.zsize)):
+            self.lists[x].write(file)
+
+    def as_dict(self):
+        dic = {"x0": self.x0,
+               "z0": self.z0,
+               "xsize": self.xsize,
+               "zsize": self.zsize,
+               "size": self.size,
+               "lists": [l.as_dict() for l in self.lists]
+               }
+        return dic
+
+
+class LookupList:
+    def __init__(self, file=None):
+        self.length = 0
+        self.polyhedron_idcs = []
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.length = struct.unpack("<L", file.read(4))[0]
+        for x in range(self.length):
+            self.polyhedron_idcs.append(struct.unpack("<L", file.read(4))[0])
+
+    def write(self, file):
+        file.write(struct.pack("<L", self.length))
+        # Writes the polyhedron indices
+        for x in range(self.length):
+            file.write(struct.pack("<L", self.polyhedron_idcs[x]))
+
+    def as_dict(self):
+        dic = {"length": self.length,
+               "polyhedron_idcs": self.polyhedron_idcs
+               }
+        return dic

@@ -61,7 +61,9 @@ All selected face type properties will be set when exporting.
 
 ## World (.w)
 ### Import
+
 #### Meshes
+
 See PRM. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.  
 
 The environment color is accessible on a vertex color layer called _Env_.
@@ -75,9 +77,23 @@ Animations are stored in a dictionary that can be accessed in the *Properties* e
 #### Debug
 Bounding boxes, bounding spheres and "big cubes" (spheres) can be imported to selected layers. They are for debug purposes only and they will not affect the export in any way.
 
-## Export
+### Export
 
 Nothing noteworthy. Exports files the way they have been imported.
+
+## NCP (Collision)
+
+### Import
+
+NCP flags and materials are written to the integer layers "NCPFlags" and "Material". A preview color for the materials is written to the "NCPPreview" vertex color channel.
+
+### Export
+
+All objects of the scene will  be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the _ignore_ object property set (Properties Editor).  
+Faces that have the material `NONE` assigned to them will not be exported.  
+The vertex color layer called "NCPPreview" will be ignored since it's only for previewing purposes.
+
+A lookup grid will be automatically exported. This can be turned off in the export settings.
 
 ## parameters.txt (Car)
 

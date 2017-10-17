@@ -18,6 +18,7 @@ from .operators import *
 from .properties import *
 
 
+
 class RevoltObjectPanel(bpy.types.Panel):
     bl_label = "Re-Volt Object Properties"
     bl_space_type = "PROPERTIES"
@@ -27,9 +28,20 @@ class RevoltObjectPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.object
+
+        # NCP Properties
+        box = layout.box()
+        box.label("NCP Properties:")
+        row = box.row()
+        row.prop(obj.revolt, "ignore_ncp")
+
+        # Debug properties
         if obj.revolt.is_bcube:
-            layout.label("BigCube Properties:")
-            layout.prop(obj.revolt, "bcube_mesh_indices")
+            box = layout.box()
+            box.label("BigCube Properties:")
+            row = box.row()
+            row.prop(obj.revolt, "bcube_mesh_indices")
+
 
 class RevoltScenePanel(bpy.types.Panel):
     """ Panel for .w properties """
@@ -42,6 +54,7 @@ class RevoltScenePanel(bpy.types.Panel):
         props = context.scene.revolt
         layout = self.layout
         layout.prop(props, "texture_animations")
+
 
 class RevoltIOToolPanel(bpy.types.Panel):
     """
@@ -71,6 +84,9 @@ class RevoltIOToolPanel(bpy.types.Panel):
         )
         if not fold_s:
             box = self.layout.box()
+            box.label("General:")
+            box.prop(props, "prefer_tex_solid_mode")
+
             box.label("Import:")
             box.prop(props, "enable_tex_mode")
 
@@ -97,6 +113,8 @@ class RevoltIOToolPanel(bpy.types.Panel):
             if props.w_import_big_cubes:
                 box.prop(props, "w_big_cube_layers")
 
+            box.label("Export Collision (.ncp):")
+            box.prop(props, "ncp_export_collgrid")
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
@@ -109,82 +127,168 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
     selected_face_count = None
 
     def draw(self, context):
-        obj = context.object
-        mesh = obj.data
-        bm = get_edit_bmesh(obj)
-        flags = (bm.faces.layers.int.get("Type")
-                 or bm.faces.layers.int.new("Type"))
-        if (self.selected_face_count is None
-            or self.selected_face_count != mesh.total_face_sel):
-            self.selected_face_count = mesh.total_face_sel
-            self.selection = [face for face in bm.faces if face.select]
+        props = context.scene.revolt
 
-        # count the number of faces the flags are set for
-        count = [0] * len(FACE_PROPS)
-        # if len(self.selection) > 1:
-        for face in self.selection:
-            for x in range(len(FACE_PROPS)):
-                if face[flags] & FACE_PROPS[x]:
-                    count[x] += 1
-
-        # self.layout.prop(context.object.data.revolt, "face_material",
-        #     text="Material".format(""))
         row  = self.layout.row()
-        col = row.column(align=True)
-        col.prop(context.object.data.revolt, "face_double_sided",
-            text="{}: Double sided".format(count[1]))
-        col.prop(context.object.data.revolt, "face_translucent",
-            text="{}: Translucent".format(count[2]))
-        col.prop(context.object.data.revolt, "face_mirror",
-            text="{}: Mirror".format(count[3]))
-        col.prop(context.object.data.revolt, "face_additive",
-            text="{}: Additive blending".format(count[4]))
-        col.prop(context.object.data.revolt, "face_texture_animation",
-            text="{}: Texture animation".format(count[5]))
-        col.prop(context.object.data.revolt, "face_no_envmapping",
-            text="{}: No EnvMap".format(count[6]))
-        if context.object.data.revolt.face_envmapping:
-            split = col.split(percentage=.7)
-            scol = split.column(align=True)
-            scol.prop(context.object.data.revolt, "face_envmapping",
-            text="{}: EnvMap".format(count[7]))
-            scol = split.column(align=True)
-            scol.prop(context.object.data.revolt, "face_env", text="")
-        else:
-            col.prop(context.object.data.revolt, "face_envmapping",
-            text="{}: EnvMap".format(count[7]))
+        row.prop(props, "face_edit_mode", expand=True)
 
-        col.prop(context.object.data.revolt, "face_cloth",
-            text="{}: Cloth effect".format(count[8]))
-        col.prop(context.object.data.revolt, "face_skip",
-            text="{}: Do not export".format(count[9]))
-        col = row.column(align=True)
-        col.scale_x = 0.15
-        col.operator("faceprops.select", text="sel").prop = FACE_DOUBLE
-        col.operator("faceprops.select", text="sel").prop = FACE_TRANSLUCENT
-        col.operator("faceprops.select", text="sel").prop = FACE_MIRROR
-        col.operator("faceprops.select", text="sel").prop = FACE_TRANSL_TYPE
-        col.operator("faceprops.select", text="sel").prop = FACE_TEXANIM
-        col.operator("faceprops.select", text="sel").prop = FACE_NOENV
-        col.operator("faceprops.select", text="sel").prop = FACE_ENV
-        col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
-        col.operator("faceprops.select", text="sel").prop = FACE_SKIP
+        if props.face_edit_mode == "prm":
+            prm_edit_panel(self, context)
+        elif props.face_edit_mode == "ncp":
+            ncp_edit_panel(self, context)
 
-        row = self.layout.row()
-        if len(self.selection) > 1:
-            if context.object.data.revolt.face_texture == -2:
-                row.prop(context.object.data.revolt, "face_texture",
-                    text="Texture (different numbers)")
-            else:
-                row.prop(context.object.data.revolt, "face_texture",
-                    text="Texture (set for all)")
-        elif len(self.selection) == 0:
+
+def prm_edit_panel(self, context):
+    """  """
+    obj = context.object
+    layout = self.layout
+
+    mesh = obj.data
+    meshprops = obj.data.revolt
+    bm = get_edit_bmesh(obj)
+    flags = (bm.faces.layers.int.get("Type") or
+             bm.faces.layers.int.new("Type"))
+    if (self.selected_face_count is None or
+            self.selected_face_count != mesh.total_face_sel):
+        self.selected_face_count = mesh.total_face_sel
+        self.selection = [face for face in bm.faces if face.select]
+
+    # count the number of faces the flags are set for
+    count = [0] * len(FACE_PROPS)
+    # if len(self.selection) > 1:
+    for face in self.selection:
+        for x in range(len(FACE_PROPS)):
+            if face[flags] & FACE_PROPS[x]:
+                count[x] += 1
+
+    row = layout.row()
+    row.label("Properties:")
+    row  = layout.row()
+    col = row.column(align=True)
+    col.prop(meshprops, "face_double_sided",
+        text="{}: Double sided".format(count[1]))
+    col.prop(meshprops, "face_translucent",
+        text="{}: Translucent".format(count[2]))
+    col.prop(meshprops, "face_mirror",
+        text="{}: Mirror".format(count[3]))
+    col.prop(meshprops, "face_additive",
+        text="{}: Additive blending".format(count[4]))
+    col.prop(meshprops, "face_texture_animation",
+        text="{}: Texture animation".format(count[5]))
+    col.prop(meshprops, "face_no_envmapping",
+        text="{}: No EnvMap".format(count[6]))
+    if meshprops.face_envmapping:
+        split = col.split(percentage=.7)
+        scol = split.column(align=True)
+        scol.prop(meshprops, "face_envmapping",
+        text="{}: EnvMap".format(count[7]))
+        scol = split.column(align=True)
+        scol.prop(meshprops, "face_env", text="")
+    else:
+        col.prop(meshprops, "face_envmapping",
+        text="{}: EnvMap".format(count[7]))
+
+    col.prop(meshprops, "face_cloth",
+        text="{}: Cloth effect".format(count[8]))
+    col.prop(meshprops, "face_skip",
+        text="{}: Do not export".format(count[9]))
+    col = row.column(align=True)
+    col.scale_x = 0.15
+    col.operator("faceprops.select", text="sel").prop = FACE_DOUBLE
+    col.operator("faceprops.select", text="sel").prop = FACE_TRANSLUCENT
+    col.operator("faceprops.select", text="sel").prop = FACE_MIRROR
+    col.operator("faceprops.select", text="sel").prop = FACE_TRANSL_TYPE
+    col.operator("faceprops.select", text="sel").prop = FACE_TEXANIM
+    col.operator("faceprops.select", text="sel").prop = FACE_NOENV
+    col.operator("faceprops.select", text="sel").prop = FACE_ENV
+    col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
+    col.operator("faceprops.select", text="sel").prop = FACE_SKIP
+
+    row = layout.row()
+    row.label("Texture:")
+
+    row = layout.row()
+    if len(self.selection) > 1:
+        if context.object.data.revolt.face_texture == -2:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture (no selection)")
+                text="Texture (different numbers)")
         else:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture".format(""))
-        row.active = context.object.data.revolt.face_texture != -3
+                text="Texture (set for all)")
+    elif len(self.selection) == 0:
+        row.prop(context.object.data.revolt, "face_texture",
+            text="Texture (no selection)")
+    else:
+        row.prop(context.object.data.revolt, "face_texture",
+            text="Texture".format(""))
+    row.active = context.object.data.revolt.face_texture != -3
+
+
+def ncp_edit_panel(self, context):
+    props = context.scene.revolt
+    obj = context.object
+    meshprops = context.object.data.revolt
+    layout = self.layout
+
+    mesh = obj.data
+    bm = get_edit_bmesh(obj)
+    flags = (bm.faces.layers.int.get("NCPType") or
+             bm.faces.layers.int.new("NCPType"))
+    if (self.selected_face_count is None or
+            self.selected_face_count != mesh.total_face_sel):
+        self.selected_face_count = mesh.total_face_sel
+        self.selection = [face for face in bm.faces if face.select]
+
+    # count the number of faces the flags are set for
+    count = [0] * len(NCP_PROPS)
+    # if len(self.selection) > 1:
+    for face in self.selection:
+        for x in range(len(NCP_PROPS)):
+            if face[flags] & NCP_PROPS[x]:
+                count[x] += 1
+
+    row = layout.row()
+    row.label("Properties:")
+    row  = self.layout.row()
+    col = row.column(align=True)
+    col.prop(meshprops, "face_ncp_double",
+        text="{}: Double sided".format(count[1]))
+    # col.prop(meshprops, "face_ncp_non_planar",
+    #     text="{}: Non-planar".format(count[4]))
+    col.prop(meshprops, "face_ncp_no_skid",
+        text="{}: No Skid Marks".format(count[5]))
+    col.prop(meshprops, "face_ncp_oil",
+        text="{}: Oil".format(count[6]))
+    col.prop(meshprops, "face_ncp_object_only",
+        text="{}: Object Only".format(count[2]))
+    col.prop(meshprops, "face_ncp_camera_only",
+        text="{}: Camera Only".format(count[3]))
+
+    col = row.column(align=True)
+    col.scale_x = 0.15
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_DOUBLE
+    # col.operator("ncpfaceprops.select", text="sel").prop = NCP_NON_PLANAR
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_NO_SKID
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_OIL
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_OBJECT_ONLY
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_CAMERA_ONLY
+
+    row = layout.row()
+    row.label("Material:")
+
+    # Warns if texture mode is not enabled
+    widget_texture_mode(self)
+
+    row = layout.row(align=True)
+    col = row.column(align=True)
+    col.prop(meshprops, "face_material", text="Set")
+    col = row.column(align=True)
+    col.scale_x = 0.15
+    col.operator("ncpmaterial.select")
+
+    row = layout.row()
+    row.prop(props, "select_material", text="Select all")
+
 
 """
 Panel for setting vertex colors in Edit Mode.
@@ -221,9 +325,12 @@ class RevoltVertexPanel(bpy.types.Panel):
             row.template_color_picker(context.scene.revolt,
                                       "vertex_color_picker",
                                       value_slider=True)
-            row = box.row(align=True)
+            col = self.layout.column(align=True)
+            row = col.row(align=True)
             row.prop(context.scene.revolt, "vertex_color_picker", text = '')
             row.operator("vertexcolor.set").number=-1
+            row = col.row(align=True)
+            row.operator("vertexcolor.copycolor")
             row = self.layout.row(align=True)
             row.operator("vertexcolor.set", text="Grey 50%").number=50
             row = self.layout.row()
@@ -261,7 +368,7 @@ class RevoltLightPanel(bpy.types.Panel):
     def draw(self, context):
         view = context.space_data
         obj = context.object
-        # warn if texture mode is not enabled
+        # Warns if texture mode is not enabled
         widget_texture_mode(self)
 
         if obj and obj.select:
@@ -372,6 +479,30 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column.prop(props, "ta_current_frame_uv2")
         column.prop(props, "ta_current_frame_uv3")
 
+class RevoltHelpersPanel():
+    bl_label = "Helpers"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_category = "Re-Volt"
+
+    def draw(self, context):
+
+        layout = self.layout
+
+        box = layout.box()
+        box.label("3D View:")
+        col = box.column(align=True)
+        col.operator("helpers.enable_texture_mode", icon="POTATO", text="Texture")
+        # col = box.col(align=True)
+        col.operator("helpers.enable_textured_solid_mode", icon="SOLID", text="Textured Solid")
+
+class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
+    bl_context = "mesh_edit"
+
+class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
+    bl_context = "objectmode"
+
+
 
 """
 Widgets are little panel snippets that generally warn users if something isn't
@@ -381,12 +512,19 @@ They return false if everything is alright.
 
 def widget_texture_mode(self):
     if not texture_mode_enabled():
+        props = bpy.context.scene.revolt
         box = self.layout.box()
         box.label(text="Texture Mode is not enabled.", icon='INFO')
         row = box.row()
-        row.operator("helpers.enable_texture_mode",
-                     text="Enable Texture Mode",
-                     icon="POTATO")
+        if props.prefer_tex_solid_mode:
+            row.operator("helpers.enable_textured_solid_mode",
+                         text="Enable Texture Mode",
+                         icon="POTATO")
+        else:
+            row.operator("helpers.enable_texture_mode",
+                         text="Enable Texture Mode",
+                         icon="POTATO")
+
         return True
     return False
 

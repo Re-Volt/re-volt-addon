@@ -1,3 +1,7 @@
+"""
+WORLD IMPORT
+Imports level files which include meshes and other structures for optimization.
+"""
 import os
 import bpy
 import bmesh
@@ -10,10 +14,7 @@ from . import prm_in
 from .rvstruct import World
 from .common import *
 from .prm_in import import_mesh
-"""
-WORLD IMPORT
-Imports level files which include meshes and other structures for optimization.
-"""
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

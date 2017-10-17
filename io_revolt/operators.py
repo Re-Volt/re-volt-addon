@@ -36,27 +36,42 @@ class ImportRV(bpy.types.Operator):
         print("Importing {}".format(self.filepath))
 
         if frmt == FORMAT_UNK:
-            msg_box("Unsupported format: {}".format(frmt))
+            msg_box("Unsupported format.")
+
         elif frmt == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
+
             # Enables texture mode after import
             if props.enable_tex_mode:
-                enable_texture_mode()
+                enable_any_tex_mode(context)
+
         elif frmt == FORMAT_CAR:
             from . import parameters_in
             parameters_in.import_file(self.filepath, scene)
+
             # Enables texture mode after import
             if props.enable_tex_mode:
-                enable_texture_mode()
+                enable_any_tex_mode(context)
+
+        elif frmt == FORMAT_NCP:
+            from . import ncp_in
+            ncp_in.import_file(self.filepath, scene)
+
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_any_tex_mode(context)
+
         elif frmt == FORMAT_W:
             from . import w_in
             w_in.import_file(self.filepath, scene)
+
             # Enables texture mode after import
             if props.enable_tex_mode:
-                enable_texture_mode()
+                enable_any_tex_mode(context)
+
         else:
-            msg_box("Not yet supported: {}".format(frmt))
+            msg_box("Not yet supported: {}".format(FORMATS[frmt]))
 
         end_time = time.time() - start_time
         print("Import done in {0:.3f} seconds.".format(end_time))
@@ -64,6 +79,36 @@ class ImportRV(bpy.types.Operator):
         context.window.cursor_set("DEFAULT")
 
         return {"FINISHED"}
+
+    def draw(self, context):
+        props = context.scene.revolt
+        layout = self.layout
+        space = context.space_data
+
+        # Gets the format from the file path
+        frmt = get_format(space.params.filename)
+
+        if frmt == -1 and not space.params.filename == "":
+            layout.label("Format not supported", icon="ERROR")
+        elif frmt != -1:
+            layout.label("Import {}:".format(FORMATS[frmt]))
+
+        if frmt in [FORMAT_W, FORMAT_PRM, FORMAT_NCP]:
+            box = layout.box()
+            box.prop(props, "enable_tex_mode")
+
+        if frmt == FORMAT_W:
+            box = layout.box()
+            box.prop(props, "w_parent_meshes")
+            box.prop(props, "w_import_bound_boxes")
+            if props.w_import_bound_boxes:
+                box.prop(props, "w_bound_box_layers")
+            box.prop(props, "w_import_cubes")
+            if props.w_import_cubes:
+                box.prop(props, "w_cube_layers")
+            box.prop(props, "w_import_big_cubes")
+            if props.w_import_big_cubes:
+                box.prop(props, "w_big_cube_layers")
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
@@ -88,7 +133,7 @@ class ExportRV(bpy.types.Operator):
         frmt = get_format(self.filepath)
 
         if frmt == FORMAT_UNK:
-            msg_box("Not supported for export: {}".format(file_formats[frmt]))
+            msg_box("Not supported for export.")
         else:
             # Turns off undo for better performance
             use_global_undo = bpy.context.user_preferences.edit.use_global_undo
@@ -108,12 +153,18 @@ class ExportRV(bpy.types.Operator):
                 from . import prm_out
                 prm_out.export_file(self.filepath, scene)
 
+            elif frmt == FORMAT_NCP:
+                from . import ncp_out
+                print("Exporting to .ncp...")
+                ncp_out.export_file(self.filepath, scene)
+
             elif frmt == FORMAT_W:
                 from . import w_out
                 print("Exporting to .w...")
                 w_out.export_file(self.filepath, scene)
+
             else:
-                print("Format not yet supported {}".format(file_formats[frmt]))
+                print("Format not yet supported {}".format(FORMATS[frmt]))
 
             # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo
@@ -134,13 +185,51 @@ class ExportRV(bpy.types.Operator):
         layout = self.layout
         space = context.space_data
 
-        layout.prop(props, "triangulate_ngons")
-        layout.prop(props, "use_tex_num")
+        # Gets the format from the file path
+        frmt = get_format(space.params.filename)
+
+        if frmt == -1 and not space.params.filename == "":
+            layout.label("Format not supported", icon="ERROR")
+        elif frmt != -1:
+            layout.label("Export {}:".format(FORMATS[frmt]))
+
+        # NCP settings
+        if frmt == FORMAT_NCP:
+            box = layout.box()
+            box.prop(props, "ncp_export_collgrid")
+
+        # Texture mesh settings
+        if frmt in [FORMAT_PRM, FORMAT_W]:
+            box = layout.box()
+            box.prop(props, "use_tex_num")
+
+        # Mesh settings
+        if frmt in [FORMAT_NCP, FORMAT_PRM, FORMAT_W]:
+            box = layout.box()
+            box.prop(props, "apply_scale")
+            box.prop(props, "apply_rotation")
+            box.prop(props, "triangulate_ngons")
+
+
+
+""" BUTTONS
+    Button operators for the user interface
+"""
+
+class ButtonColorFromActiveFace(bpy.types.Operator):
+    bl_idname = "vertexcolor.copycolor"
+    bl_label = "Get Color from active Face"
+    bl_description = "Gets the color from the active face."
+
+    def execute(self, context):
+        tools.color_from_face(context)
+        redraw()
+        return{"FINISHED"}
 
 class ButtonCopyUvToFrame(bpy.types.Operator):
     bl_idname = "texanim.copy_uv_to_frame"
     bl_label = "UV to Frame"
-    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame."
+    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame"
 
     def execute(self, context):
         copy_uv_to_frame(context)
@@ -150,7 +239,7 @@ class ButtonCopyUvToFrame(bpy.types.Operator):
 class ButtonCopyFrameToUv(bpy.types.Operator):
     bl_idname = "texanim.copy_frame_to_uv"
     bl_label = "Frame to UV"
-    bl_description = "Copies the UV coordinates of the frame to the currently selected face."
+    bl_description = "Copies the UV coordinates of the frame to the currently selected face"
 
     def execute(self, context):
         copy_frame_to_uv(context)
@@ -160,11 +249,32 @@ class ButtonCopyFrameToUv(bpy.types.Operator):
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
     bl_label = "sel"
-    bl_description = "Select or delesect all polygons with this property."
+    bl_description = "Select or delesect all polygons with this property"
     prop = bpy.props.IntProperty()
 
     def execute(self, context):
         select_faces(context, self.prop)
+        return{"FINISHED"}
+
+class ButtonSelectNCPFaceProp(bpy.types.Operator):
+    bl_idname = "ncpfaceprops.select"
+    bl_label = "sel"
+    bl_description = "Select or delesect all polygons with this property"
+    prop = bpy.props.IntProperty()
+
+    def execute(self, context):
+        select_ncp_faces(context, self.prop)
+        return{"FINISHED"}
+
+class ButtonSelectNCPMaterial(bpy.types.Operator):
+    bl_idname = "ncpmaterial.select"
+    bl_label = "sel"
+    bl_description = "Select all faces of the same material"
+
+    def execute(self, context):
+        props = context.scene.revolt
+        meshprops = context.object.data.revolt
+        props.select_material = meshprops.face_material
         return{"FINISHED"}
 
 # VERTEX COLORS
@@ -172,7 +282,7 @@ class ButtonSelectFaceProp(bpy.types.Operator):
 class ButtonVertexColorSet(bpy.types.Operator):
     bl_idname = "vertexcolor.set"
     bl_label = "Set Color"
-    bl_description = "Apply color to selected faces."
+    bl_description = "Apply color to selected faces"
     number = bpy.props.IntProperty()
 
     def execute(self, context):
@@ -182,7 +292,7 @@ class ButtonVertexColorSet(bpy.types.Operator):
 class ButtonVertexColorCreateLayer(bpy.types.Operator):
     bl_idname = "vertexcolor.create_layer"
     bl_label = "Create Vertex Color Layer"
-    bl_description = "Creates a vertex color layer."
+    bl_description = "Creates a vertex color layer"
 
     def execute(self, context):
         create_color_layer(context)
@@ -199,16 +309,25 @@ class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
 class ButtonEnableTextureMode(bpy.types.Operator):
     bl_idname = "helpers.enable_texture_mode"
     bl_label = "Enable Texture Mode"
-    bl_description = "Enables texture mode so textures can be seen."
+    bl_description = "Enables texture mode so textures can be seen"
 
     def execute(self, context):
         enable_texture_mode()
         return{"FINISHED"}
 
+class ButtonEnableTexturedSolidMode(bpy.types.Operator):
+    bl_idname = "helpers.enable_textured_solid_mode"
+    bl_label = "Enable Textured Solid Mode"
+    bl_description = "Enables texture mode so textures can be seen"
+
+    def execute(self, context):
+        enable_textured_solid_mode()
+        return{"FINISHED"}
+
 class ButtonBakeShadow(bpy.types.Operator):
     bl_idname = "lighttools.bakeshadow"
     bl_label = "Bake Shadow"
-    bl_description = "Creates a shadow plane beneath the selected object."
+    bl_description = "Creates a shadow plane beneath the selected object"
 
     def execute(self, context):
         tools.bake_shadow(self, context)
@@ -217,7 +336,7 @@ class ButtonBakeShadow(bpy.types.Operator):
 class ButtonBakeLightToVertex(bpy.types.Operator):
     bl_idname = "lighttools.bakevertex"
     bl_label = "Bake light"
-    bl_description = "Bakes the light to the active vertex color layer."
+    bl_description = "Bakes the light to the active vertex color layer"
 
     def execute(self, context):
         tools.bake_vertex(self, context)

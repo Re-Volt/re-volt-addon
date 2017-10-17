@@ -3,7 +3,7 @@
 This is the documentation for Marv's Add-On for Re-Volt files.  
 It is intended to be used with **Blender 2.79**.
 
-[**Download** (rva_17.1010)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1010)
+[**Download** (rva_17.1017)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1017)
 
 [**Changelog**](changelog/index.html)
 
@@ -15,12 +15,28 @@ It is intended to be used with **Blender 2.79**.
 A list of currently supported features and what's to come.
 
 [**Installation**](installation/index.html)  
-A guide for the installation of the add-on.
+A guide for the installation of the add-<u>on.</u>
 
-[**Tools Panel**](tools-panel/index.html)  
-Explanations to the tools panel located on the left hand side of the 3D view.
+<u>**Tools Panel**</u>:  
+The panel located on the left hand side of the 3D view.  
+Open/Close the tools panel using `T`. The **Re-Volt tab** can be found at the very bottom.  
 
-**Properties**:
+‣ [**Import/Export, Settings**](tools-panel-io-settings/index.html) (Object Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;Buttons for importing and exporting files as well as settings.
+
+‣ [**Light**](tools-panel-light/index.html) (Object Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;Tools for shading cars and generating shadow textures.
+
+‣ [**Face Properties**](tools-panel-faceprops/index.html) (Edit Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;Face/Polygon properties for PRM, W and NCP meshes.
+
+‣ [**Vertex Colors**](tools-panel-vcol/index.html) (Edit Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;An easy tool for vertex painting.
+
+‣ [**Texture Animation**](tools-panel-texanim/index.html) (Edit Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;A panel for editing texture animations of .w files.
+
+<u>**Properties**</u>:
 
 ‣ [**Object Properties**](object-properties/index.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;Re-Volt object properties found in the Properties editor.
@@ -32,7 +48,7 @@ Explanations to the tools panel located on the left hand side of the 3D view.
 Read how the add-on handles import and export (advanced).
 
 [**Re-Volt File Structure**](structure/index.html)  
-Overview of Re-Volt's binary files and their structure.
+Overview of Re-Volt's binary files and their structure (advanced).
 
 ## Known Issues
 
