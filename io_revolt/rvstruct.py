@@ -363,6 +363,8 @@ class Vector:
 
     def normalize(self):
         mag = self.magnitude()
+        if mag == 0:
+            return self
         for i in range(len(self)):
             self[i] /= mag
         return self
