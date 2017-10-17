@@ -45,6 +45,10 @@ def export_file(filepath, scene):
         if conditions:
             objs.append(obj)
 
+    if objs == []:
+        msg_box("No suitable objects in scene.")
+        return
+
     # Creates a mesh for the entire scene
     bm = objects_to_bmesh(objs)
 

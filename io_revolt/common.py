@@ -12,7 +12,7 @@ from math import sqrt
 from .parameters import read_parameters
 
 # If True, more debug messages will be printed
-DEBUG = True
+DEBUG = False
 
 SCALE = 0.01
 
@@ -148,24 +148,21 @@ FORMAT_FOB = 3
 FORMAT_HUL = 4
 FORMAT_LIT = 5
 FORMAT_NCP = 6
-FORMAT_NCP_W = 7
-FORMAT_PRM = 8
-FORMAT_RIM = 9
-FORMAT_RTU = 10
-FORMAT_TAZ = 11
-FORMAT_VIS = 12
-FORMAT_W = 13
+FORMAT_PRM = 7
+FORMAT_RIM = 8
+FORMAT_RTU = 9
+FORMAT_TAZ = 10
+FORMAT_VIS = 11
+FORMAT_W = 12
 
 FORMATS = {
-    FORMAT_UNK: "Unknown Format",
     FORMAT_BMP: "BMP",
     FORMAT_CAR: "parameters.txt",
     FORMAT_FIN: "FIN",
     FORMAT_FOB: "FOB",
     FORMAT_HUL: "HUL",
     FORMAT_LIT: "LIT",
-    FORMAT_NCP: "NCP (Object)",
-    FORMAT_NCP_W: "NCP (World)",
+    FORMAT_NCP: "NCP",
     FORMAT_PRM: "PRM/M",
     FORMAT_RIM: "RIM",
     FORMAT_RTU: "RTU",
@@ -336,7 +333,7 @@ def objects_to_bmesh(objs):
     # Creates the mesh used to merge the entire scene
     bm_all = bmesh.new()
 
-    # Adds the objects' meshes to the bmesh
+    # Adds the objects" meshes to the bmesh
     for obj in objs:
         dprint("Preparing object {} for export...".format(obj.name))
         # Creates a bmesh from the supplied object
@@ -392,11 +389,11 @@ def objects_to_bmesh(objs):
 
 
 class DialogOperator(bpy.types.Operator):
-    bl_idname = 'revolt.dialog'
-    bl_label = 'Re-Volt Add-On Notification'
+    bl_idname = "revolt.dialog"
+    bl_label = "Re-Volt Add-On Notification"
 
     def execute(self, context):
-        return {'FINISHED'}
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         wm = context.window_manager
@@ -405,7 +402,7 @@ class DialogOperator(bpy.types.Operator):
     def draw(self, context):
         global dialog_message
         column = self.layout.column()
-        for line in str.split(dialog_message, '\n'):
+        for line in str.split(dialog_message, "\n"):
             column.label(line)
 
 
@@ -413,7 +410,7 @@ def msg_box(message):
     global dialog_message
     print(message)
     dialog_message = message
-    bpy.ops.revolt.dialog('INVOKE_DEFAULT')
+    bpy.ops.revolt.dialog("INVOKE_DEFAULT")
 
 
 def redraw():
@@ -425,7 +422,7 @@ def redraw_3d():
     for window in bpy.context.window_manager.windows:
         screen = window.screen
         for area in screen.areas:
-            if area.type == 'VIEW_3D':
+            if area.type == "VIEW_3D":
                 area.tag_redraw()
                 break
 
@@ -434,36 +431,43 @@ def redraw_uvedit():
     for window in bpy.context.window_manager.windows:
         screen = window.screen
         for area in screen.areas:
-            if area.type == 'IMAGE_EDITOR':
+            if area.type == "IMAGE_EDITOR":
                 area.tag_redraw()
                 break
 
+def enable_any_tex_mode(context):
+    props = context.scene.revolt
+    if props.prefer_tex_solid_mode:
+        enable_textured_solid_mode()
+    else:
+        enable_texture_mode()
 
 def enable_texture_mode():
     for area in bpy.context.screen.areas:
-        if area.type == 'VIEW_3D':
+        if area.type == "VIEW_3D":
             for space in area.spaces:
-                if space.type == 'VIEW_3D':
-                    space.viewport_shade = 'TEXTURED'
+                if space.type == "VIEW_3D":
+                    space.viewport_shade = "TEXTURED"
     return
 
 def enable_textured_solid_mode():
     for area in bpy.context.screen.areas:
-        if area.type == 'VIEW_3D':
+        if area.type == "VIEW_3D":
             for space in area.spaces:
-                if space.type == 'VIEW_3D':
-                    space.viewport_shade = 'SOLID'
+                if space.type == "VIEW_3D":
+                    space.viewport_shade = "SOLID"
                     space.show_textured_solid = True
     return
 
+
 def texture_mode_enabled():
     for area in bpy.context.screen.areas:
-        if area.type == 'VIEW_3D':
+        if area.type == "VIEW_3D":
             for space in area.spaces:
-                if space.type == 'VIEW_3D':
-                    if space.viewport_shade == 'TEXTURED':
+                if space.type == "VIEW_3D":
+                    if space.viewport_shade == "TEXTURED":
                         return True
-                    elif (space.viewport_shade == 'SOLID' and
+                    elif (space.viewport_shade == "SOLID" and
                           space.show_textured_solid):
                         return True
     return False
@@ -525,7 +529,7 @@ def is_track_folder(path):
 
 def get_format(fstr):
     """
-    Gets the format by the ending and returns an int (see enum in common)
+    Gets the format by the ending and returns an int
     """
     fname, ext = os.path.splitext(fstr)
 

@@ -778,6 +778,16 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "Select multiple by dragging or holding down Shift.\n"
                       "Activate multiple layers by pressing Shift + numbers"
     )
+
+    # NCP
+    ncp_export_collgrid = BoolProperty(
+        name = "Export Collision Grid (.w)",
+        default = True,
+        description = "Export a collision grid to the .ncp file:\n\n"
+                      "Enable this if you want to export a level (.w) "
+                      ".ncp file."
+    )
+
     # Texture Animation
     texture_animations = StringProperty(
         name = "Texture Animations",

@@ -41,27 +41,34 @@ class ImportRV(bpy.types.Operator):
         elif frmt == FORMAT_PRM:
             from . import prm_in
             prm_in.import_file(self.filepath, scene)
+
             # Enables texture mode after import
             if props.enable_tex_mode:
-                enable_texture_mode()
+                enable_any_tex_mode(context)
 
         elif frmt == FORMAT_CAR:
             from . import parameters_in
             parameters_in.import_file(self.filepath, scene)
+
             # Enables texture mode after import
             if props.enable_tex_mode:
-                enable_texture_mode()
+                enable_any_tex_mode(context)
 
         elif frmt == FORMAT_NCP:
             from . import ncp_in
             ncp_in.import_file(self.filepath, scene)
 
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_any_tex_mode(context)
+
         elif frmt == FORMAT_W:
             from . import w_in
             w_in.import_file(self.filepath, scene)
+
             # Enables texture mode after import
             if props.enable_tex_mode:
-                enable_texture_mode()
+                enable_any_tex_mode(context)
 
         else:
             msg_box("Not yet supported: {}".format(FORMATS[frmt]))
@@ -72,6 +79,36 @@ class ImportRV(bpy.types.Operator):
         context.window.cursor_set("DEFAULT")
 
         return {"FINISHED"}
+
+    def draw(self, context):
+        props = context.scene.revolt
+        layout = self.layout
+        space = context.space_data
+
+        # Gets the format from the file path
+        frmt = get_format(space.params.filename)
+
+        if frmt == -1 and not space.params.filename == "":
+            layout.label("Format not supported", icon="ERROR")
+        elif frmt != -1:
+            layout.label("Import {}:".format(FORMATS[frmt]))
+
+        if frmt in [FORMAT_W, FORMAT_PRM, FORMAT_NCP]:
+            box = layout.box()
+            box.prop(props, "enable_tex_mode")
+
+        if frmt == FORMAT_W:
+            box = layout.box()
+            box.prop(props, "w_parent_meshes")
+            box.prop(props, "w_import_bound_boxes")
+            if props.w_import_bound_boxes:
+                box.prop(props, "w_bound_box_layers")
+            box.prop(props, "w_import_cubes")
+            if props.w_import_cubes:
+                box.prop(props, "w_cube_layers")
+            box.prop(props, "w_import_big_cubes")
+            if props.w_import_big_cubes:
+                box.prop(props, "w_big_cube_layers")
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
@@ -96,7 +133,7 @@ class ExportRV(bpy.types.Operator):
         frmt = get_format(self.filepath)
 
         if frmt == FORMAT_UNK:
-            msg_box("Not supported for export: {}".format(FORMATS[frmt]))
+            msg_box("Not supported for export.")
         else:
             # Turns off undo for better performance
             use_global_undo = bpy.context.user_preferences.edit.use_global_undo
@@ -148,8 +185,31 @@ class ExportRV(bpy.types.Operator):
         layout = self.layout
         space = context.space_data
 
-        layout.prop(props, "triangulate_ngons")
-        layout.prop(props, "use_tex_num")
+        # Gets the format from the file path
+        frmt = get_format(space.params.filename)
+
+        if frmt == -1 and not space.params.filename == "":
+            layout.label("Format not supported", icon="ERROR")
+        elif frmt != -1:
+            layout.label("Export {}:".format(FORMATS[frmt]))
+
+        # NCP settings
+        if frmt == FORMAT_NCP:
+            box = layout.box()
+            box.prop(props, "ncp_export_collgrid")
+
+        # Texture mesh settings
+        if frmt in [FORMAT_PRM, FORMAT_W]:
+            box = layout.box()
+            box.prop(props, "use_tex_num")
+
+        # Mesh settings
+        if frmt in [FORMAT_NCP, FORMAT_PRM, FORMAT_W]:
+            box = layout.box()
+            box.prop(props, "apply_scale")
+            box.prop(props, "apply_rotation")
+            box.prop(props, "triangulate_ngons")
+
 
 
 """ BUTTONS

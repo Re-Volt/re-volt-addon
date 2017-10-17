@@ -112,6 +112,8 @@ class RevoltIOToolPanel(bpy.types.Panel):
             if props.w_import_big_cubes:
                 box.prop(props, "w_big_cube_layers")
 
+            box.label("Export Collision (.ncp):")
+            box.prop(props, "ncp_export_collgrid")
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
