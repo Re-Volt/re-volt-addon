@@ -6,11 +6,22 @@
 
 [TOC]
 
+These settings can also be found when importing/exporting files in the bottom left.
+
 ## Buttons
 
 There are two buttons, one for import and one for export. They have the same
 functions as the menu entries in the File -> Import/Export menus.  
 Import and Export settings can be found right beneath the buttons.
+
+## General Settings
+
+### Prefer Textured Solid Mode
+
+There are two encouraged ways to view textured meshes: Texture mode and Solid mode with _Textured Solid_ shading enabled.
+
+If this setting is enabled, the add-on will switch to Textured Solid mode instead of Texture mode.  
+In Textured Solid mode, objects have additional shading which makes white and untextured models a lot easier to work with.
 
 ## Import Settings
 
@@ -75,3 +86,10 @@ When imported, the actual meshes are going to be on the first layer while the
 debug objects potentially are on other layers.  
 To view multiple layers at once, hold down `Shift` and press numbers, e.g.
 `1` and then `2`. While doing that, make sure the mouse cursor hovers over the 3D view.
+
+## Export Collision (.ncp)
+
+### Export Collision Grid (.w)
+
+This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).  
+NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).
