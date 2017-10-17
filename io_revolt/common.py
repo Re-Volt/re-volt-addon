@@ -463,7 +463,8 @@ def texture_mode_enabled():
                 if space.type == 'VIEW_3D':
                     if space.viewport_shade == 'TEXTURED':
                         return True
-                    elif space.show_textured_solid == True:
+                    elif (space.viewport_shade == 'SOLID' and
+                          space.show_textured_solid):
                         return True
     return False
 
