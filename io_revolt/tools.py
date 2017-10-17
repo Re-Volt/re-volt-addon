@@ -15,8 +15,9 @@ def color_from_face(context):
     obj = context.object
     bm = get_edit_bmesh(obj)
     faces = [f for f in bm.faces if f.select]
-    col = get_average_vcol(faces, bm.loops.layers.color.get("Col"))
-    context.scene.revolt.vertex_color_picker = col
+    if faces:
+        col = get_average_vcol(faces, bm.loops.layers.color.get("Col"))
+        context.scene.revolt.vertex_color_picker = col
 
 def set_vertex_color(context, number):
     eo = bpy.context.edit_object
