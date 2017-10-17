@@ -12,8 +12,10 @@ Version [`rva_17.1017`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
   * **NCP** (collision): Import and export is now supported. The face properties panel has a section for NCP now (face flags and materials).
   * **Settings**: _Prefer Textured Solid mode_ setting, enabled by default. This makes the add-on use textured solid mode (easier for editing NCP/untextured meshes).
   * **Import/Export**: Import and export operators now show the matching settings in the bottom left.
+  * **Vertex Colors**: Button for getting the color from the active face (requested by Boy80)
 * **Fixes**
   * The y coordinates of bounding boxes were swapped.
+  * Faces can now be exported with no texture (reported by Boy80).
 
 ## 2017-10-10
 

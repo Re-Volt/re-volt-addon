@@ -93,6 +93,8 @@ All objects of the scene will  be merged into one mesh and then exported to the 
 Faces that have the material `NONE` assigned to them will not be exported.  
 The vertex color layer called "NCPPreview" will be ignored since it's only for previewing purposes.
 
+A lookup grid will be automatically exported. This can be turned off in the export settings.
+
 ## parameters.txt (Car)
 
 ### Import
