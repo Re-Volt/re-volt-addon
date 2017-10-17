@@ -71,7 +71,7 @@ struct Mesh {
 ```
 
 ### TexAnimation (.w)
-```
+```c
 struct TexAnimation {
 
   rvlong frame_count; // the number of frames per animation
@@ -80,7 +80,7 @@ struct TexAnimation {
 ```
 
 ### Frame (.w)
-```
+```c
 struct Frame {
 
   rvlong  texture;
