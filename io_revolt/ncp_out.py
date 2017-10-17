@@ -17,6 +17,7 @@ from . import rvstruct
 from .common import *
 from .rvstruct import BoundingBox, NCP, Plane, Polyhedron, Vector
 
+
 def export_file(filepath, scene):
     print("Exporting NCP to {}...".format(filepath))
     props = scene.revolt

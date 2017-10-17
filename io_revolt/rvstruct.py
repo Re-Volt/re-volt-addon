@@ -362,8 +362,9 @@ class Vector:
         return sqrt(sum([self[i] * self[i] for i in range(len(self))]))
 
     def normalize(self):
+        mag = self.magnitude()
         for i in range(len(self)):
-            self[i] /= self.magnitude()
+            self[i] /= mag
         return self
 
     def as_dict(self):
