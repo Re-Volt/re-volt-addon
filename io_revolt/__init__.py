@@ -3,7 +3,7 @@ import bpy
 import os
 import os.path
 from bpy.app.handlers import persistent  # For the scene update handler
-from . import common, panels, properties
+from . import common, panels, properties, tools
 
 bl_info = {
     "name": "Re-Volt",
@@ -26,6 +26,7 @@ if "bpy" in locals():
     imp.reload(common)
     imp.reload(panels)
     imp.reload(properties)
+    imp.reload(tools)
 
     # Reloaded here because it's used in a class which is instanced here
     if "prm_in" in locals():

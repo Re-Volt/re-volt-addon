@@ -18,6 +18,7 @@ from .operators import *
 from .properties import *
 
 
+
 class RevoltObjectPanel(bpy.types.Panel):
     bl_label = "Re-Volt Object Properties"
     bl_space_type = "PROPERTIES"
@@ -324,9 +325,12 @@ class RevoltVertexPanel(bpy.types.Panel):
             row.template_color_picker(context.scene.revolt,
                                       "vertex_color_picker",
                                       value_slider=True)
-            row = box.row(align=True)
+            col = self.layout.column(align=True)
+            row = col.row(align=True)
             row.prop(context.scene.revolt, "vertex_color_picker", text = '')
             row.operator("vertexcolor.set").number=-1
+            row = col.row(align=True)
+            row.operator("vertexcolor.copycolor")
             row = self.layout.row(align=True)
             row.operator("vertexcolor.set", text="Grey 50%").number=50
             row = self.layout.row()

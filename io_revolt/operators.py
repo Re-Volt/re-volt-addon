@@ -216,6 +216,15 @@ class ExportRV(bpy.types.Operator):
     Button operators for the user interface
 """
 
+class ButtonColorFromActiveFace(bpy.types.Operator):
+    bl_idname = "vertexcolor.copycolor"
+    bl_label = "Get Color from active Face"
+    bl_description = "Gets the color from the active face."
+
+    def execute(self, context):
+        tools.color_from_face(context)
+        redraw()
+        return{"FINISHED"}
 
 class ButtonCopyUvToFrame(bpy.types.Operator):
     bl_idname = "texanim.copy_uv_to_frame"
