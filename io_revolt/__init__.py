@@ -3,12 +3,12 @@ import bpy
 import os
 import os.path
 from bpy.app.handlers import persistent  # For the scene update handler
-from . import common, panels, properties
+from . import common, panels, properties, tools
 
 bl_info = {
     "name": "Re-Volt",
     "author": "Marvin Thiel",
-    "version": (17, 10, 10),
+    "version": (17, 10, 17),
     "blender": (2, 79, 0),
     "location": "File > Import-Export",
     "description": "Import and export Re-Volt file formats.",
@@ -26,12 +26,17 @@ if "bpy" in locals():
     imp.reload(common)
     imp.reload(panels)
     imp.reload(properties)
+    imp.reload(tools)
 
     # Reloaded here because it's used in a class which is instanced here
     if "prm_in" in locals():
         imp.reload(prm_in)
     if "prm_out" in locals():
         imp.reload(prm_out)
+    if "ncp_in" in locals():
+        imp.reload(ncp_in)
+    if "ncp_out" in locals():
+        imp.reload(ncp_out)
     if "parameters_in" in locals():
         imp.reload(parameters_in)
     if "w_in" in locals():

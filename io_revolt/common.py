@@ -7,15 +7,14 @@ import bpy
 import bmesh
 import os
 import mathutils
+from mathutils import Matrix
 from math import sqrt
 from .parameters import read_parameters
 
 # If True, more debug messages will be printed
 DEBUG = False
 
-# Scale used for importing (multiplicative)
-IMPORT_SCALE = 0.01
-EXPORT_SCALE = 100
+SCALE = 0.01
 
 FACE_QUAD = 1               # 0x1
 FACE_DOUBLE = 2             # 0x2
@@ -27,6 +26,18 @@ FACE_NOENV = 1024           # 0x400
 FACE_ENV = 2048             # 0x800
 FACE_CLOTH = 4096           # 0x1000
 FACE_SKIP = 8192            # 0x2000
+
+NCP_QUAD = 1
+NCP_DOUBLE = 2
+NCP_OBJECT_ONLY = 4
+NCP_CAMERA_ONLY = 8
+NCP_NON_PLANAR = 16
+NCP_NO_SKID = 32
+NCP_OIL = 64
+
+NCP_GRID_SIZE = 1024
+
+NCP_PROP_MASK = NCP_DOUBLE | NCP_OBJECT_ONLY | NCP_CAMERA_ONLY | NCP_NON_PLANAR | NCP_NO_SKID | NCP_OIL
 
 # Used to unmask unsupported flags (FACE_SKIP)
 FACE_PROP_MASK = (
@@ -45,36 +56,86 @@ FACE_PROPS = [FACE_QUAD,
               FACE_CLOTH,
               FACE_SKIP]
 
-materials = [
-    ("MATERIAL_NONE", "None", "None", "", -1),
-    ("MATERIAL_DEFAULT", "Default", "None", "", 0),
-    ("MATERIAL_MARBLE", "Marble", "None", "", 1),
-    ("MATERIAL_STONE", "Stone", "None", "", 2),
-    ("MATERIAL_WOOD", "Wood", "None", "", 3),
-    ("MATERIAL_SAND", "Sand", "None", "", 4),
-    ("MATERIAL_PLASTIC", "Plastic", "None", "", 5),
-    ("MATERIAL_CARPETTILE", "Carpet tile", "None", "", 6),
-    ("MATERIAL_CARPETSHAG", "Carpet shag", "None", "", 7),
-    ("MATERIAL_BOUNDARY", "Boundary", "None", "", 8),
-    ("MATERIAL_GLASS", "Glass", "None", "", 9),
-    ("MATERIAL_ICE1", "Ice 1", "None", "", 10),
-    ("MATERIAL_METAL", "Metal", "None", "", 11),
-    ("MATERIAL_GRASS", "Grass", "None", "", 12),
-    ("MATERIAL_BUMPMETAL", "Bump metal", "None", "", 13),
-    ("MATERIAL_PEBBLES", "Pebbles", "None", "", 14),
-    ("MATERIAL_GRAVEL", "Gravel", "None", "", 15),
-    ("MATERIAL_CONVEYOR1", "Conveyor 1", "None", "", 16),
-    ("MATERIAL_CONVEYOR2", "Conveyor 2", "None", "", 17),
-    ("MATERIAL_DIRT1", "Dirt 1", "None", "", 18),
-    ("MATERIAL_DIRT2", "Dirt 2", "None", "", 19),
-    ("MATERIAL_DIRT3", "Dirt 3", "None", "", 20),
-    ("MATERIAL_ICE2", "Ice 2", "None", "", 21),
-    ("MATERIAL_ICE3", "Ice 3", "None", "", 22),
-    ("MATERIAL_WOOD2", "Wood 2", "None", "", 23),
-    ("MATERIAL_CONVEYOR_MARKET1", "Conveyor Market 1", "None", "", 24),
-    ("MATERIAL_CONVEYOR_MARKET2", "Conveyor Market 2", "None", "", 25),
-    ("MATERIAL_PAVING", "Paving", "None", "", 26)
-]
+NCP_PROPS = [NCP_QUAD,
+            NCP_DOUBLE,
+            NCP_OBJECT_ONLY,
+            NCP_CAMERA_ONLY,
+            NCP_NON_PLANAR,
+            NCP_NO_SKID,
+            NCP_OIL]
+
+MATERIALS = (
+    ("-1", "NONE",              "No material", "POTATO", -1),
+    ("0", "DEFAULT",            "Default material", "POTATO", 0),
+    ("1", "MARBLE",             "Marble material", "POTATO", 1),
+    ("2", "STONE",              "Stone material", "POTATO", 2),
+    ("3", "WOOD",               "Wood material", "POTATO", 3),
+    ("4", "SAND",               "Sand material", "POTATO", 4),
+    ("5", "PLASTIC",            "Plastic material", "POTATO", 5),
+    ("6", "CARPETTILE" ,        "Carpet Tile material", "POTATO", 6),
+    ("7", "CARPETSHAG" ,        "Carpet Shag material", "POTATO", 7),
+    ("8", "BOUNDARY",           "Boundary material", "POTATO", 8),
+    ("9", "GLASS",              "Glass material", "POTATO", 9),
+    ("10", "ICE1",              "Most slippery ice material", "POTATO", 10),
+    ("11", "METAL",             "Metal material", "POTATO", 11),
+    ("12", "GRASS",             "Grass material", "POTATO", 12),
+    ("13", "BUMPMETAL",         "Bump metal material", "POTATO", 13),
+    ("14", "PEBBLES",           "Pebbles material", "POTATO", 14),
+    ("15", "GRAVEL",            "Gravel material", "POTATO", 15),
+    ("16", "CONVEYOR1",         "First conveyor material", "POTATO", 16),
+    ("17", "CONVEYOR2",         "Second conveyor material", "POTATO", 17),
+    ("18", "DIRT1",             "First dirt material", "POTATO", 18),
+    ("19", "DIRT2",             "Second dirt material", "POTATO", 19),
+    ("20", "DIRT3",             "Third dirt material", "POTATO", 20),
+    ("21", "ICE2",              "Medium slippery ice material", "POTATO", 21),
+    ("22", "ICE3",              "Least slippery ice material", "POTATO", 22),
+    ("23", "WOOD2",             "Second wood material", "POTATO", 23),
+    ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor", "POTATO", 24),
+    ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor", "POTATO", 25),
+    ("26", "PAVING",            "Paving material", "POTATO", 26),
+)
+
+
+def dprint(str):
+    if DEBUG:
+        print(str)
+
+
+def vec3(r, g, b):
+    """ Workaround so I can use my color picker """
+    return (r, g, b)
+
+
+COLORS  = (
+    vec3(0.6, 0.6, 0.6),     # DEFAULT
+    vec3(0.51, 0.36, 0.36),  # MARBLE
+    vec3(0.22, 0.22, 0.22),  # STONE
+    vec3(0.47, 0.3, 0.14),   # WOOD
+    vec3(0.96, 0.76, 0.5),   # SAND
+    vec3(0.09, 0.09, 0.09),  # PLASTIC
+    vec3(0.67, 0.08, 0.0),   # CARPETTILE
+    vec3(0.53, 0.18, 0.13),  # CARPETSHAG
+    vec3(1.0, 0.0, 1.0),     # BOUNDARY
+    vec3(1.0, 1.0, 1.0),     # GLASS
+    vec3(0.72, 1.0, 0.95),   # ICE1
+    vec3(0.53, 0.6, 0.64),   # METAL
+    vec3(0.18, 0.36, 0.05),  # GRASS
+    vec3(0.22, 0.24, 0.2),   # BUMPMETAL
+    vec3(0.55, 0.55, 0.49),  # PEBBLES
+    vec3(0.79, 0.77, 0.76),  # GRAVEL
+    vec3(0.22, 0.0, 0.5),    # CONVEYOR1
+    vec3(0.2, 0.15, 0.24),   # CONVEYOR2
+    vec3(0.53, 0.39, 0.29),  # DIRT1
+    vec3(0.36, 0.26, 0.19),  # DIRT2
+    vec3(0.26, 0.16, 0.1),   # DIRT3
+    vec3(0.52, 0.71, 0.7),   # ICE2
+    vec3(0.4, 0.54, 0.53),   # ICE3
+    vec3(0.47, 0.3, 0.17),   # WOOD2
+    vec3(0.0, 0.08, 0.22),   # CONVEYOR_MARKET1
+    vec3(0.1, 0.13, 0.2),    # CONVEYOR_MARKET2
+    vec3(0.56, 0.5, 0.45),   # PAVING
+    vec3(1.0, 0.0, 0.0)      # NONE (-1)
+)
 
 """
 Supported File Formats
@@ -87,24 +148,21 @@ FORMAT_FOB = 3
 FORMAT_HUL = 4
 FORMAT_LIT = 5
 FORMAT_NCP = 6
-FORMAT_NCP_W = 7
-FORMAT_PRM = 8
-FORMAT_RIM = 9
-FORMAT_RTU = 10
-FORMAT_TAZ = 11
-FORMAT_VIS = 12
-FORMAT_W = 13
+FORMAT_PRM = 7
+FORMAT_RIM = 8
+FORMAT_RTU = 9
+FORMAT_TAZ = 10
+FORMAT_VIS = 11
+FORMAT_W = 12
 
-file_formats = {
-    FORMAT_UNK: "Unknown Format",
+FORMATS = {
     FORMAT_BMP: "BMP",
     FORMAT_CAR: "parameters.txt",
     FORMAT_FIN: "FIN",
     FORMAT_FOB: "FOB",
     FORMAT_HUL: "HUL",
     FORMAT_LIT: "LIT",
-    FORMAT_NCP: "NCP (Object)",
-    FORMAT_NCP_W: "NCP (World)",
+    FORMAT_NCP: "NCP",
     FORMAT_PRM: "PRM/M",
     FORMAT_RIM: "RIM",
     FORMAT_RTU: "RTU",
@@ -117,11 +175,6 @@ file_formats = {
 COL_CUBE = mathutils.Color((0.7, 0.08, 0))
 COL_BBOX = mathutils.Color((0, 0, 0.05))
 COL_BCUBE = mathutils.Color((0, 0.7, 0.08))
-
-
-def dprint(str):
-    if DEBUG:
-        print(str)
 
 
 """
@@ -155,37 +208,41 @@ def to_blender_axis(vec):
 
 
 def to_blender_coord(vec):
-    return (vec[0] * IMPORT_SCALE,
-            vec[2] * IMPORT_SCALE,
-            -vec[1] * IMPORT_SCALE)
+    return (vec[0] * SCALE,
+            vec[2] * SCALE,
+            -vec[1] * SCALE)
 
 
 def to_blender_scale(num):
-    return num * IMPORT_SCALE
+    return num * SCALE
 
 
 def to_revolt_coord(vec):
-    return (vec[0] * EXPORT_SCALE,
-            -vec[2] * EXPORT_SCALE,
-            vec[1] * EXPORT_SCALE)
+    return (vec[0] / SCALE,
+            -vec[2] / SCALE,
+            vec[1] / SCALE)
 
 
 def to_revolt_axis(vec):
     return (vec[0], -vec[2], vec[1])
 
 
+def to_revolt_scale(num):
+    return num / SCALE
+
 def rvbbox_from_bm(bm):
     """ The bbox of Blender objects has all edge coordinates. RV just stores the
     mins and max for each axis. """
-    # bbox = obj.bound_box
-    xlo = min(v.co[0] for v in bm.verts) * EXPORT_SCALE
-    xhi = max(v.co[0] for v in bm.verts) * EXPORT_SCALE
-    ylo = -min(v.co[2] for v in bm.verts) * EXPORT_SCALE
-    yhi = -max(v.co[2] for v in bm.verts) * EXPORT_SCALE
-    zlo = min(v.co[1] for v in bm.verts) * EXPORT_SCALE
-    zhi = max(v.co[1] for v in bm.verts) * EXPORT_SCALE
-    return(xlo, xhi, ylo, yhi, zlo, zhi)
+    return rvbbox_from_verts(bm.verts)
 
+def rvbbox_from_verts(verts):
+    xlo = min(v.co[0] for v in verts) / SCALE
+    xhi = max(v.co[0] for v in verts) / SCALE
+    ylo = -max(v.co[2] for v in verts) / SCALE
+    yhi = -min(v.co[2] for v in verts) / SCALE
+    zlo = min(v.co[1] for v in verts) / SCALE
+    zhi = max(v.co[1] for v in verts) / SCALE
+    return(xlo, xhi, ylo, yhi, zlo, zhi)
 
 def get_distance(v1, v2):
     return sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2 + (v1[2] - v2[2])**2)
@@ -201,7 +258,9 @@ def center_from_rvbbox(rvbbox):
 
 def radius_from_bmesh(bm, center):
     """ Gets the radius measured from the furthest vertex."""
-    radius = max([get_distance(center, to_revolt_coord(v.co)) for v in bm.verts])
+    radius = max(
+        [get_distance(center, to_revolt_coord(v.co)) for v in bm.verts]
+    )
     return radius
 
 
@@ -237,6 +296,8 @@ def create_material(name, diffuse, alpha):
 """
 Blender helpers
 """
+
+
 def get_average_vcol(faces, layer):
     """ Gets the average vertex color of all loops of given faces """
     for face in faces:
@@ -261,18 +322,78 @@ def get_edit_bmesh(obj):
         bm.faces.layers.int.get("Type")
         return bm
     except Exception as e:
-        # print("Bmesh is gone, creating new one...")
+        dprint("Bmesh is gone, creating new one...")
         del dic[obj.name]
         bm = dic.setdefault(obj.name, bmesh.from_edit_mesh(obj.data))
         return bm
 
 
+def objects_to_bmesh(objs):
+
+    # Creates the mesh used to merge the entire scene
+    bm_all = bmesh.new()
+
+    # Adds the objects" meshes to the bmesh
+    for obj in objs:
+        dprint("Preparing object {} for export...".format(obj.name))
+        # Creates a bmesh from the supplied object
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+
+        # Removes the parent for exporting and applies transformation
+        parent = obj.parent
+        if parent:
+            mat = obj.matrix_world.copy()
+            old_mat = obj.matrix_basis.copy()
+            obj.parent = None
+            obj.matrix_world = mat
+
+        spc = obj.matrix_basis
+        bmesh.ops.scale(
+            bm,
+            vec=obj.scale,
+            space=spc,
+            verts=bm.verts
+        )
+        bmesh.ops.transform(
+            bm,
+            matrix=Matrix.Translation(obj.location),
+            space=spc,
+            verts=bm.verts
+        )
+        bmesh.ops.rotate(
+            bm,
+            cent=obj.location,
+            matrix=obj.rotation_euler.to_matrix(),
+            space=spc,
+            verts=bm.verts
+        )
+
+        # Restores the parent relationship
+        if parent and not obj.parent:
+            obj.parent = parent
+            obj.matrix_basis = old_mat
+
+        # Converts the transformed bmesh to mesh
+        new_mesh = bpy.data.meshes.new("ncp_export_temp")
+        bm.to_mesh(new_mesh)
+
+        # Adds the transformed mesh to the big bmesh
+        bm_all.from_mesh(new_mesh)
+
+        # Removes unused meshes
+        bpy.data.meshes.remove(new_mesh, do_unlink=True)
+        bm.free()
+
+    return bm_all
+
+
 class DialogOperator(bpy.types.Operator):
-    bl_idname = 'revolt.dialog'
-    bl_label = 'Re-Volt Add-On Notification'
+    bl_idname = "revolt.dialog"
+    bl_label = "Re-Volt Add-On Notification"
 
     def execute(self, context):
-        return {'FINISHED'}
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         wm = context.window_manager
@@ -281,7 +402,7 @@ class DialogOperator(bpy.types.Operator):
     def draw(self, context):
         global dialog_message
         column = self.layout.column()
-        for line in str.split(dialog_message, '\n'):
+        for line in str.split(dialog_message, "\n"):
             column.label(line)
 
 
@@ -289,11 +410,10 @@ def msg_box(message):
     global dialog_message
     print(message)
     dialog_message = message
-    bpy.ops.revolt.dialog('INVOKE_DEFAULT')
+    bpy.ops.revolt.dialog("INVOKE_DEFAULT")
 
 
 def redraw():
-    # bpy.context.area.tag_redraw()
     redraw_3d()
     redraw_uvedit()
 
@@ -302,7 +422,7 @@ def redraw_3d():
     for window in bpy.context.window_manager.windows:
         screen = window.screen
         for area in screen.areas:
-            if area.type == 'VIEW_3D':
+            if area.type == "VIEW_3D":
                 area.tag_redraw()
                 break
 
@@ -311,26 +431,44 @@ def redraw_uvedit():
     for window in bpy.context.window_manager.windows:
         screen = window.screen
         for area in screen.areas:
-            if area.type == 'IMAGE_EDITOR':
+            if area.type == "IMAGE_EDITOR":
                 area.tag_redraw()
                 break
 
+def enable_any_tex_mode(context):
+    props = context.scene.revolt
+    if props.prefer_tex_solid_mode:
+        enable_textured_solid_mode()
+    else:
+        enable_texture_mode()
 
 def enable_texture_mode():
     for area in bpy.context.screen.areas:
-        if area.type == 'VIEW_3D':
+        if area.type == "VIEW_3D":
             for space in area.spaces:
-                if space.type == 'VIEW_3D':
-                    space.viewport_shade = 'TEXTURED'
+                if space.type == "VIEW_3D":
+                    space.viewport_shade = "TEXTURED"
+    return
+
+def enable_textured_solid_mode():
+    for area in bpy.context.screen.areas:
+        if area.type == "VIEW_3D":
+            for space in area.spaces:
+                if space.type == "VIEW_3D":
+                    space.viewport_shade = "SOLID"
+                    space.show_textured_solid = True
     return
 
 
 def texture_mode_enabled():
     for area in bpy.context.screen.areas:
-        if area.type == 'VIEW_3D':
+        if area.type == "VIEW_3D":
             for space in area.spaces:
-                if space.type == 'VIEW_3D':
-                    if space.viewport_shade == 'TEXTURED':
+                if space.type == "VIEW_3D":
+                    if space.viewport_shade == "TEXTURED":
+                        return True
+                    elif (space.viewport_shade == "SOLID" and
+                          space.show_textured_solid):
                         return True
     return False
 
@@ -391,7 +529,7 @@ def is_track_folder(path):
 
 def get_format(fstr):
     """
-    Gets the format by the ending and returns an int (see enum in common)
+    Gets the format by the ending and returns an int
     """
     fname, ext = os.path.splitext(fstr)
 
@@ -399,6 +537,8 @@ def get_format(fstr):
         return FORMAT_BMP
     elif ext == ".txt":
         return FORMAT_CAR
+    elif ext in [".ncp"]:
+        return FORMAT_NCP
     elif ext in [".prm", ".m"]:
         return FORMAT_PRM
     elif ext == ".w":

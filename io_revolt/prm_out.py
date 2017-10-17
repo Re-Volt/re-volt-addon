@@ -110,9 +110,10 @@ def export_mesh(me, obj, scene, filepath, world=None):
             obj.parent = parent
             obj.matrix_basis = old_mat
 
-    num_ngons = triangulate_ngons(bm)
-    if scene.revolt.triangulate_ngons > 0:
-        print("Triangulated {} n-gons".format(num_ngons))
+    if props.triangulate_ngons:
+        num_ngons = triangulate_ngons(bm)
+        if scene.revolt.triangulate_ngons > 0:
+            print("Triangulated {} n-gons".format(num_ngons))
 
     # Gets layers
     uv_layer = bm.loops.layers.uv.get("UVMap")
@@ -151,9 +152,8 @@ def export_mesh(me, obj, scene, filepath, world=None):
         # Falls back to texture if not enabled or texnum layer not found
         elif tex_layer and face[tex_layer] and face[tex_layer].image:
             poly.texture = texture_to_int(face[tex_layer].image.name)
-        # Uses 'A' texture instead
         else:
-            poly.texture = 0
+            poly.texture = -1
 
         # Sets vertex indices for the polygon
         vert_order = [2, 1, 0, 3] if not is_quad else [3, 2, 1, 0]
@@ -195,7 +195,6 @@ def export_mesh(me, obj, scene, filepath, world=None):
                 alpha = int(face[env_alpha_layer] * 255)
                 col = rvstruct.Color(color=rgb, alpha=alpha)
                 world.env_list.append(col)
-
 
         prm.polygons.append(poly)
 

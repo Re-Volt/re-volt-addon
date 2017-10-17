@@ -11,6 +11,14 @@ import time
 from . import common
 from .common import *
 
+def color_from_face(context):
+    obj = context.object
+    bm = get_edit_bmesh(obj)
+    faces = [f for f in bm.faces if f.select]
+    if faces:
+        col = get_average_vcol(faces, bm.loops.layers.color.get("Col"))
+        context.scene.revolt.vertex_color_picker = col
+
 def set_vertex_color(context, number):
     eo = bpy.context.edit_object
     bm = dic.setdefault(eo.name, bmesh.from_edit_mesh(eo.data))
