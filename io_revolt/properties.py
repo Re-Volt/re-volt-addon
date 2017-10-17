@@ -670,12 +670,20 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     ui_fold_export_settings = BoolProperty(
         name = "Export Settings",
         default = True,
-        description = "Show Export Settings"
+        description = "Show/Hide Settings"
     )
     enable_tex_mode = BoolProperty(
         name = "Texture Mode after Import",
         default = True,
         description = "Enables Texture Mode after mesh import"
+    )
+    prefer_tex_solid_mode = BoolProperty(
+        name = "Prefer Textured Solid Mode",
+        default = True,
+        description = "Prefer Textured Solid mode instead of Texture mode for "
+                      "3D view:\n\nThis makes it easier to work with "
+                      "untextured meshes.\nThis setting affects widgets that "
+                      "prompt to enable texture mode"
     )
     vertex_color_picker = FloatVectorProperty(
         name="Object Color",

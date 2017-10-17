@@ -54,6 +54,7 @@ class RevoltScenePanel(bpy.types.Panel):
         layout = self.layout
         layout.prop(props, "texture_animations")
 
+
 class RevoltIOToolPanel(bpy.types.Panel):
     """
     Tool panel in the left sidebar of the viewport for performing
@@ -82,6 +83,9 @@ class RevoltIOToolPanel(bpy.types.Panel):
         )
         if not fold_s:
             box = self.layout.box()
+            box.label("General:")
+            box.prop(props, "prefer_tex_solid_mode")
+
             box.label("Import:")
             box.prop(props, "enable_tex_mode")
 
@@ -269,6 +273,9 @@ def ncp_edit_panel(self, context):
     row = layout.row()
     row.label("Material:")
 
+    # Warns if texture mode is not enabled
+    widget_texture_mode(self)
+
     row = layout.row(align=True)
     col = row.column(align=True)
     col.prop(meshprops, "face_material", text="Set")
@@ -355,7 +362,7 @@ class RevoltLightPanel(bpy.types.Panel):
     def draw(self, context):
         view = context.space_data
         obj = context.object
-        # warn if texture mode is not enabled
+        # Warns if texture mode is not enabled
         widget_texture_mode(self)
 
         if obj and obj.select:
@@ -499,12 +506,19 @@ They return false if everything is alright.
 
 def widget_texture_mode(self):
     if not texture_mode_enabled():
+        props = bpy.context.scene.revolt
         box = self.layout.box()
         box.label(text="Texture Mode is not enabled.", icon='INFO')
         row = box.row()
-        row.operator("helpers.enable_texture_mode",
-                     text="Enable Texture Mode",
-                     icon="POTATO")
+        if props.prefer_tex_solid_mode:
+            row.operator("helpers.enable_textured_solid_mode",
+                         text="Enable Texture Mode",
+                         icon="POTATO")
+        else:
+            row.operator("helpers.enable_texture_mode",
+                         text="Enable Texture Mode",
+                         icon="POTATO")
+
         return True
     return False
 
