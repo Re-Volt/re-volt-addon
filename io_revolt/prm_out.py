@@ -152,9 +152,8 @@ def export_mesh(me, obj, scene, filepath, world=None):
         # Falls back to texture if not enabled or texnum layer not found
         elif tex_layer and face[tex_layer] and face[tex_layer].image:
             poly.texture = texture_to_int(face[tex_layer].image.name)
-        # Uses 'A' texture instead
         else:
-            poly.texture = 0
+            poly.texture = -1
 
         # Sets vertex indices for the polygon
         vert_order = [2, 1, 0, 3] if not is_quad else [3, 2, 1, 0]
