@@ -35,6 +35,8 @@ NCP_NON_PLANAR = 16
 NCP_NO_SKID = 32
 NCP_OIL = 64
 
+NCP_GRID_SIZE = 1024
+
 NCP_PROP_MASK = NCP_DOUBLE | NCP_OBJECT_ONLY | NCP_CAMERA_ONLY | NCP_NON_PLANAR | NCP_NO_SKID | NCP_OIL
 
 # Used to unmask unsupported flags (FACE_SKIP)
@@ -239,8 +241,8 @@ def rvbbox_from_bm(bm):
 def rvbbox_from_verts(verts):
     xlo = min(v.co[0] for v in verts) / SCALE
     xhi = max(v.co[0] for v in verts) / SCALE
-    ylo = -min(v.co[2] for v in verts) / SCALE
-    yhi = -max(v.co[2] for v in verts) / SCALE
+    ylo = -max(v.co[2] for v in verts) / SCALE
+    yhi = -min(v.co[2] for v in verts) / SCALE
     zlo = min(v.co[1] for v in verts) / SCALE
     zhi = max(v.co[1] for v in verts) / SCALE
     return(xlo, xhi, ylo, yhi, zlo, zhi)

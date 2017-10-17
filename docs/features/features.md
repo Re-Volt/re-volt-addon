@@ -75,6 +75,6 @@
 - [x] Properties
 - [x] Materials
 ### Export
-- [ ] Geometry
-- [ ] Properties
-- [ ] Materials
+- [x] Geometry
+- [x] Properties
+- [x] Materials

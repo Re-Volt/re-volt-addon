@@ -246,8 +246,8 @@ def ncp_edit_panel(self, context):
     col = row.column(align=True)
     col.prop(meshprops, "face_ncp_double",
         text="{}: Double sided".format(count[1]))
-    col.prop(meshprops, "face_ncp_non_planar",
-        text="{}: Non-planar".format(count[4]))
+    # col.prop(meshprops, "face_ncp_non_planar",
+    #     text="{}: Non-planar".format(count[4]))
     col.prop(meshprops, "face_ncp_no_skid",
         text="{}: No Skid Marks".format(count[5]))
     col.prop(meshprops, "face_ncp_oil",
@@ -260,7 +260,7 @@ def ncp_edit_panel(self, context):
     col = row.column(align=True)
     col.scale_x = 0.15
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_DOUBLE
-    col.operator("ncpfaceprops.select", text="sel").prop = NCP_NON_PLANAR
+    # col.operator("ncpfaceprops.select", text="sel").prop = NCP_NON_PLANAR
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_NO_SKID
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OIL
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OBJECT_ONLY

@@ -10,19 +10,28 @@ if "bpy" in locals():
 import os
 import bpy
 import bmesh
+from math import ceil
 from mathutils import Color, Matrix
 from . import common
 from . import rvstruct
 
 from .common import *
-from .rvstruct import BoundingBox, NCP, Plane, Polyhedron, Vector
+from .rvstruct import (
+    BoundingBox,
+    LookupGrid,
+    LookupList,
+    NCP,
+    Plane,
+    Polyhedron,
+    Vector
+)
 
 
 def export_file(filepath, scene):
     print("Exporting NCP to {}...".format(filepath))
     props = scene.revolt
 
-    # Collect objects for exporting
+    # Collects objects for export
     objs = []
     for obj in scene.objects:
         conditions = (
@@ -44,6 +53,7 @@ def export_file(filepath, scene):
         if scene.revolt.triangulate_ngons > 0:
             print("Triangulated {} n-gons".format(num_ngons))
 
+    # Material and type layers. The preview layer will be ignored.
     material_layer = (bm.faces.layers.int.get("Material") or
                       bm.faces.layers.int.new("Material"))
     type_layer = (bm.faces.layers.int.get("NCPType") or
@@ -70,7 +80,6 @@ def export_file(filepath, scene):
 
         vec = Vector(data=to_revolt_coord(verts[0].co))
         distance = -normal.dot(vec)
-        # distance = -vec.x * normal.x - vec.y * normal.y - vec.z * normal.z
 
         # Creates main plane
         poly.planes.append(Plane(n=normal, d=distance))
@@ -88,7 +97,6 @@ def export_file(filepath, scene):
             pnormal = normal.cross(vec0 - vec1)
             pnormal.normalize()
             distance = -pnormal.dot(vec0)
-            # distance = -vec0.x * pnormal.x - vec0.y * pnormal.y - vec0.z * pnormal.z
 
             poly.planes.append(Plane(n=Vector(data=pnormal), d=distance))
 
@@ -103,16 +111,45 @@ def export_file(filepath, scene):
     # Sets length of polyhedron list
     ncp.polyhedron_count = len(ncp.polyhedra)
 
+    grid = LookupGrid()
+    grid.size = NCP_GRID_SIZE
+
+    bbox = BoundingBox(data=(
+        min([poly.bbox.xlo for poly in ncp.polyhedra]),
+        max([poly.bbox.xhi for poly in ncp.polyhedra]),
+        0,
+        0,
+        min([poly.bbox.zlo for poly in ncp.polyhedra]),
+        max([poly.bbox.zhi for poly in ncp.polyhedra]))
+    )
+
+    grid.xsize = ceil((bbox.xhi - bbox.xlo) / grid.size)
+    grid.zsize = ceil((bbox.zhi - bbox.zlo) / grid.size)
+
+    grid.x0 = (bbox.xlo + bbox.xhi - grid.xsize * grid.size) / 2
+    grid.z0 = (bbox.zlo + bbox.zhi - grid.zsize * grid.size) / 2
+
+    for z in range(grid.zsize):
+        zlo = grid.z0 + z * grid.size - 150
+        zhi = grid.z0 + (z + 1) * grid.size + 150
+
+        for x in range(grid.xsize):
+            xlo = grid.x0 + x * grid.size - 150
+            xhi = grid.x0 + (x + 1) * grid.size + 150
+
+            lookup = LookupList()
+            for i, poly in enumerate(ncp.polyhedra):
+                if (poly.bbox.zhi > zlo and poly.bbox.zlo < zhi and
+                        poly.bbox.xhi > xlo and poly.bbox.xlo < xhi):
+                    lookup.polyhedron_idcs.append(i)
+
+            lookup.length = len(lookup.polyhedron_idcs)
+            grid.lists.append(lookup)
+    ncp.lookup_grid = grid
+
     # Writes the NCP to file
     with open(filepath, "wb") as f:
         ncp.write(f)
-
-
-    # me = bpy.data.meshes.new("test")
-    # bm.to_mesh(me)
-    # ob = bpy.data.objects.new("testoutput", me)
-    # scene.objects.link(ob)
-    # scene.objects.active = ob
 
     # Frees the bmesh
     bm.free()

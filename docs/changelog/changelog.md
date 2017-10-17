@@ -4,6 +4,13 @@
 
 # Changelog
 
+## 2017-10-17
+
+Version [`rva_17.1017`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1017)
+
+* **Additions**
+  * **NCP**: Export is now supported. The face properties panel has a section for NCP now (face flags and materials).
+
 ## 2017-10-10
 
 Version [`rva_17.1010`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1010)

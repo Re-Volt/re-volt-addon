@@ -197,7 +197,6 @@ def export_mesh(me, obj, scene, filepath, world=None):
                 col = rvstruct.Color(color=rgb, alpha=alpha)
                 world.env_list.append(col)
 
-
         prm.polygons.append(poly)
 
     # export vertex positions and normals

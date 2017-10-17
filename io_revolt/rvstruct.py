@@ -1082,7 +1082,7 @@ class LookupGrid:
         self.xsize = 0.0
         self.zsize = 0.0
 
-        self.raster_size = 0.0
+        self.size = 0.0
 
         self.lists = []
 
@@ -1096,7 +1096,7 @@ class LookupGrid:
         sizes = [int(s) for s in struct.unpack("<ff", file.read(8))]
         self.xsize, self.zsize = sizes
 
-        self.raster_size = struct.unpack("<f", file.read(4))[0]
+        self.size = struct.unpack("<f", file.read(4))[0]
 
         self.lists = [LookupList(file) for x in range(self.xsize * self.zsize)]
 
@@ -1106,7 +1106,7 @@ class LookupGrid:
         file.write(struct.pack("<f", self.z0))
         file.write(struct.pack("<f", self.xsize))
         file.write(struct.pack("<f", self.zsize))
-        file.write(struct.pack("<f", self.raster_size))
+        file.write(struct.pack("<f", self.size))
         # Writes the lists
         for x in range(int(self.xsize) * int(self.zsize)):
             self.lists[x].write(file)
@@ -1116,7 +1116,7 @@ class LookupGrid:
                "z0": self.z0,
                "xsize": self.xsize,
                "zsize": self.zsize,
-               "raster_size": self.raster_size,
+               "size": self.size,
                "lists": [l.as_dict() for l in self.lists]
                }
         return dic
