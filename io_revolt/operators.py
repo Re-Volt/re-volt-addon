@@ -62,7 +62,7 @@ class ImportRV(bpy.types.Operator):
                 enable_any_tex_mode(context)
 
         else:
-            msg_box("Not yet supported: {}".format(FORMATS[frmt]))
+            msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 
         end_time = time.time() - start_time
         print("Import done in {0:.3f} seconds.".format(end_time))
@@ -155,7 +155,7 @@ class ExportRV(bpy.types.Operator):
                 w_out.export_file(self.filepath, scene)
 
             else:
-                print("Format not yet supported {}".format(FORMATS[frmt]))
+                msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 
             # Re-enables undo
             bpy.context.user_preferences.edit.use_global_undo = use_global_undo
@@ -195,10 +195,12 @@ class ExportRV(bpy.types.Operator):
             box.prop(props, "use_tex_num")
 
         # Mesh settings
-        if frmt in [FORMAT_NCP, FORMAT_PRM, FORMAT_W]:
+        if frmt in [FORMAT_PRM, FORMAT_W]:
             box = layout.box()
             box.prop(props, "apply_scale")
             box.prop(props, "apply_rotation")
+        if frmt in [FORMAT_NCP, FORMAT_PRM, FORMAT_W]:
+            box = layout.box()
             box.prop(props, "triangulate_ngons")
 
 

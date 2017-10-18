@@ -25,7 +25,7 @@ Missing Formats:
 
 import os
 import struct
-from math import sqrt
+from math import ceil, sqrt
 
 class World:
     """
@@ -993,6 +993,45 @@ class NCP:
 
         if self.lookup_grid:
             self.lookup_grid.write(file)
+
+    def generate_lookup_grid(self):
+        grid = LookupGrid()
+        grid.size = 1024
+
+        bbox = BoundingBox(data=(
+            min([poly.bbox.xlo for poly in self.polyhedra]),
+            max([poly.bbox.xhi for poly in self.polyhedra]),
+            0,
+            0,
+            min([poly.bbox.zlo for poly in self.polyhedra]),
+            max([poly.bbox.zhi for poly in self.polyhedra]))
+        )
+
+        grid.xsize = ceil((bbox.xhi - bbox.xlo) / grid.size)
+        grid.zsize = ceil((bbox.zhi - bbox.zlo) / grid.size)
+
+        grid.x0 = (bbox.xlo + bbox.xhi - grid.xsize * grid.size) / 2
+        grid.z0 = (bbox.zlo + bbox.zhi - grid.zsize * grid.size) / 2
+
+        for z in range(grid.zsize):
+            zlo = grid.z0 + z * grid.size - 150
+            zhi = grid.z0 + (z + 1) * grid.size + 150
+
+            for x in range(grid.xsize):
+                xlo = grid.x0 + x * grid.size - 150
+                xhi = grid.x0 + (x + 1) * grid.size + 150
+
+                lookup = LookupList()
+                for i, poly in enumerate(self.polyhedra):
+                    if (poly.bbox.zhi > zlo and poly.bbox.zlo < zhi and
+                            poly.bbox.xhi > xlo and poly.bbox.xlo < xhi):
+                        lookup.polyhedron_idcs.append(i)
+
+                lookup.length = len(lookup.polyhedron_idcs)
+                grid.lists.append(lookup)
+
+        self.lookup_grid = grid
+        return self
 
     def as_dict(self):
         if not self.lookup_grid:
