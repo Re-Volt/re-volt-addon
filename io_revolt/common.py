@@ -1,4 +1,4 @@
-# Prevents it from being reloaded
+# Prevents the global dict from being reloaded
 if "bpy" not in locals():
     # Global dict to hold the mesh for edit mode
     dic = {}
@@ -6,13 +6,13 @@ if "bpy" not in locals():
 import bpy
 import bmesh
 import os
-import mathutils
-from mathutils import Matrix
+
 from math import sqrt
+from mathutils import Color, Matrix
 from .parameters import read_parameters
 
 # If True, more debug messages will be printed
-DEBUG = False
+DEBUG = True
 
 SCALE = 0.01
 
@@ -37,43 +37,67 @@ NCP_OIL = 64
 
 NCP_GRID_SIZE = 1024
 
-NCP_PROP_MASK = NCP_DOUBLE | NCP_OBJECT_ONLY | NCP_CAMERA_ONLY | NCP_NON_PLANAR | NCP_NO_SKID | NCP_OIL
+NCP_PROP_MASK = (
+    NCP_DOUBLE |
+    NCP_OBJECT_ONLY |
+    NCP_CAMERA_ONLY |
+    NCP_NON_PLANAR |
+    NCP_NO_SKID |
+    NCP_OIL
+)
 
 # Used to unmask unsupported flags (FACE_SKIP)
 FACE_PROP_MASK = (
-    FACE_QUAD | FACE_DOUBLE | FACE_TRANSLUCENT | FACE_MIRROR |
-    FACE_TRANSL_TYPE | FACE_TEXANIM | FACE_NOENV | FACE_ENV |
+    FACE_QUAD |
+    FACE_DOUBLE |
+    FACE_TRANSLUCENT |
+    FACE_MIRROR |
+    FACE_TRANSL_TYPE |
+    FACE_TEXANIM |
+    FACE_NOENV |
+    FACE_ENV |
     FACE_CLOTH
 )
-FACE_PROPS = [FACE_QUAD,
-              FACE_DOUBLE,
-              FACE_TRANSLUCENT,
-              FACE_MIRROR,
-              FACE_TRANSL_TYPE,
-              FACE_TEXANIM,
-              FACE_NOENV,
-              FACE_ENV,
-              FACE_CLOTH,
-              FACE_SKIP]
 
-NCP_PROPS = [NCP_QUAD,
-            NCP_DOUBLE,
-            NCP_OBJECT_ONLY,
-            NCP_CAMERA_ONLY,
-            NCP_NON_PLANAR,
-            NCP_NO_SKID,
-            NCP_OIL]
+FACE_PROPS = [
+    FACE_QUAD,
+    FACE_DOUBLE,
+    FACE_TRANSLUCENT,
+    FACE_MIRROR,
+    FACE_TRANSL_TYPE,
+    FACE_TEXANIM,
+    FACE_NOENV,
+    FACE_ENV,
+    FACE_CLOTH,
+    FACE_SKIP
+]
+
+NCP_PROPS = [
+    NCP_QUAD,
+    NCP_DOUBLE,
+    NCP_OBJECT_ONLY,
+    NCP_CAMERA_ONLY,
+    NCP_NON_PLANAR,
+    NCP_NO_SKID,
+    NCP_OIL
+]
 
 MATERIALS = (
-    ("-1", "NONE",              "No material", "POTATO", -1),
+    (   # None
+        "-1",
+        "NONE",
+        "No material. Faces with this material will not be exported.",
+        "POTATO",
+        -1
+    ),
     ("0", "DEFAULT",            "Default material", "POTATO", 0),
     ("1", "MARBLE",             "Marble material", "POTATO", 1),
     ("2", "STONE",              "Stone material", "POTATO", 2),
     ("3", "WOOD",               "Wood material", "POTATO", 3),
     ("4", "SAND",               "Sand material", "POTATO", 4),
     ("5", "PLASTIC",            "Plastic material", "POTATO", 5),
-    ("6", "CARPETTILE" ,        "Carpet Tile material", "POTATO", 6),
-    ("7", "CARPETSHAG" ,        "Carpet Shag material", "POTATO", 7),
+    ("6", "CARPETTILE",         "Carpet Tile material", "POTATO", 6),
+    ("7", "CARPETSHAG",         "Carpet Shag material", "POTATO", 7),
     ("8", "BOUNDARY",           "Boundary material", "POTATO", 8),
     ("9", "GLASS",              "Glass material", "POTATO", 9),
     ("10", "ICE1",              "Most slippery ice material", "POTATO", 10),
@@ -97,45 +121,51 @@ MATERIALS = (
 
 
 def dprint(str):
+    """ Debug print: only prints if debug is enabled """
     if DEBUG:
         print(str)
 
 
-def vec3(r, g, b):
-    """ Workaround so I can use my color picker """
-    return (r, g, b)
+def rgb(r, g, b):
+    """ Workaround so I can use a color picker """
+    return (r/255, g/255, b/255)
 
 
-COLORS  = (
-    vec3(0.6, 0.6, 0.6),     # DEFAULT
-    vec3(0.51, 0.36, 0.36),  # MARBLE
-    vec3(0.22, 0.22, 0.22),  # STONE
-    vec3(0.47, 0.3, 0.14),   # WOOD
-    vec3(0.96, 0.76, 0.5),   # SAND
-    vec3(0.09, 0.09, 0.09),  # PLASTIC
-    vec3(0.67, 0.08, 0.0),   # CARPETTILE
-    vec3(0.53, 0.18, 0.13),  # CARPETSHAG
-    vec3(1.0, 0.0, 1.0),     # BOUNDARY
-    vec3(1.0, 1.0, 1.0),     # GLASS
-    vec3(0.72, 1.0, 0.95),   # ICE1
-    vec3(0.53, 0.6, 0.64),   # METAL
-    vec3(0.18, 0.36, 0.05),  # GRASS
-    vec3(0.22, 0.24, 0.2),   # BUMPMETAL
-    vec3(0.55, 0.55, 0.49),  # PEBBLES
-    vec3(0.79, 0.77, 0.76),  # GRAVEL
-    vec3(0.22, 0.0, 0.5),    # CONVEYOR1
-    vec3(0.2, 0.15, 0.24),   # CONVEYOR2
-    vec3(0.53, 0.39, 0.29),  # DIRT1
-    vec3(0.36, 0.26, 0.19),  # DIRT2
-    vec3(0.26, 0.16, 0.1),   # DIRT3
-    vec3(0.52, 0.71, 0.7),   # ICE2
-    vec3(0.4, 0.54, 0.53),   # ICE3
-    vec3(0.47, 0.3, 0.17),   # WOOD2
-    vec3(0.0, 0.08, 0.22),   # CONVEYOR_MARKET1
-    vec3(0.1, 0.13, 0.2),    # CONVEYOR_MARKET2
-    vec3(0.56, 0.5, 0.45),   # PAVING
-    vec3(1.0, 0.0, 0.0)      # NONE (-1)
+COLORS = (
+    rgb(153, 153, 153),     # DEFAULT
+    rgb(130, 91, 91),       # MARBLE
+    rgb(56, 56, 56),        # STONE
+    rgb(119, 76, 35),       # WOOD
+    rgb(244, 193, 127),     # SAND
+    rgb(22, 22, 22),        # PLASTIC
+    rgb(170, 20, 0),        # CARPETTILE
+    rgb(135, 45, 33),       # CARPETSHAG
+    rgb(255, 0, 255),       # BOUNDARY
+    rgb(255, 255, 255),     # GLASS
+    rgb(184, 255, 242),     # ICE1
+    rgb(135, 153, 163),     # METAL
+    rgb(45, 91, 12),        # GRASS
+    rgb(56, 61, 51),        # BUMPMETAL
+    rgb(140, 140, 124),     # PEBBLES
+    rgb(201, 196, 193),     # GRAVEL
+    rgb(56, 0, 128),        # CONVEYOR1
+    rgb(51, 38, 61),        # CONVEYOR2
+    rgb(135, 99, 73),       # DIRT1
+    rgb(91, 66, 48),        # DIRT2
+    rgb(66, 40, 25),        # DIRT3
+    rgb(132, 181, 178),     # ICE2
+    rgb(102, 136, 134),     # ICE3
+    rgb(119, 76, 43),       # WOOD2
+    rgb(0, 20, 56),         # CONVEYOR_MARKET1
+    rgb(25, 33, 51),        # CONVEYOR_MARKET2
+    rgb(142, 127, 114),     # PAVING
+    rgb(255, 0, 0)          # NONE (-1)
 )
+
+# Colors for debug objects
+COL_CUBE = Color(rgb(180, 20, 0))
+COL_BBOX = Color(rgb(0, 0, 40))
+COL_BCUBE = Color(rgb(0, 180, 20))
 
 """
 Supported File Formats
@@ -156,46 +186,42 @@ FORMAT_VIS = 11
 FORMAT_W = 12
 
 FORMATS = {
-    FORMAT_BMP: "BMP",
-    FORMAT_CAR: "parameters.txt",
-    FORMAT_FIN: "FIN",
-    FORMAT_FOB: "FOB",
-    FORMAT_HUL: "HUL",
-    FORMAT_LIT: "LIT",
-    FORMAT_NCP: "NCP",
-    FORMAT_PRM: "PRM/M",
-    FORMAT_RIM: "RIM",
-    FORMAT_RTU: "RTU",
-    FORMAT_TAZ: "TAZ",
-    FORMAT_VIS: "VIS",
-    FORMAT_W: "W",
+    FORMAT_BMP: "Bitmap",
+    FORMAT_CAR: "Car Parameters",
+    FORMAT_FIN: "Instances",
+    FORMAT_FOB: "Objects",
+    FORMAT_HUL: "Hull",
+    FORMAT_LIT: "Lights",
+    FORMAT_NCP: "Collision",
+    FORMAT_PRM: "Mesh",
+    FORMAT_RIM: "Mirrors",
+    FORMAT_RTU: "Track Editor Units",
+    FORMAT_TAZ: "Track Zones",
+    FORMAT_VIS: "Visiboxes",
+    FORMAT_W: "World",
 }
-
-# Colors for debug objects
-COL_CUBE = mathutils.Color((0.7, 0.08, 0))
-COL_BBOX = mathutils.Color((0, 0, 0.05))
-COL_BCUBE = mathutils.Color((0, 0.7, 0.08))
 
 
 """
 Constants for the tool shelf functions
 """
 
-bake_lights = [
+BAKE_LIGHTS = [
     ("None", "None", "", -1),
     ("HEMI", "Soft", "", 0),
     ("SUN", "Hard", "", 1)
 ]
 
-bake_light_orientations = [
+BAKE_LIGHT_ORIENTATIONS = [
     ("X", "X (Horizontal)", "", 0),
     ("Y", "Y (Horizontal)", "", 1),
     ("Z", "Z (Vertical)", "", 2)
 ]
-bake_shadow_methods = [
+BAKE_SHADOW_METHODS = [
     ("ADAPTIVE_QMC", "Default (fast)", "", 0),
     ("CONSTANT_QMC", "High Quality (slow)", "", 1)
 ]
+
 
 """
 Conversion functions for Re-Volt structures.
@@ -208,9 +234,7 @@ def to_blender_axis(vec):
 
 
 def to_blender_coord(vec):
-    return (vec[0] * SCALE,
-            vec[2] * SCALE,
-            -vec[1] * SCALE)
+    return (vec[0] * SCALE, vec[2] * SCALE, -vec[1] * SCALE)
 
 
 def to_blender_scale(num):
@@ -218,9 +242,7 @@ def to_blender_scale(num):
 
 
 def to_revolt_coord(vec):
-    return (vec[0] / SCALE,
-            -vec[2] / SCALE,
-            vec[1] / SCALE)
+    return (vec[0] / SCALE, -vec[2] / SCALE, vec[1] / SCALE)
 
 
 def to_revolt_axis(vec):
@@ -230,10 +252,12 @@ def to_revolt_axis(vec):
 def to_revolt_scale(num):
     return num / SCALE
 
+
 def rvbbox_from_bm(bm):
     """ The bbox of Blender objects has all edge coordinates. RV just stores the
     mins and max for each axis. """
     return rvbbox_from_verts(bm.verts)
+
 
 def rvbbox_from_verts(verts):
     xlo = min(v.co[0] for v in verts) / SCALE
@@ -243,6 +267,7 @@ def rvbbox_from_verts(verts):
     zlo = min(v.co[1] for v in verts) / SCALE
     zhi = max(v.co[1] for v in verts) / SCALE
     return(xlo, xhi, ylo, yhi, zlo, zhi)
+
 
 def get_distance(v1, v2):
     return sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2 + (v1[2] - v2[2])**2)
@@ -272,18 +297,27 @@ def reverse_quad(quad, tri=False):
 
 
 def texture_to_int(string):
+    # Assigns texture A to cars
     if string == "car.bmp":
         return 0
+
+    # Checks if the last letter of the file name matches naming convention
     elif ".bmp" in string:
         num = ord(string[-5]) - 97
+
+        # Returns texture A if it's not a fitting track texture
         if num > 9 or num < 0:
             return 0
+
         return num
+
+    # .bmp is not in the texture name, assumes no texture
     else:
-        return 0
+        return -1
 
 
 def create_material(name, diffuse, alpha):
+    """ Creates a material, mostly used for debugging objects """
     mat = bpy.data.materials.new(name)
     mat.diffuse_color = diffuse
     mat.diffuse_intensity = 1.0
@@ -296,17 +330,6 @@ def create_material(name, diffuse, alpha):
 """
 Blender helpers
 """
-
-
-def get_average_vcol(faces, layer):
-    """ Gets the average vertex color of all loops of given faces """
-    for face in faces:
-        cols = [loop[layer] for loop in face.loops]
-        r = sum([c[0] for c in cols]) / 4
-        g = sum([c[1] for c in cols]) / 4
-        b = sum([c[2] for c in cols]) / 4
-        return (r, g, b)
-
 
 def get_active_face(bm):
     if bm.select_history:
@@ -329,6 +352,7 @@ def get_edit_bmesh(obj):
 
 
 def objects_to_bmesh(objs):
+    """ Merges multiple objects into one bmesh for export """
 
     # Creates the mesh used to merge the entire scene
     bm_all = bmesh.new()
@@ -435,14 +459,18 @@ def redraw_uvedit():
                 area.tag_redraw()
                 break
 
+
 def enable_any_tex_mode(context):
+    """ Enables the preferred texture mode according to settings """
     props = context.scene.revolt
     if props.prefer_tex_solid_mode:
         enable_textured_solid_mode()
     else:
         enable_texture_mode()
 
+
 def enable_texture_mode():
+    """ Enables textured shading in the viewport """
     for area in bpy.context.screen.areas:
         if area.type == "VIEW_3D":
             for space in area.spaces:
@@ -451,6 +479,7 @@ def enable_texture_mode():
     return
 
 def enable_textured_solid_mode():
+    """ Enables solid mode and enables textured solid shading """
     for area in bpy.context.screen.areas:
         if area.type == "VIEW_3D":
             for space in area.spaces:
@@ -461,6 +490,7 @@ def enable_textured_solid_mode():
 
 
 def texture_mode_enabled():
+    """ Returns true if texture mode or textured solid mode is enabled """
     for area in bpy.context.screen.areas:
         if area.type == "VIEW_3D":
             for space in area.spaces:
@@ -494,6 +524,19 @@ def triangulate_ngons(bm):
     return len(triangulate)
 
 
+def check_for_export(obj):
+    if not obj:
+        msg_box("Please select an object first.")
+        return False
+    if not obj.data:
+        msg_box("The selected object does not have any data.")
+        return False
+    if not obj.type == "MESH":
+        msg_box("The selected object does not have any mesh.")
+        return False
+    return True
+
+
 """
 Non-Blender helper functions
 """
@@ -513,6 +556,7 @@ def get_texture_path(filepath, tex_num):
         params = read_parameters(os.path.join(path, "parameters.txt"))
         tpage = params["tpage"].replace("\\", os.sep).split(os.sep)[-1]
         return os.path.join(path, tpage)
+
     # The file is part of a track
     elif is_track_folder(path):
         tpage = filepath.split(os.sep)[-2].lower() + chr(97 + tex_num) + ".bmp"

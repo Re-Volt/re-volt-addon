@@ -1,18 +1,9 @@
-if "bpy" in locals():
-    import imp
-    imp.reload(common)
-    imp.reload(properties)
-    imp.reload(tools)
-
 import bpy
 import time
-from . import common
-from . import properties
+
 from . import tools
-
 from .common import *
-from .properties import *
-
+from .layers import *
 
 class ImportRV(bpy.types.Operator):
     """
@@ -216,16 +207,6 @@ class ExportRV(bpy.types.Operator):
     Button operators for the user interface
 """
 
-class ButtonColorFromActiveFace(bpy.types.Operator):
-    bl_idname = "vertexcolor.copycolor"
-    bl_label = "Get Color from active Face"
-    bl_description = "Gets the color from the active face."
-
-    def execute(self, context):
-        tools.color_from_face(context)
-        redraw()
-        return{"FINISHED"}
-
 class ButtonCopyUvToFrame(bpy.types.Operator):
     bl_idname = "texanim.copy_uv_to_frame"
     bl_label = "UV to Frame"
@@ -279,6 +260,17 @@ class ButtonSelectNCPMaterial(bpy.types.Operator):
 
 # VERTEX COLORS
 
+class ButtonColorFromActiveFace(bpy.types.Operator):
+    bl_idname = "vertexcolor.copycolor"
+    bl_label = "Get Color from active Face"
+    bl_description = "Gets the color from the active face."
+
+    def execute(self, context):
+        color_from_face(context)
+        redraw()
+        return{"FINISHED"}
+
+
 class ButtonVertexColorSet(bpy.types.Operator):
     bl_idname = "vertexcolor.set"
     bl_label = "Set Color"
@@ -286,7 +278,7 @@ class ButtonVertexColorSet(bpy.types.Operator):
     number = bpy.props.IntProperty()
 
     def execute(self, context):
-        tools.set_vertex_color(context, self.number)
+        set_vertex_color(context, self.number)
         return{"FINISHED"}
 
 class ButtonVertexColorCreateLayer(bpy.types.Operator):

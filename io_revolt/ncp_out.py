@@ -1,7 +1,3 @@
-"""
-PRM EXPORT
-Meshes used for cars, game objects and track instances.
-"""
 if "bpy" in locals():
     import imp
     imp.reload(common)
@@ -10,6 +6,7 @@ if "bpy" in locals():
 import os
 import bpy
 import bmesh
+
 from math import ceil
 from mathutils import Color, Matrix
 from . import common

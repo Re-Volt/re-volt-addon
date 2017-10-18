@@ -2,10 +2,10 @@ import bpy
 import os
 
 def load_image(filepath):
-    # Guess texture name and path
+    # Guesses texture name and path
     texture_name = os.path.basename(filepath)
 
-    # Get image if it already exists
+    # Gets image if it already exists
     image = bpy.data.images.get(texture_name)
     # Loads image if it doesn't exit yet
     if not image:

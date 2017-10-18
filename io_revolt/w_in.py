@@ -1,7 +1,3 @@
-"""
-WORLD IMPORT
-Imports level files which include meshes and other structures for optimization.
-"""
 import os
 import bpy
 import bmesh

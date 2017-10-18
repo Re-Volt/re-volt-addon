@@ -1,7 +1,3 @@
-"""
-PRM EXPORT
-Meshes used for cars, game objects and track instances.
-"""
 if "bpy" in locals():
     import imp
     imp.reload(common)
@@ -26,11 +22,11 @@ def export_file(filepath, scene):
 
     # Checks if other LoDs are present
     if "|q" in obj.data.name:
-        print("LODs present.")
+        dprint("LODs present.")
         meshes = get_all_lod(obj.data.name.split('|')[0])
         print([m.name for m in meshes])
     else:
-        print("No LOD present.")
+        dprint("No LOD present.")
         meshes.append(obj.data)
 
     # Exports all meshes to the PRM file
@@ -200,12 +196,8 @@ def export_mesh(me, obj, scene, filepath, world=None):
 
     # export vertex positions and normals
     for vertex in bm.verts:
-        coord = to_revolt_coord((vertex.co[0],
-                                 vertex.co[1],
-                                 vertex.co[2]))
-        normal = to_revolt_axis((vertex.normal[0],
-                                 vertex.normal[1],
-                                 vertex.normal[2]))
+        coord = to_revolt_coord(vertex.co)
+        normal = to_revolt_axis(vertex.normal)
         rvvert = rvstruct.Vertex()
         rvvert.position = rvstruct.Vector(data=coord)
         rvvert.normal = rvstruct.Vector(data=normal)

@@ -10,6 +10,7 @@ Supported Formats:
 - .w (World)
 - .fin (Instances)
 - .pan (PosNodes)
+- .ncp (Collision)
 
 Missing Formats:
 - .fan (AiNodes)
@@ -18,7 +19,6 @@ Missing Formats:
 - .fld (ForceFields)
 - .lit (Lights)
 - .tri (Triggers)
-- .ncp (Collision)
 - .rim (Mirrors)
 - .hul (Hull collision)
 """

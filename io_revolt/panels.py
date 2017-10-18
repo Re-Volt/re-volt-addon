@@ -1,23 +1,5 @@
-"""
-Panels for editing object and face properties.
-"""
-
-if "bpy" in locals():
-    import imp
-    imp.reload(common)
-    imp.reload(properties)
-    imp.reload(operators)
-
 import bpy
-from . import common
-from . import operators
-from . import properties
-
 from .common import *
-from .operators import *
-from .properties import *
-
-
 
 class RevoltObjectPanel(bpy.types.Panel):
     bl_label = "Re-Volt Object Properties"
@@ -28,19 +10,20 @@ class RevoltObjectPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.object
+        objprops = obj.revolt
 
         # NCP Properties
         box = layout.box()
         box.label("NCP Properties:")
         row = box.row()
-        row.prop(obj.revolt, "ignore_ncp")
+        row.prop(objprops, "ignore_ncp")
 
         # Debug properties
-        if obj.revolt.is_bcube:
+        if objprops.is_bcube:
             box = layout.box()
             box.label("BigCube Properties:")
             row = box.row()
-            row.prop(obj.revolt, "bcube_mesh_indices")
+            row.prop(objprops, "bcube_mesh_indices")
 
 
 class RevoltScenePanel(bpy.types.Panel):
@@ -53,6 +36,7 @@ class RevoltScenePanel(bpy.types.Panel):
     def draw(self, context):
         props = context.scene.revolt
         layout = self.layout
+
         layout.prop(props, "texture_animations")
 
 
@@ -73,8 +57,9 @@ class RevoltIOToolPanel(bpy.types.Panel):
         fold_s = props.ui_fold_export_settings
 
         row = self.layout.row(align=True)
-        row.operator(ImportRV.bl_idname, text="Import", icon="IMPORT")
-        row.operator(ExportRV.bl_idname, text="Export", icon="EXPORT")
+        row.operator("import_scene.revolt", text="Import", icon="IMPORT")
+        row.operator("Export_scene.revolt", text="Export", icon="EXPORT")
+
         row = self.layout.row(align=True)
         row.prop(
             props,
@@ -84,23 +69,25 @@ class RevoltIOToolPanel(bpy.types.Panel):
         )
         if not fold_s:
             box = self.layout.box()
+            # General settings
             box.label("General:")
             box.prop(props, "prefer_tex_solid_mode")
 
+            # General import settings
             box.label("Import:")
             box.prop(props, "enable_tex_mode")
 
-            # box = self.layout.box()
+            # General export settings
             box.label("Export:")
             box.prop(props, "triangulate_ngons")
             box.prop(props, "use_tex_num")
 
-            # box = self.layout.box()
+            # PRM Export settings
             box.label("Export PRM (.prm/.m):")
             box.prop(props, "apply_scale")
             box.prop(props, "apply_rotation")
 
-            # box = self.layout.box()
+            # World Import settings
             box.label("Import World (.w):")
             box.prop(props, "w_parent_meshes")
             box.prop(props, "w_import_bound_boxes")
@@ -113,6 +100,7 @@ class RevoltIOToolPanel(bpy.types.Panel):
             if props.w_import_big_cubes:
                 box.prop(props, "w_big_cube_layers")
 
+            # NCP Export settings
             box.label("Export Collision (.ncp):")
             box.prop(props, "ncp_export_collgrid")
 
@@ -130,6 +118,7 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
         props = context.scene.revolt
 
         row  = self.layout.row()
+        # PRM/NCP toggle
         row.prop(props, "face_edit_mode", expand=True)
 
         if props.face_edit_mode == "prm":
@@ -153,9 +142,8 @@ def prm_edit_panel(self, context):
         self.selected_face_count = mesh.total_face_sel
         self.selection = [face for face in bm.faces if face.select]
 
-    # count the number of faces the flags are set for
+    # Counts the number of faces the flags are set for
     count = [0] * len(FACE_PROPS)
-    # if len(self.selection) > 1:
     for face in self.selection:
         for x in range(len(FACE_PROPS)):
             if face[flags] & FACE_PROPS[x]:
@@ -163,6 +151,7 @@ def prm_edit_panel(self, context):
 
     row = layout.row()
     row.label("Properties:")
+
     row  = layout.row()
     col = row.column(align=True)
     col.prop(meshprops, "face_double_sided",
@@ -239,9 +228,8 @@ def ncp_edit_panel(self, context):
         self.selected_face_count = mesh.total_face_sel
         self.selection = [face for face in bm.faces if face.select]
 
-    # count the number of faces the flags are set for
+    # Counts the number of faces the flags are set for
     count = [0] * len(NCP_PROPS)
-    # if len(self.selection) > 1:
     for face in self.selection:
         for x in range(len(NCP_PROPS)):
             if face[flags] & NCP_PROPS[x]:
@@ -253,8 +241,6 @@ def ncp_edit_panel(self, context):
     col = row.column(align=True)
     col.prop(meshprops, "face_ncp_double",
         text="{}: Double sided".format(count[1]))
-    # col.prop(meshprops, "face_ncp_non_planar",
-    #     text="{}: Non-planar".format(count[4]))
     col.prop(meshprops, "face_ncp_no_skid",
         text="{}: No Skid Marks".format(count[5]))
     col.prop(meshprops, "face_ncp_oil",
@@ -267,7 +253,6 @@ def ncp_edit_panel(self, context):
     col = row.column(align=True)
     col.scale_x = 0.15
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_DOUBLE
-    # col.operator("ncpfaceprops.select", text="sel").prop = NCP_NON_PLANAR
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_NO_SKID
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OIL
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OBJECT_ONLY
@@ -281,11 +266,13 @@ def ncp_edit_panel(self, context):
 
     row = layout.row(align=True)
     col = row.column(align=True)
+    # Dropdown list of the current material
     col.prop(meshprops, "face_material", text="Set")
     col = row.column(align=True)
     col.scale_x = 0.15
     col.operator("ncpmaterial.select")
 
+    # Dropdown list for selecting materials
     row = layout.row()
     row.prop(props, "select_material", text="Select all")
 
@@ -310,14 +297,14 @@ class RevoltVertexPanel(bpy.types.Panel):
         obj = context.object
         row = self.layout.row(align=True)
 
-        # warn if texture mode is not enabled
+        # Warns if texture mode is not enabled
         widget_texture_mode(self)
 
         bm = get_edit_bmesh(obj)
         vc_layer = bm.loops.layers.color.get("Col")
 
         if widget_vertex_color_channel(self, obj):
-            pass # there is not vertex color channel and the panel can't be used
+            pass # No vertex color channel and the panel can't be used
 
         else:
             box = self.layout.box()
@@ -335,7 +322,7 @@ class RevoltVertexPanel(bpy.types.Panel):
             row.operator("vertexcolor.set", text="Grey 50%").number=50
             row = self.layout.row()
             col = row.column(align=True)
-            col.alignment = 'EXPAND'
+            # col.alignment = 'EXPAND'
             col.operator("vertexcolor.set", text="Grey 45%").number=45
             col.operator("vertexcolor.set", text="Grey 40%").number=40
             col.operator("vertexcolor.set", text="Grey 35%").number=35
@@ -344,7 +331,7 @@ class RevoltVertexPanel(bpy.types.Panel):
             col.operator("vertexcolor.set", text="Grey 10%").number=10
             col.operator("vertexcolor.set", text="Black").number=0
             col = row.column(align=True)
-            col.alignment = 'EXPAND'
+            # col.alignment = 'EXPAND'
             col.operator("vertexcolor.set", text="Grey 55%").number=55
             col.operator("vertexcolor.set", text="Grey 60%").number=60
             col.operator("vertexcolor.set", text="Grey 65%").number=65
@@ -368,6 +355,8 @@ class RevoltLightPanel(bpy.types.Panel):
     def draw(self, context):
         view = context.space_data
         obj = context.object
+        props = context.scene.revolt
+
         # Warns if texture mode is not enabled
         widget_texture_mode(self)
 
@@ -376,54 +365,53 @@ class RevoltLightPanel(bpy.types.Panel):
             if widget_vertex_color_channel(self, obj):
                 pass
             else:
-                # light orientation selection
+                # Light orientation selection
                 box = self.layout.box()
                 box.label(text="Shade Object")
                 row = box.row()
-                row.prop(context.object.revolt,
-                         "light_orientation",
-                         text="Orientation")
-                if obj.revolt.light_orientation == "X":
+                row.prop(props, "light_orientation", text="Orientation")
+                if props.light_orientation == "X":
                     dirs = ["Left", "Right"]
-                if obj.revolt.light_orientation == "Y":
+                if props.light_orientation == "Y":
                     dirs = ["Front", "Back"]
-                if obj.revolt.light_orientation == "Z":
+                if props.light_orientation == "Z":
                     dirs = ["Top", "Bottom"]
-                # headings
+                # Headings
                 row = box.row()
                 row.label(text="Direction")
                 row.label(text="Light")
                 row.label(text="Intensity")
-                # settings for the first light
+                # Settings for the first light
                 row = box.row(align=True)
                 row.label(text=dirs[0])
-                row.prop(context.object.revolt, "light1", text="")
-                row.prop(context.object.revolt, "light_intensity1", text="")
-                # settings for the second light
+                row.prop(props, "light1", text="")
+                row.prop(props, "light_intensity1", text="")
+                # Settings for the second light
                 row = box.row(align=True)
                 row.label(text=dirs[1])
-                row.prop(context.object.revolt, "light2", text="")
-                row.prop(context.object.revolt, "light_intensity2", text="")
-                # bake button
+                row.prop(props, "light2", text="")
+                row.prop(props, "light_intensity2", text="")
+                # Bake button
                 row = box.row()
                 row.operator("lighttools.bakevertex",
                              text="Generate Shading",
                              icon="LIGHTPAINT")
 
+            # Shadow tool
             box = self.layout.box()
             box.label(text="Generate Shadow Texture")
             row = box.row()
-            row.prop(context.object.revolt, "shadow_method")
+            row.prop(props, "shadow_method")
             col = box.column(align=True)
-            col.prop(context.object.revolt, "shadow_quality")
-            col.prop(context.object.revolt, "shadow_softness")
-            col.prop(context.object.revolt, "shadow_resolution")
+            col.prop(props, "shadow_quality")
+            col.prop(props, "shadow_softness")
+            col.prop(props, "shadow_resolution")
             row = box.row()
             row.operator("lighttools.bakeshadow",
                          text="Generate Shadow",
                          icon="LAMP_SPOT")
             row = box.row()
-            row.prop(context.object.revolt, "shadow_table", text="Table")
+            row.prop(props, "shadow_table", text="Table")
 
 
 class RevoltAnimationPanel(bpy.types.Panel):
@@ -437,8 +425,6 @@ class RevoltAnimationPanel(bpy.types.Panel):
         obj = context.object
         props = context.scene.revolt
 
-        # row = self.layout.row(align=True)
-        # row.prop(props, "texture_animations")
         row = self.layout.row(align=True)
         row.prop(props, "ta_max_slots", text="Total Slots")
 
@@ -492,14 +478,23 @@ class RevoltHelpersPanel():
         box = layout.box()
         box.label("3D View:")
         col = box.column(align=True)
-        col.operator("helpers.enable_texture_mode", icon="POTATO", text="Texture")
-        # col = box.col(align=True)
-        col.operator("helpers.enable_textured_solid_mode", icon="SOLID", text="Textured Solid")
+        col.operator(
+            "helpers.enable_texture_mode",
+            icon="POTATO",
+            text="Texture"
+        )
+        col.operator(
+            "helpers.enable_textured_solid_mode",
+            icon="SOLID",
+            text="Textured Solid"
+        )
 
 class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
+    """ Inherits the draw method from the main class """
     bl_context = "mesh_edit"
 
 class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
+    """ Inherits the draw method from the main class """
     bl_context = "objectmode"
 
 
