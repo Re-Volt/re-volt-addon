@@ -11,6 +11,50 @@ from .common import *
 import bpy
 
 
+class ButtonCopyUvToFrame(bpy.types.Operator):
+    bl_idname = "texanim.copy_uv_to_frame"
+    bl_label = "UV to Frame"
+    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame"
+
+    def execute(self, context):
+        copy_uv_to_frame(context)
+        redraw()
+        return{"FINISHED"}
+
+class ButtonCopyFrameToUv(bpy.types.Operator):
+    bl_idname = "texanim.copy_frame_to_uv"
+    bl_label = "Frame to UV"
+    bl_description = "Copies the UV coordinates of the frame to the currently selected face"
+
+    def execute(self, context):
+        copy_frame_to_uv(context)
+        redraw()
+        return{"FINISHED"}
+
+
+class PreviewNextFrame(bpy.types.Operator):
+    bl_idname = "texanim.prev_next"
+    bl_label = "Preview Next"
+
+    def execute(self, context):
+        props = context.scene.revolt
+
+        props.ta_current_frame += 1
+        copy_frame_to_uv(context)
+        return{"FINISHED"}
+
+
+class PreviewPrevFrame(bpy.types.Operator):
+    bl_idname = "texanim.prev_prev"
+    bl_label = "Preview Previous"
+
+    def execute(self, context):
+        props = context.scene.revolt
+
+        props.ta_current_frame -= 1
+        copy_frame_to_uv(context)
+        return{"FINISHED"}
+
 class TexAnimTransform(bpy.types.Operator):
     bl_idname = "texanim.transform"
     bl_label = "Transform Animation"

@@ -231,27 +231,6 @@ class ButtonReExport(bpy.types.Operator):
         res = exec_export(props.last_exported_filepath, context)
         return res
 
-
-class ButtonCopyUvToFrame(bpy.types.Operator):
-    bl_idname = "texanim.copy_uv_to_frame"
-    bl_label = "UV to Frame"
-    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame"
-
-    def execute(self, context):
-        copy_uv_to_frame(context)
-        redraw()
-        return{"FINISHED"}
-
-class ButtonCopyFrameToUv(bpy.types.Operator):
-    bl_idname = "texanim.copy_frame_to_uv"
-    bl_label = "Frame to UV"
-    bl_description = "Copies the UV coordinates of the frame to the currently selected face"
-
-    def execute(self, context):
-        copy_frame_to_uv(context)
-        redraw()
-        return{"FINISHED"}
-
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
     bl_label = "sel"

@@ -480,16 +480,26 @@ class RevoltAnimationPanel(bpy.types.Panel):
         row.active = (props.ta_max_slots > 0)
         row.label("UV Coordinates:")
 
-
-        row = self.layout.row(align=True)
-        row.active = (props.ta_max_slots > 0)
-        # row.prop(props, "ta_sync_with_face") can't do that just yet
-        row.operator("texanim.copy_uv_to_frame", icon="COPYDOWN")
-        row.operator("texanim.copy_frame_to_uv", icon="PASTEDOWN")
-
         row = self.layout.row()
         row.active = (props.ta_max_slots > 0)
         row.menu("texanim.modemenu", text="Animate...", icon="ANIM")
+
+        row = self.layout.row(align=True)
+        row.active = (props.ta_max_slots > 0)
+
+        # row.label("Preview:")
+        column = row.column(align=True)
+        column.scale_x = 2.4
+        column.operator("texanim.prev_prev", text="", icon="FRAME_PREV")
+        column = row.column(align=True)
+        column.operator("texanim.copy_frame_to_uv", text="Preview", icon="NLA_PUSHDOWN")
+        column = row.column(align=True)
+        column.scale_x = 2.4
+        column.operator("texanim.prev_next", text="", icon="FRAME_NEXT")
+
+        row = self.layout.row(align=True)
+        row.active = (props.ta_max_slots > 0)
+        row.operator("texanim.copy_uv_to_frame", icon="COPYDOWN")
 
         row = self.layout.row()
         row.active = (props.ta_max_slots > 0)

@@ -100,7 +100,7 @@ def bake_shadow(self, context):
     sphor = (shadow_plane.location[0] - (shadow_plane.dimensions[0]/2))
     spver = ((shadow_plane.dimensions[1]/2) - shadow_plane.location[1])
 
-    # generateImport .prm completedImport .prm completed shadowtable
+    # Generates shadowtable
     sleft = (sphor - shade_obj.location[0]) * 100
     sright = (shade_obj.location[0] - sphor) * 100
     sfront = (spver - shade_obj.location[1]) * 100
