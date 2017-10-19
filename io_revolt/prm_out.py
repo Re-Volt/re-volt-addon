@@ -187,7 +187,7 @@ def export_mesh(me, obj, scene, filepath, world=None):
 
         if world is not None:
             if poly.type & FACE_ENV:
-                rgb = [int(c * 255) for c in get_average_vcol([face], env_layer)]
+                rgb = [int(c * 255) for c in get_average_vcol2([face], env_layer)]
                 alpha = int(face[env_alpha_layer] * 255)
                 col = rvstruct.Color(color=rgb, alpha=alpha)
                 world.env_list.append(col)

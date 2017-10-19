@@ -4,6 +4,22 @@
 
 # Changelog
 
+## 2017-10-1?
+
+Version [`rva_17.101?`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.101?)
+
+* **Additions**
+  * **Texture Animation**: Added a transform animation feature (animates from frame A to frame B).
+  * **Re-Export Button**: Press the button next to the Export button to export to the same file again.
+
+* **Fixes**
+  * The vertex color picker now picks from selected faces _or_ vertices. (Contribution by Boy80)
+
+* **Misc.**
+  * Added icons to panels
+  * Notifications now have an icon that matches the messages
+  * Code refactoring
+
 ## 2017-10-17
 
 Version [`rva_17.1017`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1017)
