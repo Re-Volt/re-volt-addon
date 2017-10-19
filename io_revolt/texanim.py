@@ -35,6 +35,7 @@ class ButtonCopyFrameToUv(bpy.types.Operator):
 class PreviewNextFrame(bpy.types.Operator):
     bl_idname = "texanim.prev_next"
     bl_label = "Preview Next"
+    bl_description = "Loads the next frame and previews it on the selected face"
 
     def execute(self, context):
         props = context.scene.revolt
@@ -47,6 +48,7 @@ class PreviewNextFrame(bpy.types.Operator):
 class PreviewPrevFrame(bpy.types.Operator):
     bl_idname = "texanim.prev_prev"
     bl_label = "Preview Previous"
+    bl_description = "Loads the previous frame and previews it on the selected face"
 
     def execute(self, context):
         props = context.scene.revolt
@@ -58,6 +60,7 @@ class PreviewPrevFrame(bpy.types.Operator):
 class TexAnimTransform(bpy.types.Operator):
     bl_idname = "texanim.transform"
     bl_label = "Transform Animation"
+    bl_description = "Creates a linear animation from one frame to another"
 
     frame_start = bpy.props.IntProperty(
         name = "Start Frame",
@@ -157,6 +160,99 @@ class TexAnimTransform(bpy.types.Operator):
         row = layout.row(align=True)
         row.prop(self, "frame_start")
         row.prop(self, "frame_end")
+
+        row = layout.row()
+        row.prop(self, "delay", icon="PREVIEW_RANGE")
+        row.prop(self, "texture", icon="TEXTURE")
+
+class TexAnimGrid(bpy.types.Operator):
+    bl_idname = "texanim.grid"
+    bl_label = "Grid Animation"
+    bl_description = "Creates an animation based on a grid texture."
+
+    frame_start = bpy.props.IntProperty(
+        name = "Start Frame",
+        min = 0,
+        description = "Start frame of the animation"
+    )
+    grid_x = bpy.props.IntProperty(
+        name = "X Resolution",
+        min = 1,
+        default = 1,
+        description = "Amount of frames along the X axis"
+    )
+    grid_y = bpy.props.IntProperty(
+        name = "Y Resolution",
+        min = 1,
+        default = 1,
+        description = "Amount of frames along the Y axis"
+    )
+    delay = bpy.props.FloatProperty(
+        name = "Frame duration",
+        description = "Duration of every frame",
+        min = 0.0,
+    )
+    texture = bpy.props.IntProperty(
+        name = "Texture",
+        default = 0,
+        min = -1,
+        max = 9,
+        description = "Texture for every frame"
+    )
+
+    def execute(self, context):
+        props = context.scene.revolt
+
+        ta = eval(props.texture_animations)
+        slot = props.ta_current_slot
+        max_frames = props.ta_max_frames
+
+        frame_start = self.frame_start
+        nframes = self.grid_x * self.grid_y
+
+        if nframes > max_frames:
+            msg_box("Frame out of range.", "ERROR")
+            return {'FINISHED'}
+
+        for x in self.grid_x:
+            for y in self.grid_y:
+                i = x * y
+                ta[slot]["frames"][frame_start + i]["delay"] = self.delay
+                ta[slot]["frames"][frame_start + i]["texture"] = self.texture
+
+                for j in range(0, 4):
+                    new_u = uv_start[j][0] * (1 - prog) + uv_end[j][0] * prog
+                    new_v = uv_start[j][1] * (1 - prog) + uv_end[j][1] * prog
+
+                    ta[slot]["frames"][frame_start + i]["uv"][j]["u"] = new_u
+                    ta[slot]["frames"][frame_start + i]["uv"][j]["v"] = new_v
+
+        for i in range(0, nframes):
+            current_frame = frame_start + i
+            prog = i / (frame_end - frame_start)
+
+        props.texture_animations = str(ta)
+
+        msg_box("Animation of {} frames completed.".format(
+            nframes),
+            icon = "FILE_TICK"
+        )
+
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+
+        row = layout.row(align=True)
+        row.prop(self, "frame_start")
+
+        row = layout.row(align=True)
+        row.prop(self, "grid_x")
+        row.prop(self, "grid_y")
 
         row = layout.row()
         row.prop(self, "delay", icon="PREVIEW_RANGE")

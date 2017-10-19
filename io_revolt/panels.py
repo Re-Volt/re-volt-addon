@@ -50,9 +50,12 @@ class RevoltIOToolPanel(bpy.types.Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_category = "Re-Volt"
+    bl_options = {"HIDE_HEADER"}
 
-    def draw_header(self, context):
-        self.layout.label("", icon="FILE_BLANK")
+    # def draw_header(self, context):
+    #     # self.layout.label("", icon="SETTINGS")
+    #     pass
+
 
     def draw(self, context):
         # i/o buttons
@@ -64,49 +67,15 @@ class RevoltIOToolPanel(bpy.types.Panel):
         row.operator("export_scene.revolt", text="Export", icon="EXPORT")
         row.operator("export_scene.revolt_redo", text="", icon="FILE_REFRESH")
 
-        row = self.layout.row(align=True)
-        row.prop(
-            props,
-            "ui_fold_export_settings",
-            icon="TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
-            text="Show Settings" if fold_s else "Hide Settings"
-        )
-        if not fold_s:
-            box = self.layout.box()
-            # General settings
-            box.label("General:")
-            box.prop(props, "prefer_tex_solid_mode")
+        # row = self.layout.row(align=True)
+        # row.prop(
+        #     props,
+        #     "ui_fold_export_settings",
+        #     icon="TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
+        #     text="Show Settings" if fold_s else "Hide Settings"
+        # )
+        # if not fold_s:
 
-            # General import settings
-            box.label("Import:")
-            box.prop(props, "enable_tex_mode")
-
-            # General export settings
-            box.label("Export:")
-            box.prop(props, "triangulate_ngons")
-            box.prop(props, "use_tex_num")
-
-            # PRM Export settings
-            box.label("Export PRM (.prm/.m):")
-            box.prop(props, "apply_scale")
-            box.prop(props, "apply_rotation")
-
-            # World Import settings
-            box.label("Import World (.w):")
-            box.prop(props, "w_parent_meshes")
-            box.prop(props, "w_import_bound_boxes")
-            if props.w_import_bound_boxes:
-                box.prop(props, "w_bound_box_layers")
-            box.prop(props, "w_import_cubes")
-            if props.w_import_cubes:
-                box.prop(props, "w_cube_layers")
-            box.prop(props, "w_import_big_cubes")
-            if props.w_import_big_cubes:
-                box.prop(props, "w_big_cube_layers")
-
-            # NCP Export settings
-            box.label("Export Collision (.ncp):")
-            box.prop(props, "ncp_export_collgrid")
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
@@ -322,12 +291,12 @@ class RevoltVertexPanel(bpy.types.Panel):
             row.template_color_picker(context.scene.revolt,
                                       "vertex_color_picker",
                                       value_slider=True)
-            col = self.layout.column(align=True)
+            col = box.column(align=True)
+            row = col.row(align=True)
+            row.prop(context.scene.revolt, "vertex_color_picker", text = '')
             row = col.row(align=True)
             row.operator("vertexcolor.set", icon="PASTEDOWN").number=-1
             row.operator("vertexcolor.copycolor", icon="COPYDOWN")
-            row = col.row(align=True)
-            row.prop(context.scene.revolt, "vertex_color_picker", text = '')
             row = self.layout.row(align=True)
             row.operator("vertexcolor.set", text="Grey 50%").number=50
             row = self.layout.row()
@@ -427,7 +396,6 @@ class RevoltLightPanel(bpy.types.Panel):
             row.prop(props, "shadow_table", text="Table")
 
 
-
 class MenuAnimModes(bpy.types.Menu):
     bl_idname = "texanim.modemenu"
     bl_label = "Animation Mode"
@@ -436,6 +404,7 @@ class MenuAnimModes(bpy.types.Menu):
         layout = self.layout
 
         layout.operator("texanim.transform", icon="ARROW_LEFTRIGHT")
+        layout.operator("texanim.grid", icon="MESH_GRID")
 
 
 class RevoltAnimationPanel(bpy.types.Panel):
@@ -444,10 +413,7 @@ class RevoltAnimationPanel(bpy.types.Panel):
     bl_region_type = "TOOLS"
     bl_context = "mesh_edit"
     bl_category = "Re-Volt"
-
-    animation_modes = (
-        ("texanim.transform", "Transform", "Transform frame A to B")
-    )
+    bl_options = {"DEFAULT_CLOSED"}
 
     def draw_header(self, context):
         self.layout.label("", icon="CAMERA_DATA")
@@ -456,9 +422,11 @@ class RevoltAnimationPanel(bpy.types.Panel):
         obj = context.object
         props = context.scene.revolt
 
+        # Total slots
         row = self.layout.row(align=True)
         row.prop(props, "ta_max_slots", text="Total Slots")
 
+        # Current slot
         row = self.layout.row(align=True)
         row.active = (props.ta_max_slots > 0)
         column = row.column(align=True)
@@ -466,36 +434,38 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column.prop(props, "ta_current_slot", text="Slot")
         column.prop(props, "ta_max_frames")
 
-        column = self.layout.column(align=True)
-        column.active = (props.ta_max_slots > 0)
-        column.label("Animation Frame:")
-        column.prop(props, "ta_current_frame")
+        # Current frame
+        framecol = self.layout.column(align=True)
+        framecol.active = (props.ta_max_slots > 0)
+        framecol.label("Animation Frame:")
+        framecol.prop(props, "ta_current_frame")
 
-
-        row = column.row(align=True)
-        row.prop(props, "ta_current_frame_tex", icon="TEXTURE")
-        row.prop(props, "ta_current_frame_delay", icon="PREVIEW_RANGE")
-
-        row = self.layout.row()
+        # Texture animation preview
+        row = framecol.row(align=True)
         row.active = (props.ta_max_slots > 0)
-        row.label("UV Coordinates:")
-
-        row = self.layout.row()
-        row.active = (props.ta_max_slots > 0)
-        row.menu("texanim.modemenu", text="Animate...", icon="ANIM")
-
-        row = self.layout.row(align=True)
-        row.active = (props.ta_max_slots > 0)
-
-        # row.label("Preview:")
         column = row.column(align=True)
         column.scale_x = 2.4
         column.operator("texanim.prev_prev", text="", icon="FRAME_PREV")
         column = row.column(align=True)
-        column.operator("texanim.copy_frame_to_uv", text="Preview", icon="NLA_PUSHDOWN")
+        column.operator("texanim.copy_frame_to_uv", text="Preview", icon="VIEWZOOM")
         column = row.column(align=True)
         column.scale_x = 2.4
         column.operator("texanim.prev_next", text="", icon="FRAME_NEXT")
+
+        row = framecol.row(align=True)
+        row.prop(props, "ta_current_frame_tex", icon="TEXTURE")
+        row.prop(props, "ta_current_frame_delay", icon="PREVIEW_RANGE")
+
+        # Texture animation operators
+        row = self.layout.row()
+        row.active = (props.ta_max_slots > 0)
+        row.menu("texanim.modemenu", text="Animate...", icon="ANIM")
+
+
+        # UV Coords
+        row = self.layout.row()
+        row.active = (props.ta_max_slots > 0)
+        row.label("UV Coordinates:")
 
         row = self.layout.row(align=True)
         row.active = (props.ta_max_slots > 0)
@@ -512,11 +482,14 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column.prop(props, "ta_current_frame_uv2")
         column.prop(props, "ta_current_frame_uv3")
 
+
+
 class RevoltHelpersPanel():
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_category = "Re-Volt"
+    bl_options = {"DEFAULT_CLOSED"}
 
     def draw_header(self, context):
         self.layout.label("", icon="HELP")
@@ -542,10 +515,74 @@ class RevoltHelpersPanel():
 class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
     """ Inherits the draw method from the main class """
     bl_context = "mesh_edit"
+    bl_options = {"DEFAULT_CLOSED"}
 
 class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
     """ Inherits the draw method from the main class """
     bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
+
+class RevoltSettingsPanel(bpy.types.Panel):
+    """
+
+    """
+    bl_label = "Add-On Settings"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "objectmode"
+    bl_category = "Re-Volt"
+    bl_options = {"DEFAULT_CLOSED"}
+
+    def draw_header(self, context):
+        self.layout.label("", icon="SCRIPTWIN")
+
+    def draw(self, context):
+        props = context.scene.revolt
+        # box = self.layout.box()
+        layout = self.layout
+        # General settings
+        layout.label("General:")
+        layout.prop(props, "prefer_tex_solid_mode")
+        layout.separator()
+
+        # General import settings
+        layout.label("Import:")
+        layout.prop(props, "enable_tex_mode")
+        layout.separator()
+
+        # General export settings
+        layout.label("Export:")
+        layout.prop(props, "triangulate_ngons")
+        layout.prop(props, "use_tex_num")
+        layout.separator()
+
+        # PRM Export settings
+        layout.label("Export PRM (.prm/.m):")
+        layout.prop(props, "apply_scale")
+        layout.prop(props, "apply_rotation")
+        layout.separator()
+
+        # World Import settings
+        layout.label("Import World (.w):")
+        layout.prop(props, "w_parent_meshes")
+        layout.prop(props, "w_import_bound_boxes")
+        if props.w_import_bound_boxes:
+            layout.prop(props, "w_bound_box_layers")
+        layout.prop(props, "w_import_cubes")
+        if props.w_import_cubes:
+            layout.prop(props, "w_cube_layers")
+        layout.prop(props, "w_import_big_cubes")
+        if props.w_import_big_cubes:
+            layout.prop(props, "w_big_cube_layers")
+        layout.separator()
+
+        # NCP Export settings
+        layout.label("Export Collision (.ncp):")
+        layout.prop(props, "ncp_export_collgrid")
+
+
+
+
 
 
 
