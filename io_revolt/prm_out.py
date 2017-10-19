@@ -3,6 +3,7 @@ if "bpy" in locals():
     imp.reload(common)
     imp.reload(rvstruct)
     imp.reload(img_in)
+    imp.reload(layers)
 
 import os
 import bpy
@@ -11,8 +12,10 @@ from mathutils import Color, Vector, Matrix
 from . import common
 from . import rvstruct
 from . import img_in
+from . import layers
 
 from .common import *
+from .layers import *
 
 
 def export_file(filepath, scene):
