@@ -49,6 +49,7 @@ from .common import *
 from .props_mesh import *
 from .props_obj import *
 from .props_scene import *
+from .texanim import *
 
 dprint("---\n\n\n\n")
 

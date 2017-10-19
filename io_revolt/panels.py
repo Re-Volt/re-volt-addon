@@ -51,6 +51,9 @@ class RevoltIOToolPanel(bpy.types.Panel):
     bl_context = "objectmode"
     bl_category = "Re-Volt"
 
+    def draw_header(self, context):
+        self.layout.label("", icon="FILE_BLANK")
+
     def draw(self, context):
         # i/o buttons
         props = context.scene.revolt
@@ -58,7 +61,8 @@ class RevoltIOToolPanel(bpy.types.Panel):
 
         row = self.layout.row(align=True)
         row.operator("import_scene.revolt", text="Import", icon="IMPORT")
-        row.operator("Export_scene.revolt", text="Export", icon="EXPORT")
+        row.operator("export_scene.revolt", text="Export", icon="EXPORT")
+        row.operator("export_scene.revolt_redo", text="", icon="FILE_REFRESH")
 
         row = self.layout.row(align=True)
         row.prop(
@@ -113,6 +117,9 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
 
     selection = None
     selected_face_count = None
+
+    def draw_header(self, context):
+        self.layout.label("", icon="FACESEL_HLT")
 
     def draw(self, context):
         props = context.scene.revolt
@@ -293,6 +300,9 @@ class RevoltVertexPanel(bpy.types.Panel):
     selection = None
     selected_face_count = None
 
+    def draw_header(self, context):
+        self.layout.label("", icon="COLOR")
+
     def draw(self, context):
         obj = context.object
         row = self.layout.row(align=True)
@@ -314,10 +324,10 @@ class RevoltVertexPanel(bpy.types.Panel):
                                       value_slider=True)
             col = self.layout.column(align=True)
             row = col.row(align=True)
-            row.prop(context.scene.revolt, "vertex_color_picker", text = '')
-            row.operator("vertexcolor.set").number=-1
+            row.operator("vertexcolor.set", icon="PASTEDOWN").number=-1
+            row.operator("vertexcolor.copycolor", icon="COPYDOWN")
             row = col.row(align=True)
-            row.operator("vertexcolor.copycolor")
+            row.prop(context.scene.revolt, "vertex_color_picker", text = '')
             row = self.layout.row(align=True)
             row.operator("vertexcolor.set", text="Grey 50%").number=50
             row = self.layout.row()
@@ -351,6 +361,9 @@ class RevoltLightPanel(bpy.types.Panel):
     @classmethod
     def poll(self, context):
         return (context.scene.objects.active is not None)
+
+    def draw_header(self, context):
+        self.layout.label("", icon="RENDER_STILL")
 
     def draw(self, context):
         view = context.space_data
@@ -414,12 +427,30 @@ class RevoltLightPanel(bpy.types.Panel):
             row.prop(props, "shadow_table", text="Table")
 
 
+
+class MenuAnimModes(bpy.types.Menu):
+    bl_idname = "texanim.modemenu"
+    bl_label = "Animation Mode"
+
+    def draw(self, context):
+        layout = self.layout
+
+        layout.operator("texanim.transform", icon="ARROW_LEFTRIGHT")
+
+
 class RevoltAnimationPanel(bpy.types.Panel):
     bl_label = "Texture Animation (.w)"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_context = "mesh_edit"
     bl_category = "Re-Volt"
+
+    animation_modes = (
+        ("texanim.transform", "Transform", "Transform frame A to B")
+    )
+
+    def draw_header(self, context):
+        self.layout.label("", icon="CAMERA_DATA")
 
     def draw(self, context):
         obj = context.object
@@ -440,19 +471,25 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column.label("Animation Frame:")
         column.prop(props, "ta_current_frame")
 
+
         row = column.row(align=True)
-        row.prop(props, "ta_current_frame_tex")
-        row.prop(props, "ta_current_frame_delay")
+        row.prop(props, "ta_current_frame_tex", icon="TEXTURE")
+        row.prop(props, "ta_current_frame_delay", icon="PREVIEW_RANGE")
 
         row = self.layout.row()
         row.active = (props.ta_max_slots > 0)
         row.label("UV Coordinates:")
 
+
         row = self.layout.row(align=True)
         row.active = (props.ta_max_slots > 0)
         # row.prop(props, "ta_sync_with_face") can't do that just yet
-        row.operator("texanim.copy_uv_to_frame")
-        row.operator("texanim.copy_frame_to_uv")
+        row.operator("texanim.copy_uv_to_frame", icon="COPYDOWN")
+        row.operator("texanim.copy_frame_to_uv", icon="PASTEDOWN")
+
+        row = self.layout.row()
+        row.active = (props.ta_max_slots > 0)
+        row.menu("texanim.modemenu", text="Animate...", icon="ANIM")
 
         row = self.layout.row()
         row.active = (props.ta_max_slots > 0)
@@ -471,6 +508,9 @@ class RevoltHelpersPanel():
     bl_region_type = "TOOLS"
     bl_category = "Re-Volt"
 
+    def draw_header(self, context):
+        self.layout.label("", icon="HELP")
+
     def draw(self, context):
 
         layout = self.layout
@@ -485,7 +525,7 @@ class RevoltHelpersPanel():
         )
         col.operator(
             "helpers.enable_textured_solid_mode",
-            icon="SOLID",
+            icon="TEXTURE_SHADED",
             text="Textured Solid"
         )
 

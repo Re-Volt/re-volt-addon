@@ -10,23 +10,52 @@ behavior.
 """
 
 def color_from_face(context):
-    """ Returns the average vertex color form all selected faces """
     obj = context.object
     bm = get_edit_bmesh(obj)
-    face = get_active_face(bm)
-    if face:
-        col = get_average_vcol([face], bm.loops.layers.color.get("Col"))
-        context.scene.revolt.vertex_color_picker = col
+    selmode = bpy.context.tool_settings.mesh_select_mode
 
+    # vertex select mode
+    if selmode[0]:
+        verts = [v for v in bm.verts if v.select]
+        if verts:
+            col = get_average_vcol0(verts, bm.loops.layers.color.get("Col"))
+            context.scene.revolt.vertex_color_picker = col
+    # face select mode
+    elif selmode[2]:
+        faces = [f for f in bm.faces if f.select]
+        if faces:
+            col = get_average_vcol2(faces, bm.loops.layers.color.get("Col"))
+            context.scene.revolt.vertex_color_picker = col
 
-def get_average_vcol(faces, layer):
+def get_average_vcol0(verts, layer):
+    """ Gets the average vertex color of loops all given verts """
+    len_cols = 0
+    r = 0
+    g = 0
+    b = 0
+    for vert in verts:
+        cols = [loop[layer] for loop in vert.link_loops]
+        r += sum([c[0] for c in cols])
+        g += sum([c[1] for c in cols])
+        b += sum([c[2] for c in cols])
+        len_cols += len(cols)
+
+    return (r / len_cols, g / len_cols, b / len_cols)
+
+def get_average_vcol2(faces, layer):
     """ Gets the average vertex color of all loops of given faces """
+    len_cols = 0
+    r = 0
+    g = 0
+    b = 0
     for face in faces:
         cols = [loop[layer] for loop in face.loops]
-        r = sum([c[0] for c in cols]) / 4
-        g = sum([c[1] for c in cols]) / 4
-        b = sum([c[2] for c in cols]) / 4
-        return (r, g, b)
+        r += sum([c[0] for c in cols])
+        g += sum([c[1] for c in cols])
+        b += sum([c[2] for c in cols])
+        len_cols += len(cols)
+
+    return (r / len_cols, g / len_cols, b / len_cols)
 
 
 def set_vcol(faces, layer, color):
@@ -156,7 +185,7 @@ def get_face_env(self):
 
     # Gets the average color for all selected faces
     selected_faces = [face for face in bm.faces if face.select]
-    col = get_average_vcol(selected_faces, env_layer)
+    col = get_average_vcol2(selected_faces, env_layer)
 
     return [*col, selected_faces[0][env_alpha_layer]]
 

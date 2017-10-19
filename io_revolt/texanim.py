@@ -8,6 +8,117 @@ from . import rvstruct
 from .common import *
 
 
+import bpy
+
+
+class TexAnimTransform(bpy.types.Operator):
+    bl_idname = "texanim.transform"
+    bl_label = "Transform Animation"
+
+    frame_start = bpy.props.IntProperty(
+        name = "Start Frame",
+        description = "Start frame of the animation",
+        min = 0
+    )
+    frame_end = bpy.props.IntProperty(
+        name = "End Frame",
+        description = "End frame of the animation",
+        min = 0,
+    )
+    delay = bpy.props.FloatProperty(
+        name = "Frame duration",
+        description = "Duration of every frame",
+        min = 0.0,
+    )
+    texture = bpy.props.IntProperty(
+        name = "Texture",
+        default = 0,
+        min = -1,
+        max = 9,
+        description = "Texture for every frame"
+    )
+
+    def execute(self, context):
+        props = context.scene.revolt
+
+        ta = eval(props.texture_animations)
+        slot = props.ta_current_slot
+        max_frames = props.ta_max_frames
+
+        frame_start = self.frame_start
+        frame_end = self.frame_end
+
+        if self.frame_end > max_frames - 1:
+            msg_box("Frame out of range.", "ERROR")
+            return {'FINISHED'}
+        elif self.frame_start == self.frame_end:
+            msg_box("Frame range too short.", "ERROR")
+            return {'FINISHED'}
+
+
+        uv_start = (
+            (ta[slot]["frames"][frame_start]["uv"][0]["u"],
+             ta[slot]["frames"][frame_start]["uv"][0]["v"]),
+            (ta[slot]["frames"][frame_start]["uv"][1]["u"],
+             ta[slot]["frames"][frame_start]["uv"][1]["v"]),
+            (ta[slot]["frames"][frame_start]["uv"][2]["u"],
+             ta[slot]["frames"][frame_start]["uv"][2]["v"]),
+            (ta[slot]["frames"][frame_start]["uv"][3]["u"],
+             ta[slot]["frames"][frame_start]["uv"][3]["v"])
+        )
+
+        uv_end = (
+            (ta[slot]["frames"][frame_end]["uv"][0]["u"],
+             ta[slot]["frames"][frame_end]["uv"][0]["v"]),
+            (ta[slot]["frames"][frame_end]["uv"][1]["u"],
+             ta[slot]["frames"][frame_end]["uv"][1]["v"]),
+            (ta[slot]["frames"][frame_end]["uv"][2]["u"],
+             ta[slot]["frames"][frame_end]["uv"][2]["v"]),
+            (ta[slot]["frames"][frame_end]["uv"][3]["u"],
+             ta[slot]["frames"][frame_end]["uv"][3]["v"])
+        )
+
+        nframes = abs(frame_end - frame_start) + 1
+
+        for i in range(0, nframes):
+            current_frame = frame_start + i
+            prog = i / (frame_end - frame_start)
+
+            ta[slot]["frames"][frame_start + i]["delay"] = self.delay
+            ta[slot]["frames"][frame_start + i]["texture"] = self.texture
+
+            for j in range(0, 4):
+                new_u = uv_start[j][0] * (1 - prog) + uv_end[j][0] * prog
+                new_v = uv_start[j][1] * (1 - prog) + uv_end[j][1] * prog
+
+                ta[slot]["frames"][frame_start + i]["uv"][j]["u"] = new_u
+                ta[slot]["frames"][frame_start + i]["uv"][j]["v"] = new_v
+
+        props.texture_animations = str(ta)
+
+        msg_box("Animation from frame {} to {} completed.".format(
+            frame_start, frame_end),
+            icon = "FILE_TICK"
+        )
+
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+
+        row = layout.row(align=True)
+        row.prop(self, "frame_start")
+        row.prop(self, "frame_end")
+
+        row = layout.row()
+        row.prop(self, "delay", icon="PREVIEW_RANGE")
+        row.prop(self, "texture", icon="TEXTURE")
+
+
 def update_ta_max_slots(self, context):
     props = context.scene.revolt
     slot = props.ta_current_slot
@@ -73,7 +184,7 @@ def update_ta_current_slot(self, context):
 
     # Updates the rest of the UI
     props.ta_max_frames = len(ta[slot]["frames"])
-    update_ta_max_frames(self, context)
+    # update_ta_max_frames(self, context)
     update_ta_current_frame(self, context)
 
 

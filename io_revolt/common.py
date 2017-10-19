@@ -95,11 +95,23 @@ MATERIALS = (
     ("3", "WOOD",               "Wood material", "POTATO", 3),
     ("4", "SAND",               "Sand material", "POTATO", 4),
     ("5", "PLASTIC",            "Plastic material", "POTATO", 5),
-    ("6", "CARPETTILE",         "Carpet Tile material", "POTATO", 6),
-    ("7", "CARPETSHAG",         "Carpet Shag material", "POTATO", 7),
+    (   # Carpet Tile
+        "6",
+        "CARPETTILE",
+        "Carpet Tile material",
+        "POTATO",
+        6
+    ),
+    (   # Carpet Shag
+        "7",
+        "CARPETSHAG",
+        "Carpet Shag material",
+        "POTATO",
+        7
+    ),
     ("8", "BOUNDARY",           "Boundary material", "POTATO", 8),
     ("9", "GLASS",              "Glass material", "POTATO", 9),
-    ("10", "ICE1",              "Most slippery ice material", "POTATO", 10),
+    ("10", "ICE1",              "Most slippery ice material", "FREEZE", 10),
     ("11", "METAL",             "Metal material", "POTATO", 11),
     ("12", "GRASS",             "Grass material", "POTATO", 12),
     ("13", "BUMPMETAL",         "Bump metal material", "POTATO", 13),
@@ -110,8 +122,8 @@ MATERIALS = (
     ("18", "DIRT1",             "First dirt material", "POTATO", 18),
     ("19", "DIRT2",             "Second dirt material", "POTATO", 19),
     ("20", "DIRT3",             "Third dirt material", "POTATO", 20),
-    ("21", "ICE2",              "Medium slippery ice material", "POTATO", 21),
-    ("22", "ICE3",              "Least slippery ice material", "POTATO", 22),
+    ("21", "ICE2",              "Medium slippery ice material", "FREEZE", 21),
+    ("22", "ICE3",              "Least slippery ice material", "FREEZE", 22),
     ("23", "WOOD2",             "Second wood material", "POTATO", 23),
     ("24", "CONVEYOR_MARKET1",  "First supermarket conveyor", "POTATO", 24),
     ("25", "CONVEYOR_MARKET2",  "Second supermarket conveyor", "POTATO", 25),
@@ -185,19 +197,19 @@ FORMAT_VIS = 11
 FORMAT_W = 12
 
 FORMATS = {
-    FORMAT_BMP: "Bitmap",
-    FORMAT_CAR: "Car Parameters",
-    FORMAT_FIN: "Instances",
-    FORMAT_FOB: "Objects",
-    FORMAT_HUL: "Hull",
-    FORMAT_LIT: "Lights",
-    FORMAT_NCP: "Collision",
-    FORMAT_PRM: "Mesh",
-    FORMAT_RIM: "Mirrors",
-    FORMAT_RTU: "Track Editor Units",
-    FORMAT_TAZ: "Track Zones",
-    FORMAT_VIS: "Visiboxes",
-    FORMAT_W: "World",
+    FORMAT_BMP: "Bitmap (.bm*)",
+    FORMAT_CAR: "Car Parameters (.txt)",
+    FORMAT_FIN: "Instances (.fin)",
+    FORMAT_FOB: "Objects (.fob)",
+    FORMAT_HUL: "Hull (.hul)",
+    FORMAT_LIT: "Lights (.lit)",
+    FORMAT_NCP: "Collision (.ncp)",
+    FORMAT_PRM: "Mesh (.prm/.m)",
+    FORMAT_RIM: "Mirrors (.rim)",
+    FORMAT_RTU: "Track Editor (.rtu)",
+    FORMAT_TAZ: "Track Zones (.taz)",
+    FORMAT_VIS: "Visiboxes (.vis)",
+    FORMAT_W:   "World (.w)",
 }
 
 
@@ -217,8 +229,8 @@ BAKE_LIGHT_ORIENTATIONS = [
     ("Z", "Z (Vertical)", "", 2)
 ]
 BAKE_SHADOW_METHODS = [
-    ("ADAPTIVE_QMC", "Default (fast)", "", 0),
-    ("CONSTANT_QMC", "High Quality (slow)", "", 1)
+    ("ADAPTIVE_QMC", "Default (fast)", "", "ALIASED", 0),
+    ("CONSTANT_QMC", "Nicer (slow)", "", "ANTIALIASED", 1)
 ]
 
 
@@ -424,15 +436,20 @@ class DialogOperator(bpy.types.Operator):
 
     def draw(self, context):
         global dialog_message
-        column = self.layout.column()
+        global dialog_icon
+        row = self.layout.row()
+        row.label("", icon=dialog_icon)
+        column = row.column()
         for line in str.split(dialog_message, "\n"):
             column.label(line)
 
 
-def msg_box(message):
+def msg_box(message, icon="INFO"):
     global dialog_message
+    global dialog_icon
     print(message)
     dialog_message = message
+    dialog_icon = icon
     bpy.ops.revolt.dialog("INVOKE_DEFAULT")
 
 
