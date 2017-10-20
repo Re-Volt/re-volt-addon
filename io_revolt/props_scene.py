@@ -39,11 +39,6 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Last Exported Filepath",
         default = ""
     )
-    ui_fold_export_settings = BoolProperty(
-        name = "Export Settings",
-        default = True,
-        description = "Show/Hide Settings"
-    )
     enable_tex_mode = BoolProperty(
         name = "Texture Mode after Import",
         default = True,

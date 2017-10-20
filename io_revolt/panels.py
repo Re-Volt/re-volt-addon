@@ -52,11 +52,6 @@ class RevoltIOToolPanel(bpy.types.Panel):
     bl_category = "Re-Volt"
     bl_options = {"HIDE_HEADER"}
 
-    # def draw_header(self, context):
-    #     # self.layout.label("", icon="SETTINGS")
-    #     pass
-
-
     def draw(self, context):
         # i/o buttons
         props = context.scene.revolt
@@ -66,15 +61,6 @@ class RevoltIOToolPanel(bpy.types.Panel):
         row.operator("import_scene.revolt", text="Import", icon="IMPORT")
         row.operator("export_scene.revolt", text="Export", icon="EXPORT")
         row.operator("export_scene.revolt_redo", text="", icon="FILE_REFRESH")
-
-        # row = self.layout.row(align=True)
-        # row.prop(
-        #     props,
-        #     "ui_fold_export_settings",
-        #     icon="TRIA_DOWN" if not fold_s else "TRIA_RIGHT",
-        #     text="Show Settings" if fold_s else "Hide Settings"
-        # )
-        # if not fold_s:
 
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
@@ -473,7 +459,6 @@ class RevoltAnimationPanel(bpy.types.Panel):
 
         row = self.layout.row()
         row.active = (props.ta_max_slots > 0)
-
         column = row.column()
         column.prop(props, "ta_current_frame_uv0")
         column.prop(props, "ta_current_frame_uv1")

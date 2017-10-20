@@ -76,6 +76,7 @@ class TexAnimTransform(bpy.types.Operator):
         name = "Frame duration",
         description = "Duration of every frame",
         min = 0.0,
+        default = 0.02,
     )
     texture = bpy.props.IntProperty(
         name = "Texture",
@@ -96,7 +97,13 @@ class TexAnimTransform(bpy.types.Operator):
         frame_end = self.frame_end
 
         if self.frame_end > max_frames - 1:
-            msg_box("Frame out of range.", "ERROR")
+            msg_box(
+                "Frame out of range.\n"
+                "Please set the amount of frames to {}.".format(
+                    frame_end + 1),
+                "ERROR"
+            )
+
             return {'FINISHED'}
         elif self.frame_start == self.frame_end:
             msg_box("Frame range too short.", "ERROR")
@@ -178,19 +185,20 @@ class TexAnimGrid(bpy.types.Operator):
     grid_x = bpy.props.IntProperty(
         name = "X Resolution",
         min = 1,
-        default = 1,
+        default = 2,
         description = "Amount of frames along the X axis"
     )
     grid_y = bpy.props.IntProperty(
         name = "Y Resolution",
         min = 1,
-        default = 1,
+        default = 2,
         description = "Amount of frames along the Y axis"
     )
     delay = bpy.props.FloatProperty(
         name = "Frame duration",
         description = "Duration of every frame",
         min = 0.0,
+        default = 0.02,
     )
     texture = bpy.props.IntProperty(
         name = "Texture",
@@ -208,28 +216,40 @@ class TexAnimGrid(bpy.types.Operator):
         max_frames = props.ta_max_frames
 
         frame_start = self.frame_start
-        nframes = self.grid_x * self.grid_y
+        grid_x = self.grid_x
+        grid_y = self.grid_y
+        nframes = grid_x * grid_y
 
         if nframes > max_frames:
-            msg_box("Frame out of range.", "ERROR")
+            msg_box(
+                "Frame out of range.\n"
+                "Please set the amount of frames to {}.".format(
+                    frame_end + 1),
+                "ERROR"
+            )
             return {'FINISHED'}
 
-        for x in self.grid_x:
-            for y in self.grid_y:
-                i = x * y
+        i = 0
+        for y in range(grid_x):
+            for x in range(grid_y):
+                uv0 = (x/grid_x, y/grid_y)
+                uv1 = ((x+1)/grid_x, y/grid_y)
+                uv2 = ((x+1)/grid_x, (y+1)/grid_y)
+                uv3 = (x/grid_x, (y+1)/grid_y)
+
                 ta[slot]["frames"][frame_start + i]["delay"] = self.delay
                 ta[slot]["frames"][frame_start + i]["texture"] = self.texture
 
-                for j in range(0, 4):
-                    new_u = uv_start[j][0] * (1 - prog) + uv_end[j][0] * prog
-                    new_v = uv_start[j][1] * (1 - prog) + uv_end[j][1] * prog
+                ta[slot]["frames"][frame_start + i]["uv"][0]["u"] = uv0[0]
+                ta[slot]["frames"][frame_start + i]["uv"][0]["v"] = uv0[1]
+                ta[slot]["frames"][frame_start + i]["uv"][1]["u"] = uv1[0]
+                ta[slot]["frames"][frame_start + i]["uv"][1]["v"] = uv1[1]
+                ta[slot]["frames"][frame_start + i]["uv"][2]["u"] = uv2[0]
+                ta[slot]["frames"][frame_start + i]["uv"][2]["v"] = uv2[1]
+                ta[slot]["frames"][frame_start + i]["uv"][3]["u"] = uv3[0]
+                ta[slot]["frames"][frame_start + i]["uv"][3]["v"] = uv3[1]
 
-                    ta[slot]["frames"][frame_start + i]["uv"][j]["u"] = new_u
-                    ta[slot]["frames"][frame_start + i]["uv"][j]["v"] = new_v
-
-        for i in range(0, nframes):
-            current_frame = frame_start + i
-            prog = i / (frame_end - frame_start)
+                i += 1
 
         props.texture_animations = str(ta)
 
