@@ -1,18 +1,9 @@
+
 [$\leftarrow$ Back](../index.html)
 
-------
-
-# Import/Export
-
-[TOC]
+---
 
 These settings can also be found when importing/exporting files in the bottom left.
-
-## Buttons
-
-There are two buttons, one for import and one for export. They have the same
-functions as the menu entries in the File -> Import/Export menus.  
-Import and Export settings can be found right beneath the buttons.
 
 ## General Settings
 

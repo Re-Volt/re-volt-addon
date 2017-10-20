@@ -12,7 +12,7 @@
 - [x] Generate car texture inc. shadow table
 - [x] Face properties panel
 - [x] Vertex coloring panel
-- [ ] Texture animation panel
+- [x] Texture animation panel
 
 ## PRM
 

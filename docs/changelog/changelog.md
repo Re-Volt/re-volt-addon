@@ -4,23 +4,23 @@
 
 # Changelog
 
-## 2017-10-1?
+## 2017-10-??
 
-Version [`rva_17.101?`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.101?)
+Version [`rva_17.10??`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10??)
 
 * **Additions**
   * **Texture Animation**: Transform animation feature (animates from frame A to frame B), Grid animation feature (for creating animations like the mars animation found in Museum 2)
   * **Re-Export Button**: Press the button next to the Export button to export to the same file again.
-
 * **Fixes**
   * The vertex color picker now picks from selected faces _or_ vertices. (Contribution by Boy80)
-
-* **Misc.**
+* **UI**
   * Added icons to panels
   * Moved add-on settings to a separate panel
+  * The settings, texture animation and the helpers panel are now collapsed by default
   * Fixed the import/export panel to the top
-  * Notifications now have an icon that matches the messages
-  * Code refactoring
+  * Notifications now have an icon
+* **Misc.**
+  * Code refactoring and some fixes
 
 ## 2017-10-17
 

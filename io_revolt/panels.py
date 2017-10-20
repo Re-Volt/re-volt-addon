@@ -55,7 +55,6 @@ class RevoltIOToolPanel(bpy.types.Panel):
     def draw(self, context):
         # i/o buttons
         props = context.scene.revolt
-        fold_s = props.ui_fold_export_settings
 
         row = self.layout.row(align=True)
         row.operator("import_scene.revolt", text="Import", icon="IMPORT")
