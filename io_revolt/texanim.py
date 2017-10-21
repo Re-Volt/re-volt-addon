@@ -149,6 +149,7 @@ class TexAnimTransform(bpy.types.Operator):
                 ta[slot]["frames"][frame_start + i]["uv"][j]["v"] = new_v
 
         props.texture_animations = str(ta)
+        update_ta_current_frame(self, context)
 
         msg_box("Animation from frame {} to {} completed.".format(
             frame_start, frame_end),
@@ -252,6 +253,7 @@ class TexAnimGrid(bpy.types.Operator):
                 i += 1
 
         props.texture_animations = str(ta)
+        update_ta_current_frame(self, context)
 
         msg_box("Animation of {} frames completed.".format(
             nframes),
