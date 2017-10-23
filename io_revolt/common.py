@@ -47,7 +47,6 @@ NCP_PROP_MASK = (
 
 # Used to unmask unsupported flags (FACE_SKIP)
 FACE_PROP_MASK = (
-    FACE_QUAD |
     FACE_DOUBLE |
     FACE_TRANSLUCENT |
     FACE_MIRROR |

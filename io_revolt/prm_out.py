@@ -136,13 +136,13 @@ def export_mesh(me, obj, scene, filepath, world=None):
 
     for face in bm.faces:
         poly = rvstruct.Polygon()
-        is_quad = len(face.verts) > 3
+        is_quad = len(face.verts) == 4
+
+        poly.type = face[type_layer] & FACE_PROP_MASK
 
         # Sets the quad flag on the polygon
         if is_quad:
-            face[type_layer] |= FACE_QUAD
-
-        poly.type = face[type_layer] & FACE_PROP_MASK
+            poly.type |= FACE_QUAD
 
         # Gets the texture number from the integer layer if setting enabled
         # use_tex_num is the only way to achieve no texture
