@@ -1,7 +1,3 @@
-"""
-PRM EXPORT
-Meshes used for cars, game objects and track instances.
-"""
 if "bpy" in locals():
     import imp
     imp.reload(common)
@@ -10,6 +6,7 @@ if "bpy" in locals():
 import os
 import bpy
 import bmesh
+
 from math import ceil
 from mathutils import Color, Matrix
 from . import common
@@ -115,41 +112,9 @@ def export_file(filepath, scene):
     # Sets length of polyhedron list
     ncp.polyhedron_count = len(ncp.polyhedra)
 
-    grid = LookupGrid()
-    grid.size = NCP_GRID_SIZE
-
-    bbox = BoundingBox(data=(
-        min([poly.bbox.xlo for poly in ncp.polyhedra]),
-        max([poly.bbox.xhi for poly in ncp.polyhedra]),
-        0,
-        0,
-        min([poly.bbox.zlo for poly in ncp.polyhedra]),
-        max([poly.bbox.zhi for poly in ncp.polyhedra]))
-    )
-
-    grid.xsize = ceil((bbox.xhi - bbox.xlo) / grid.size)
-    grid.zsize = ceil((bbox.zhi - bbox.zlo) / grid.size)
-
-    grid.x0 = (bbox.xlo + bbox.xhi - grid.xsize * grid.size) / 2
-    grid.z0 = (bbox.zlo + bbox.zhi - grid.zsize * grid.size) / 2
-
-    for z in range(grid.zsize):
-        zlo = grid.z0 + z * grid.size - 150
-        zhi = grid.z0 + (z + 1) * grid.size + 150
-
-        for x in range(grid.xsize):
-            xlo = grid.x0 + x * grid.size - 150
-            xhi = grid.x0 + (x + 1) * grid.size + 150
-
-            lookup = LookupList()
-            for i, poly in enumerate(ncp.polyhedra):
-                if (poly.bbox.zhi > zlo and poly.bbox.zlo < zhi and
-                        poly.bbox.xhi > xlo and poly.bbox.xlo < xhi):
-                    lookup.polyhedron_idcs.append(i)
-
-            lookup.length = len(lookup.polyhedron_idcs)
-            grid.lists.append(lookup)
-    ncp.lookup_grid = grid
+    # Creates a collision grid
+    if props.ncp_export_collgrid:
+        ncp.generate_lookup_grid()
 
     # Writes the NCP to file
     with open(filepath, "wb") as f:

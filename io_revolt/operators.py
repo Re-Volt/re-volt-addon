@@ -1,18 +1,10 @@
-if "bpy" in locals():
-    import imp
-    imp.reload(common)
-    imp.reload(properties)
-    imp.reload(tools)
-
 import bpy
 import time
-from . import common
-from . import properties
+
 from . import tools
-
 from .common import *
-from .properties import *
-
+from .layers import *
+from .texanim import *
 
 class ImportRV(bpy.types.Operator):
     """
@@ -71,7 +63,7 @@ class ImportRV(bpy.types.Operator):
                 enable_any_tex_mode(context)
 
         else:
-            msg_box("Not yet supported: {}".format(FORMATS[frmt]))
+            msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 
         end_time = time.time() - start_time
         print("Import done in {0:.3f} seconds.".format(end_time))
@@ -123,58 +115,7 @@ class ExportRV(bpy.types.Operator):
     filepath = bpy.props.StringProperty(subtype="FILE_PATH")
 
     def execute(self, context):
-        scene = context.scene
-        props = context.scene.revolt
-
-        start_time = time.time()
-        context.window.cursor_set("WAIT")
-
-        # Gets the format from the file path
-        frmt = get_format(self.filepath)
-
-        if frmt == FORMAT_UNK:
-            msg_box("Not supported for export.")
-        else:
-            # Turns off undo for better performance
-            use_global_undo = bpy.context.user_preferences.edit.use_global_undo
-            bpy.context.user_preferences.edit.use_global_undo = False
-
-            if bpy.ops.object.mode_set.poll():
-                bpy.ops.object.mode_set(mode="OBJECT")
-
-            # Saves filepath for re-exporting the same file
-            props.last_exported_filepath = self.filepath
-
-            if frmt == FORMAT_PRM:
-                # Checks if a file can be exported
-                if not tools.check_for_export(scene.objects.active):
-                    return {"FINISHED"}
-
-                from . import prm_out
-                prm_out.export_file(self.filepath, scene)
-
-            elif frmt == FORMAT_NCP:
-                from . import ncp_out
-                print("Exporting to .ncp...")
-                ncp_out.export_file(self.filepath, scene)
-
-            elif frmt == FORMAT_W:
-                from . import w_out
-                print("Exporting to .w...")
-                w_out.export_file(self.filepath, scene)
-
-            else:
-                print("Format not yet supported {}".format(FORMATS[frmt]))
-
-            # Re-enables undo
-            bpy.context.user_preferences.edit.use_global_undo = use_global_undo
-
-        context.window.cursor_set("DEFAULT")
-
-        end_time = time.time() - start_time
-        print("Export done in {0:.3f} seconds.".format(end_time))
-
-        return {"FINISHED"}
+        return exec_export(self.filepath, context)
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
@@ -204,47 +145,91 @@ class ExportRV(bpy.types.Operator):
             box.prop(props, "use_tex_num")
 
         # Mesh settings
-        if frmt in [FORMAT_NCP, FORMAT_PRM, FORMAT_W]:
+        if frmt in [FORMAT_PRM, FORMAT_W]:
             box = layout.box()
             box.prop(props, "apply_scale")
             box.prop(props, "apply_rotation")
+        if frmt in [FORMAT_NCP, FORMAT_PRM, FORMAT_W]:
+            box = layout.box()
             box.prop(props, "triangulate_ngons")
 
+
+def exec_export(filepath, context):
+    scene = context.scene
+    props = context.scene.revolt
+
+    start_time = time.time()
+    context.window.cursor_set("WAIT")
+
+    if filepath == "":
+        msg_box("File not specified.", "ERROR")
+        return {"FINISHED"}
+
+    # Gets the format from the file path
+    frmt = get_format(filepath)
+
+    if frmt == FORMAT_UNK:
+        msg_box("Not supported for export.", "INFO")
+        return {"FINISHED"}
+    else:
+        # Turns off undo for better performance
+        use_global_undo = bpy.context.user_preferences.edit.use_global_undo
+        bpy.context.user_preferences.edit.use_global_undo = False
+
+        if bpy.ops.object.mode_set.poll():
+            bpy.ops.object.mode_set(mode="OBJECT")
+
+        # Saves filepath for re-exporting the same file
+        props.last_exported_filepath = filepath
+
+        if frmt == FORMAT_PRM:
+            # Checks if a file can be exported
+            if not tools.check_for_export(scene.objects.active):
+                return {"FINISHED"}
+
+            from . import prm_out
+            prm_out.export_file(filepath, scene)
+
+        elif frmt == FORMAT_NCP:
+            from . import ncp_out
+            print("Exporting to .ncp...")
+            ncp_out.export_file(filepath, scene)
+
+        elif frmt == FORMAT_W:
+            from . import w_out
+            print("Exporting to .w...")
+            w_out.export_file(filepath, scene)
+
+        else:
+            msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
+
+        # Re-enables undo
+        bpy.context.user_preferences.edit.use_global_undo = use_global_undo
+
+    context.window.cursor_set("DEFAULT")
+
+    end_time = time.time() - start_time
+    msg_box(
+        "Export to {} done in {:.3f} seconds.".format(FORMATS[frmt], end_time),
+        icon="FILE_TICK"
+    )
+
+    return {"FINISHED"}
 
 
 """ BUTTONS
     Button operators for the user interface
 """
 
-class ButtonColorFromActiveFace(bpy.types.Operator):
-    bl_idname = "vertexcolor.copycolor"
-    bl_label = "Get Color from active Face"
-    bl_description = "Gets the color from the active face."
+class ButtonReExport(bpy.types.Operator):
+    bl_idname = "export_scene.revolt_redo"
+    bl_label = "Re-Export"
+    bl_description = "Redo the same export again"
 
     def execute(self, context):
-        tools.color_from_face(context)
-        redraw()
-        return{"FINISHED"}
-
-class ButtonCopyUvToFrame(bpy.types.Operator):
-    bl_idname = "texanim.copy_uv_to_frame"
-    bl_label = "UV to Frame"
-    bl_description = "Copies the UV coordinates of the currently selected face to the texture animation frame"
-
-    def execute(self, context):
-        copy_uv_to_frame(context)
-        redraw()
-        return{"FINISHED"}
-
-class ButtonCopyFrameToUv(bpy.types.Operator):
-    bl_idname = "texanim.copy_frame_to_uv"
-    bl_label = "Frame to UV"
-    bl_description = "Copies the UV coordinates of the frame to the currently selected face"
-
-    def execute(self, context):
-        copy_frame_to_uv(context)
-        redraw()
-        return{"FINISHED"}
+        props = context.scene.revolt
+        res = exec_export(props.last_exported_filepath, context)
+        return res
 
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
@@ -279,6 +264,17 @@ class ButtonSelectNCPMaterial(bpy.types.Operator):
 
 # VERTEX COLORS
 
+class ButtonColorFromActive(bpy.types.Operator):
+    bl_idname = "vertexcolor.copycolor"
+    bl_label = "Get Color"
+    bl_description = "Gets the color from the active face."
+
+    def execute(self, context):
+        color_from_face(context)
+        redraw()
+        return{"FINISHED"}
+
+
 class ButtonVertexColorSet(bpy.types.Operator):
     bl_idname = "vertexcolor.set"
     bl_label = "Set Color"
@@ -286,7 +282,7 @@ class ButtonVertexColorSet(bpy.types.Operator):
     number = bpy.props.IntProperty()
 
     def execute(self, context):
-        tools.set_vertex_color(context, self.number)
+        set_vertex_color(context, self.number)
         return{"FINISHED"}
 
 class ButtonVertexColorCreateLayer(bpy.types.Operator):

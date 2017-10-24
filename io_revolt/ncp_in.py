@@ -55,12 +55,14 @@ def import_file(filepath, scene):
     vc_layer = bm.loops.layers.color.new("NCPPreview")
 
     # Goes through all polyhedra and creates faces from them
-    for polyhedron in ncp.polyhedra:
-        ds = [-to_blender_scale(p.distance) for p in polyhedron.planes]
-        ns = [Vector(data=to_blender_axis(p.normal)) for p in polyhedron.planes]
+    for poly in ncp.polyhedra:
+        # distances
+        ds = [-to_blender_scale(p.distance) for p in poly.planes]
+        # normals
+        ns = [Vector(data=to_blender_axis(p.normal)) for p in poly.planes]
         verts = []
 
-        if polyhedron.type & NCP_QUAD:
+        if poly.type & NCP_QUAD:
             verts.append(intersect(ds[0], ns[0], ds[1], ns[1], ds[2], ns[2]))
             verts.append(intersect(ds[0], ns[0], ds[2], ns[2], ds[3], ns[3]))
             verts.append(intersect(ds[0], ns[0], ds[3], ns[3], ds[4], ns[4]))
@@ -72,9 +74,9 @@ def import_file(filepath, scene):
             verts.append(intersect(ds[0], ns[0], ds[3], ns[3], ds[1], ns[1]))
             face = (0, 2, 1)
 
-        # Skips the polyhedron if no intersection was found
+        # Skips the poly if no intersection was found
         if None in verts:
-            dprint('Skipping polyhedron.')
+            dprint('Skipping polyhedron (not intersection).')
             continue
 
         # Creates the bmverts and face
@@ -84,12 +86,12 @@ def import_file(filepath, scene):
         face = bm.faces.new(bmverts)
 
         # Assigns the material and type
-        face[material_layer] = polyhedron.material
-        face[type_layer] = polyhedron.type
+        face[material_layer] = poly.material
+        face[type_layer] = poly.type
 
         # Sets preview colors
         for lnum in range(len(face.loops)):
-            face.loops[lnum][vc_layer] = Color(COLORS[polyhedron.material])
+            face.loops[lnum][vc_layer] = Color(COLORS[poly.material])
 
         bm.verts.ensure_lookup_table()
 

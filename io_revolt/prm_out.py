@@ -1,12 +1,9 @@
-"""
-PRM EXPORT
-Meshes used for cars, game objects and track instances.
-"""
 if "bpy" in locals():
     import imp
     imp.reload(common)
     imp.reload(rvstruct)
     imp.reload(img_in)
+    imp.reload(layers)
 
 import os
 import bpy
@@ -15,8 +12,10 @@ from mathutils import Color, Vector, Matrix
 from . import common
 from . import rvstruct
 from . import img_in
+from . import layers
 
 from .common import *
+from .layers import *
 
 
 def export_file(filepath, scene):
@@ -26,11 +25,11 @@ def export_file(filepath, scene):
 
     # Checks if other LoDs are present
     if "|q" in obj.data.name:
-        print("LODs present.")
+        dprint("LODs present.")
         meshes = get_all_lod(obj.data.name.split('|')[0])
         print([m.name for m in meshes])
     else:
-        print("No LOD present.")
+        dprint("No LOD present.")
         meshes.append(obj.data)
 
     # Exports all meshes to the PRM file
@@ -137,13 +136,13 @@ def export_mesh(me, obj, scene, filepath, world=None):
 
     for face in bm.faces:
         poly = rvstruct.Polygon()
-        is_quad = len(face.verts) > 3
+        is_quad = len(face.verts) == 4
+
+        poly.type = face[type_layer] & FACE_PROP_MASK
 
         # Sets the quad flag on the polygon
         if is_quad:
-            face[type_layer] |= FACE_QUAD
-
-        poly.type = face[type_layer] & FACE_PROP_MASK
+            poly.type |= FACE_QUAD
 
         # Gets the texture number from the integer layer if setting enabled
         # use_tex_num is the only way to achieve no texture
@@ -191,7 +190,7 @@ def export_mesh(me, obj, scene, filepath, world=None):
 
         if world is not None:
             if poly.type & FACE_ENV:
-                rgb = [int(c * 255) for c in get_average_vcol([face], env_layer)]
+                rgb = [int(c * 255) for c in get_average_vcol2([face], env_layer)]
                 alpha = int(face[env_alpha_layer] * 255)
                 col = rvstruct.Color(color=rgb, alpha=alpha)
                 world.env_list.append(col)
@@ -200,12 +199,8 @@ def export_mesh(me, obj, scene, filepath, world=None):
 
     # export vertex positions and normals
     for vertex in bm.verts:
-        coord = to_revolt_coord((vertex.co[0],
-                                 vertex.co[1],
-                                 vertex.co[2]))
-        normal = to_revolt_axis((vertex.normal[0],
-                                 vertex.normal[1],
-                                 vertex.normal[2]))
+        coord = to_revolt_coord(vertex.co)
+        normal = to_revolt_axis(vertex.normal)
         rvvert = rvstruct.Vertex()
         rvvert.position = rvstruct.Vector(data=coord)
         rvvert.normal = rvstruct.Vector(data=normal)

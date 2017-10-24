@@ -1,7 +1,3 @@
-"""
-WORLD EXPORT
-Level files that contain optimized meshes (.w).
-"""
 if "bpy" in locals():
     import imp
     imp.reload(common)
@@ -13,11 +9,12 @@ import os
 import bpy
 import bmesh
 from mathutils import Color, Vector
-from . import common
-from . import rvstruct
-from . import img_in
-from . import prm_out
-
+from . import (
+    common,
+    rvstruct,
+    img_in,
+    prm_out
+)
 from .common import *
 from .prm_out import export_mesh
 

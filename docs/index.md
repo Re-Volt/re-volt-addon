@@ -3,11 +3,12 @@
 This is the documentation for Marv's Add-On for Re-Volt files.  
 It is intended to be used with **Blender 2.79**.
 
-[**Download** (rva_17.1017)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1017)
+[**Download** (rva_17.1024)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1024)
 
 [**Changelog**](changelog/index.html)
 
-[**Tutorial**](http://learn.re-volt.io)
+[Tutorial](http://learn.re-volt.io)  
+[Resources](http://learn.re-volt.io/tracks-blender/resources) (Animations, textures, etc.)
 
 ## Documentation
 
@@ -19,13 +20,18 @@ A guide for the installation of the add-<u>on.</u>
 
 <u>**Tools Panel**</u>:  
 The panel located on the left hand side of the 3D view.  
-Open/Close the tools panel using `T`. The **Re-Volt tab** can be found at the very bottom.  
+Open/Close the tools panel using `T`.  
+The following panels are located in the Re-Volt tab. Its contents depend on the edit mode.  
+Some panels are collapsed by default. They can be expanded by clicking on the triangle on the left side of their header.
 
-‣ [**Import/Export, Settings**](tools-panel-io-settings/index.html) (Object Mode)  
-&nbsp;&nbsp;&nbsp;&nbsp;Buttons for importing and exporting files as well as settings.
+‣ [**Import/Export**](tools-panel-io/index.html) (Object Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;Buttons for importing and exporting files.
 
 ‣ [**Light**](tools-panel-light/index.html) (Object Mode)  
 &nbsp;&nbsp;&nbsp;&nbsp;Tools for shading cars and generating shadow textures.
+
+‣ [**Add-On Settings**](tools-panel-settings/index.html) (Object Mode)  
+&nbsp;&nbsp;&nbsp;&nbsp;Settings regarding the import, export and ui.
 
 ‣ [**Face Properties**](tools-panel-faceprops/index.html) (Edit Mode)  
 &nbsp;&nbsp;&nbsp;&nbsp;Face/Polygon properties for PRM, W and NCP meshes.
@@ -56,4 +62,4 @@ Overview of Re-Volt's binary files and their structure (advanced).
 Not an issue with this add-on directly, however, there is a bug in Blender that is caused by a feature used by the add-on. I reported this bug and it has recently been fixed. The fix sadly didn't make it into 2.79 yet. **To obtain a version with the fix included, download Blender from [builder.blender.org](http://builder.blender.org)**.
 
 **<u>Only one BigCube</u>**  
-Only one sphere (BigCube) is written around the entire level. This shouldn't impact performance too much, a fix should come eventually.
+Only one sphere (BigCube) is written around the entire level. This shouldn't impact performance too much, a fix should come eventually. WorldCut can be used to achieve better performance in-game.
