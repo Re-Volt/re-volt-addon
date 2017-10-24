@@ -1,7 +1,8 @@
 # Prevents the global dict from being reloaded
 if "bpy" not in locals():
-    # Global dict to hold the mesh for edit mode
-    dic = {}
+    dic = {}  # dict to hold the mesh for edit mode
+    global textures
+    textures = {}  # Gobal dict to hold texture paths
 
 import bpy
 import bmesh
@@ -308,7 +309,7 @@ def reverse_quad(quad, tri=False):
 
 def texture_to_int(string):
     # Assigns texture A to cars
-    if string == "car.bmp":
+    if "car.bmp" in string:
         return 0
 
     # Checks if the last letter of the file name matches naming convention

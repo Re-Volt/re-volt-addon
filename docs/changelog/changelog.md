@@ -4,15 +4,17 @@
 
 # Changelog
 
-## 2017-10-??
+## 2017-10-24
 
-Version [`rva_17.10??`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10??)
+Version [`rva_17.1024`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1023)
 
 * **Additions**
-  * **Texture Animation**: Transform animation feature (animates from frame A to frame B), Grid animation feature (for creating animations like the mars animation found in Museum 2)
+  * **Texture Animation**: Transform animation feature (animates from frame A to frame B), Grid animation feature (for creating animations like the mars animation found in Museum 2). Added a [resources](http://learn.re-volt.io/tracks-blender/resources) link to the documentation which will include texture animation sheets ready to be used with the add-on.
   * **Re-Export Button**: Press the button next to the Export button to export to the same file again.
 * **Fixes**
   * The vertex color picker now picks from selected faces _or_ vertices. (Contribution by Boy80)
+  * Fixed persisting QUAD flag by removing it from the export mask. (Reported by Boy80)
+  * Importing cars with the same texture name resulted in them having the same texture. (Reported by Gotolei)
 * **UI**
   * Added icons to panels
   * Moved add-on settings to a separate panel
@@ -20,7 +22,8 @@ Version [`rva_17.10??`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
   * Fixed the import/export panel to the top
   * Notifications now have an icon
 * **Misc.**
-  * Code refactoring and some fixes
+  * Huge code refactoring and some fixes
+  * Restructured the documentation
 
 ## 2017-10-17
 

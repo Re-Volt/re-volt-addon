@@ -28,6 +28,8 @@ imp.reload(texanim)
 imp.reload(tools)
 
 # Reloaded here because it's used in a class which is instanced here
+if "img_in" in locals():
+    imp.reload(img_in)
 if "prm_in" in locals():
     imp.reload(prm_in)
 if "prm_out" in locals():
@@ -56,13 +58,13 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (17, 10, 17),
+"version": (17, 10, 24),
 "blender": (2, 79, 0),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",
 "tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
-"index.php?showtopic=2296",
+               "index.php?showtopic=2296",
 "support": 'COMMUNITY',
 "category": "Import-Export"
 }

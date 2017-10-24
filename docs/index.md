@@ -3,11 +3,12 @@
 This is the documentation for Marv's Add-On for Re-Volt files.  
 It is intended to be used with **Blender 2.79**.
 
-[**Download** (rva_17.101?)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.101?)
+[**Download** (rva_17.1024)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1024)
 
 [**Changelog**](changelog/index.html)
 
-[**Tutorial**](http://learn.re-volt.io)
+[Tutorial](http://learn.re-volt.io)  
+[Resources](http://learn.re-volt.io/tracks-blender/resources) (Animations, textures, etc.)
 
 ## Documentation
 
@@ -24,7 +25,7 @@ The following panels are located in the Re-Volt tab. Its contents depend on the 
 Some panels are collapsed by default. They can be expanded by clicking on the triangle on the left side of their header.
 
 ‣ [**Import/Export**](tools-panel-io/index.html) (Object Mode)  
-&nbsp;&nbsp;&nbsp;&nbsp;Buttons for importing and exporting files as well as settings.
+&nbsp;&nbsp;&nbsp;&nbsp;Buttons for importing and exporting files.
 
 ‣ [**Light**](tools-panel-light/index.html) (Object Mode)  
 &nbsp;&nbsp;&nbsp;&nbsp;Tools for shading cars and generating shadow textures.
