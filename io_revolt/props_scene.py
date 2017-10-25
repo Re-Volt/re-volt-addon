@@ -234,7 +234,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     ta_max_slots = IntProperty(
         name = "Slots",
         min = 0,
-        max = 9,
+        max = 10,
         default = 0,
         update = update_ta_max_slots,
         description = "Total number of texture animation slots. "

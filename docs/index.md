@@ -3,7 +3,7 @@
 This is the documentation for Marv's Add-On for Re-Volt files.  
 It is intended to be used with **Blender 2.79**.
 
-[**Download** (rva_17.1024)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1024)
+[**Download** (rva_17.1025)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
 
 [**Changelog**](changelog/index.html)
 
@@ -16,7 +16,7 @@ It is intended to be used with **Blender 2.79**.
 A list of currently supported features and what's to come.
 
 [**Installation**](installation/index.html)  
-A guide for the installation of the add-<u>on.</u>
+A guide for the installation of the add-on.
 
 <u>**Tools Panel**</u>:  
 The panel located on the left hand side of the 3D view.  

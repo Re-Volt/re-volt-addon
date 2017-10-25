@@ -326,7 +326,6 @@ def texture_to_int(string):
     else:
         return -1
 
-
 def create_material(name, diffuse, alpha):
     """ Creates a material, mostly used for debugging objects """
     mat = bpy.data.materials.new(name)

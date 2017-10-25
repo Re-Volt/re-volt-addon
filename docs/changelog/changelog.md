@@ -4,9 +4,18 @@
 
 # Changelog
 
+## 2017-10-245
+
+Version [`rva_17.1025`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
+
+- **Fixes** (reported by Gotolei):
+  - Animation slot count can now be set to 10
+  - Frame count for animations reset itself
+  - Animation export didn't work in some cases
+
 ## 2017-10-24
 
-Version [`rva_17.1024`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1023)
+Version [`rva_17.1024`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1024)
 
 * **Additions**
   * **Texture Animation**: Transform animation feature (animates from frame A to frame B), Grid animation feature (for creating animations like the mars animation found in Museum 2). Added a [resources](http://learn.re-volt.io/tracks-blender/resources) link to the documentation which will include texture animation sheets ready to be used with the add-on.

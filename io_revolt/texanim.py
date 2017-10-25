@@ -345,7 +345,8 @@ def update_ta_current_slot(self, context):
     props.texture_animations = str(ta)
 
     # Updates the rest of the UI
-    props.ta_max_frames = len(ta[slot]["frames"])
+    # props.ta_max_frames = len(ta[slot]["frames"])
+    props.ta_max_frames = ta[slot]["frame_count"]
     # update_ta_max_frames(self, context)
     update_ta_current_frame(self, context)
 

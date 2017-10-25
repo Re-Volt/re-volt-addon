@@ -43,7 +43,7 @@ class RVMeshProperties(bpy.types.PropertyGroup):
                       "8 is texture page I\n"
                       "9 is texture page J\n"
                       "For this number to have an effect, "
-                      "the \"Use Texture Number\" export settings needs to be "
+                      "the \"Use Texture Number\" export setting needs to be "
                       "enabled"
     )
     face_double_sided = BoolProperty(

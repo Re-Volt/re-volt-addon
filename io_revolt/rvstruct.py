@@ -666,7 +666,7 @@ class TexAnimation:
         file.write(struct.pack("<l", self.frame_count))
 
         # Writes the frames
-        for frame in self.frames:
+        for frame in self.frames[:self.frame_count]:
             frame.write(file)
 
     def as_dict(self):

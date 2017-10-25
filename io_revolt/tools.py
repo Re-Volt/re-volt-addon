@@ -48,7 +48,6 @@ def bake_shadow(self, context):
     shadow_tex = bpy.data.images.new(name="Shadow", width=resolution, height=resolution)
 
     all_objs = [ob_child for ob_child in context.scene.objects if ob_child.parent == shade_obj] + [shade_obj]
-    print([ob.matrix_local for ob in all_objs])
 
     # get the bounds taking in account all child objects (wheels, etc.)
     # using the world matrix here to get positions from child objects
@@ -110,6 +109,7 @@ def bake_shadow(self, context):
         sleft, sright, sfront, sback, sheight
     )
     shade_obj.revolt.shadow_table = shtable
+
 
 def bake_vertex(self, context):
     # Set scene to render to vertex color
