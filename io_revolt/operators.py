@@ -54,6 +54,10 @@ class ImportRV(bpy.types.Operator):
             if props.enable_tex_mode:
                 enable_any_tex_mode(context)
 
+        elif frmt == FORMAT_TA_CSV:
+            from . import ta_csv_in
+            ta_csv_in.import_file(self.filepath, scene)
+
         elif frmt == FORMAT_W:
             from . import w_in
             w_in.import_file(self.filepath, scene)
@@ -199,6 +203,11 @@ def exec_export(filepath, context):
             from . import w_out
             print("Exporting to .w...")
             w_out.export_file(filepath, scene)
+
+        elif frmt == FORMAT_TA_CSV:
+            from . import ta_csv_out
+            print("Exporting texture animation sheet...")
+            ta_csv_out.export_file(filepath, scene)
 
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))

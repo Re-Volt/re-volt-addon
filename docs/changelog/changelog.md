@@ -4,7 +4,7 @@
 
 # Changelog
 
-## 2017-10-245
+## 2017-10-25
 
 Version [`rva_17.1025`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
 

@@ -40,6 +40,10 @@ if "ncp_out" in locals():
     imp.reload(ncp_out)
 if "parameters_in" in locals():
     imp.reload(parameters_in)
+if "ta_csv_in" in locals():
+    imp.reload(ta_csv_in)
+if "ta_csv_out" in locals():
+    imp.reload(ta_csv_out)
 if "w_in" in locals():
     imp.reload(w_in)
 if "w_out" in locals():
