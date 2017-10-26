@@ -600,9 +600,6 @@ def get_format(fstr):
     except:
         fname, ext = ("", "")
 
-    print(fname, ext)
-    print(ext == "w")
-
     if ext.startswith("bm"):
         return FORMAT_BMP
     elif ext == "txt":
