@@ -593,10 +593,15 @@ def get_format(fstr):
     """
     Gets the format by the ending and returns an int
     """
+    if os.sep in fstr:
+        fstr = fstr.split(os.sep)[-1]
     try:
         fname, ext = fstr.split(".", 1)
     except:
         fname, ext = ("", "")
+
+    print(fname, ext)
+    print(ext == "w")
 
     if ext.startswith("bm"):
         return FORMAT_BMP
