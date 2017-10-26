@@ -72,6 +72,11 @@ class ImportRV(bpy.types.Operator):
         end_time = time.time() - start_time
         print("Import done in {0:.3f} seconds.".format(end_time))
 
+        msg_box(
+            "Import of {} done in {:.3f} seconds.".format(FORMATS[frmt], end_time),
+            icon="FILE_TICK"
+        )
+
         context.window.cursor_set("DEFAULT")
 
         return {"FINISHED"}
