@@ -994,9 +994,12 @@ class NCP:
         if self.lookup_grid:
             self.lookup_grid.write(file)
 
-    def generate_lookup_grid(self):
+    def generate_lookup_grid(self, grid_size=None):
         grid = LookupGrid()
-        grid.size = 1024
+        if grid_size is None:
+            grid.size = 1024
+        else:
+            grid.size = grid_size
 
         bbox = BoundingBox(data=(
             min([poly.bbox.xlo for poly in self.polyhedra]),

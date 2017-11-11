@@ -147,6 +147,7 @@ class ExportRV(bpy.types.Operator):
         if frmt == FORMAT_NCP:
             box = layout.box()
             box.prop(props, "ncp_export_collgrid")
+            box.prop(props, "ncp_collgrid_resolution")
 
         # Texture mesh settings
         if frmt in [FORMAT_PRM, FORMAT_W]:
