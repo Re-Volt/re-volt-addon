@@ -24,6 +24,8 @@ def import_file(filepath, scene):
     Imports a .w file and links it to the scene as a Blender object.
     """
 
+    common.TEXTURES = {}
+
     props = scene.revolt
     # Resets the index of the current env color
     props.envidx = 0
@@ -85,6 +87,11 @@ def import_file(filepath, scene):
 
     props.texture_animations = str([a.as_dict() for a in world.animations])
     props.ta_max_slots = world.animation_count
+
+    # Clears the used texture paths
+    # # global textures
+    # textures = {}
+    # print("Cleared textures...")
 
 
 def create_bound_box(scene, bbox, filename):

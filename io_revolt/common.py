@@ -1,8 +1,6 @@
 # Prevents the global dict from being reloaded
 if "bpy" not in locals():
     dic = {}  # dict to hold the mesh for edit mode
-    global textures
-    textures = {}  # Gobal dict to hold texture paths
 
 import bpy
 import bmesh
@@ -11,6 +9,8 @@ import os
 from math import sqrt
 from mathutils import Color, Matrix
 from .parameters import read_parameters
+
+TEXTURES = {}  # Gobal dict to hold texture paths
 
 # If True, more debug messages will be printed
 DEBUG = True

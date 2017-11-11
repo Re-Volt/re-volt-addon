@@ -153,12 +153,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "Enable this if you want to export a level (.w) "
                       ".ncp file."
     )
-    ncp_collgrid_resolution = IntProperty(
-        name = "Grid Resolution",
+    ncp_collgrid_size = IntProperty(
+        name = "Grid Size",
         default = 1024,
-        min = 2,
+        min = 512,
         max = 8192,
-        description = "Resolution of the lookup grid."
+        description = "Size of the lookup grid."
     )
 
     # Light tools
