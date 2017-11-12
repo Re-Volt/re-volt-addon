@@ -24,6 +24,7 @@ def import_file(filepath, scene):
     Imports a .w file and links it to the scene as a Blender object.
     """
 
+    # Clears textures since they might not exist anymore
     common.TEXTURES = {}
 
     props = scene.revolt

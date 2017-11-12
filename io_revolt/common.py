@@ -13,7 +13,7 @@ from .parameters import read_parameters
 TEXTURES = {}  # Gobal dict to hold texture paths
 
 # If True, more debug messages will be printed
-DEBUG = True
+DEBUG = False
 
 SCALE = 0.01
 

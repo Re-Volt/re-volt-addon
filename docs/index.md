@@ -3,7 +3,7 @@
 This is the documentation for Marv's Add-On for Re-Volt files.  
 It is intended to be used with **Blender 2.79**.
 
-[**Download** (rva_17.1025)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
+[**Download** (rva_17.1112)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1112)
 
 [**Changelog**](changelog/index.html)
 

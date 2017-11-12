@@ -108,7 +108,7 @@ def bake_shadow(self, context):
     shtable = ";)SHADOWTABLE {:.4f} {:.4f} {:.4f} {:.4f} {:.4f}".format(
         sleft, sright, sfront, sback, sheight
     )
-    shade_obj.revolt.shadow_table = shtable
+    props.shadow_table = shtable
 
 
 def bake_vertex(self, context):

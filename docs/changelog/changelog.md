@@ -4,6 +4,17 @@
 
 # Changelog
 
+## 2017-11-12
+
+Version [`rva_17.1012`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
+
+- **Fixes**:
+  - Fixed the following crash: Import mesh, clear .blend, import mesh again (reported by Zorbah)
+  - Shadowtable not added to the UI (reported by Mladen)
+  - Required vertex color layers weren't created on export ([Issue #16](https://github.com/Yethiel/re-volt-addon/issues/16), reported by progwolff)
+- **Additions**:
+  - NCP: Setting for collision grid size (requested by Zorbah). Higher values = faster export (might slow down the game in return)
+
 ## 2017-10-25
 
 Version [`rva_17.1025`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)

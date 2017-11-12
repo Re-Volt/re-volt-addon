@@ -144,13 +144,10 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
         if poly.texture >= 0:
             texture_path = get_texture_path(filepath, poly.texture)
             if not texture_path in common.TEXTURES.keys():
-                print("Texture path ({}) not found in dict".format(texture_path))
                 img = img_in.import_file(texture_path)
                 face[tex_layer].image = img
                 common.TEXTURES[texture_path] = img
             else:
-                print("Texture path ({}) found in dict:".format(texture_path))
-                print(common.TEXTURES[texture_path])
                 face[tex_layer].image = common.TEXTURES[texture_path]
 
         # Assigns the face properties (bit field, one int per face)
