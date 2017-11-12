@@ -153,6 +153,13 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "Enable this if you want to export a level (.w) "
                       ".ncp file."
     )
+    ncp_collgrid_size = IntProperty(
+        name = "Grid Size",
+        default = 1024,
+        min = 512,
+        max = 8192,
+        description = "Size of the lookup grid."
+    )
 
     # Light tools
     light1 = EnumProperty(

@@ -28,6 +28,8 @@ def import_file(filepath, scene):
     """
     meshes = []
 
+    common.TEXTURES = {}
+
     with open(filepath, 'rb') as file:
         filename = os.path.basename(filepath)
 
@@ -102,8 +104,6 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
     texnum_layer = bm.faces.layers.int.new("Texture Number")
     type_layer = bm.faces.layers.int.new("Type")
 
-    global textures
-
     for vert in prm.vertices:
         position = to_blender_coord(vert.position.data)
         normal = to_blender_axis(vert.normal.data)
@@ -143,12 +143,12 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
         # Assigns the texture to the face
         if poly.texture >= 0:
             texture_path = get_texture_path(filepath, poly.texture)
-            if not texture_path in textures:
+            if not texture_path in common.TEXTURES.keys():
                 img = img_in.import_file(texture_path)
                 face[tex_layer].image = img
-                textures[texture_path] = img
+                common.TEXTURES[texture_path] = img
             else:
-                face[tex_layer].image = textures[texture_path]
+                face[tex_layer].image = common.TEXTURES[texture_path]
 
         # Assigns the face properties (bit field, one int per face)
         face[type_layer] = poly.type

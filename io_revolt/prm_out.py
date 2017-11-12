@@ -117,10 +117,14 @@ def export_mesh(me, obj, scene, filepath, world=None):
     # Gets layers
     uv_layer = bm.loops.layers.uv.get("UVMap")
     tex_layer = bm.faces.layers.tex.get("UVMap")
-    vc_layer = bm.loops.layers.color.get("Col")
-    env_layer = bm.loops.layers.color.get("Env")
-    env_alpha_layer = bm.faces.layers.float.get("EnvAlpha")
-    va_layer = bm.loops.layers.color.get("Alpha")
+    vc_layer = (bm.loops.layers.color.get("Col") or 
+                bm.loops.layers.color.new("Col"))
+    env_layer = (bm.loops.layers.color.get("Env") or
+                 bm.loops.layers.color.new("Env"))
+    env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha") or
+                       bm.faces.layers.float.new("EnvAlpha"))
+    va_layer = (bm.loops.layers.color.get("Alpha") or
+                bm.loops.layers.color.new("Alpha"))
     texnum_layer = bm.faces.layers.int.get("Texture Number")
     type_layer = (bm.faces.layers.int.get("Type") or
                   bm.faces.layers.int.new("Type"))
@@ -189,7 +193,7 @@ def export_mesh(me, obj, scene, filepath, world=None):
                 poly.uv.append(rvstruct.UV())
 
         if world is not None:
-            if poly.type & FACE_ENV:
+            if (poly.type & FACE_ENV):
                 rgb = [int(c * 255) for c in get_average_vcol2([face], env_layer)]
                 alpha = int(face[env_alpha_layer] * 255)
                 col = rvstruct.Color(color=rgb, alpha=alpha)

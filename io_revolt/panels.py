@@ -563,6 +563,7 @@ class RevoltSettingsPanel(bpy.types.Panel):
         # NCP Export settings
         layout.label("Export Collision (.ncp):")
         layout.prop(props, "ncp_export_collgrid")
+        layout.prop(props, "ncp_collgrid_size")
 
 
 

@@ -1,8 +1,6 @@
 # Prevents the global dict from being reloaded
 if "bpy" not in locals():
     dic = {}  # dict to hold the mesh for edit mode
-    global textures
-    textures = {}  # Gobal dict to hold texture paths
 
 import bpy
 import bmesh
@@ -12,8 +10,10 @@ from math import sqrt
 from mathutils import Color, Matrix
 from .parameters import read_parameters
 
+TEXTURES = {}  # Gobal dict to hold texture paths
+
 # If True, more debug messages will be printed
-DEBUG = True
+DEBUG = False
 
 SCALE = 0.01
 
@@ -184,21 +184,23 @@ Supported File Formats
 FORMAT_UNK = -1
 FORMAT_BMP = 0
 FORMAT_CAR = 1
-FORMAT_FIN = 2
-FORMAT_FOB = 3
-FORMAT_HUL = 4
-FORMAT_LIT = 5
-FORMAT_NCP = 6
-FORMAT_PRM = 7
-FORMAT_RIM = 8
-FORMAT_RTU = 9
-FORMAT_TAZ = 10
-FORMAT_VIS = 11
-FORMAT_W = 12
+FORMAT_TA_CSV = 2
+FORMAT_FIN = 3
+FORMAT_FOB = 4
+FORMAT_HUL = 5
+FORMAT_LIT = 6
+FORMAT_NCP = 7
+FORMAT_PRM = 8
+FORMAT_RIM = 9
+FORMAT_RTU = 10
+FORMAT_TAZ = 11
+FORMAT_VIS = 12
+FORMAT_W = 13
 
 FORMATS = {
     FORMAT_BMP: "Bitmap (.bm*)",
     FORMAT_CAR: "Car Parameters (.txt)",
+    FORMAT_TA_CSV: "Texture Animation Sheet (.ta.csv)",
     FORMAT_FIN: "Instances (.fin)",
     FORMAT_FOB: "Objects (.fob)",
     FORMAT_HUL: "Hull (.hul)",
@@ -233,6 +235,7 @@ BAKE_SHADOW_METHODS = [
     ("CONSTANT_QMC", "Nicer (slow)", "", "ANTIALIASED", 1)
 ]
 
+TA_CSV_HEADER = "Slot,Frame,Texture,Delay,U0,V0,U1,V1,U2,V2,U3,V3"
 
 """
 Conversion functions for Re-Volt structures.
@@ -590,17 +593,24 @@ def get_format(fstr):
     """
     Gets the format by the ending and returns an int
     """
-    fname, ext = os.path.splitext(fstr)
+    if os.sep in fstr:
+        fstr = fstr.split(os.sep)[-1]
+    try:
+        fname, ext = fstr.split(".", 1)
+    except:
+        fname, ext = ("", "")
 
-    if ext.startswith(".bm"):
+    if ext.startswith("bm"):
         return FORMAT_BMP
-    elif ext == ".txt":
+    elif ext == "txt":
         return FORMAT_CAR
-    elif ext in [".ncp"]:
+    elif ext == "ta.csv":
+        return FORMAT_TA_CSV
+    elif ext in ["ncp"]:
         return FORMAT_NCP
-    elif ext in [".prm", ".m"]:
+    elif ext in ["prm", "m"]:
         return FORMAT_PRM
-    elif ext == ".w":
+    elif ext == "w":
         return FORMAT_W
     else:
         return FORMAT_UNK

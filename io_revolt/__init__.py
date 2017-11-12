@@ -40,6 +40,10 @@ if "ncp_out" in locals():
     imp.reload(ncp_out)
 if "parameters_in" in locals():
     imp.reload(parameters_in)
+if "ta_csv_in" in locals():
+    imp.reload(ta_csv_in)
+if "ta_csv_out" in locals():
+    imp.reload(ta_csv_out)
 if "w_in" in locals():
     imp.reload(w_in)
 if "w_out" in locals():
@@ -58,7 +62,7 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (17, 10, 24),
+"version": (17, 11, 12),
 "blender": (2, 79, 0),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",

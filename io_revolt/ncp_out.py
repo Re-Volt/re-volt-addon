@@ -114,7 +114,7 @@ def export_file(filepath, scene):
 
     # Creates a collision grid
     if props.ncp_export_collgrid:
-        ncp.generate_lookup_grid()
+        ncp.generate_lookup_grid(grid_size=props.ncp_collgrid_size)
 
     # Writes the NCP to file
     with open(filepath, "wb") as f:
