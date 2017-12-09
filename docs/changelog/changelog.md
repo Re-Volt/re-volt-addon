@@ -6,6 +6,13 @@
 
 ## 2017-11-12
 
+No release.
+
+- **Fixes**:
+  - The alpha value of vertex color channels has been exposed. The add-on has been adjust acordingly.
+
+## 2017-11-12
+
 Version [`rva_17.1012`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
 
 - **Fixes**:

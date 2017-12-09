@@ -28,7 +28,7 @@ def color_from_face(context):
             context.scene.revolt.vertex_color_picker = col
 
 def get_average_vcol0(verts, layer):
-    """ Gets the average vertex color of loops all given verts """
+    """ Gets the average vertex color of loops all given VERTS """
     len_cols = 0
     r = 0
     g = 0
@@ -43,7 +43,7 @@ def get_average_vcol0(verts, layer):
     return (r / len_cols, g / len_cols, b / len_cols)
 
 def get_average_vcol2(faces, layer):
-    """ Gets the average vertex color of all loops of given faces """
+    """ Gets the average vertex color of all loops of given FACES """
     len_cols = 0
     r = 0
     g = 0
@@ -71,7 +71,8 @@ def set_vertex_color(context, number):
     selmode = bpy.context.tool_settings.mesh_select_mode
     v_layer = bm.loops.layers.color.active
     if number == -1:
-        color = context.scene.revolt.vertex_color_picker
+        cpick = context.scene.revolt.vertex_color_picker
+        color = mathutils.Color((cpick[0], cpick[1], cpick[2]))
     else:
         color = mathutils.Color((number/100, number/100, number/100))
 
