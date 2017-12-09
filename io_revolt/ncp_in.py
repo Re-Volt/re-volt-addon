@@ -91,7 +91,8 @@ def import_file(filepath, scene):
 
         # Sets preview colors
         for lnum in range(len(face.loops)):
-            face.loops[lnum][vc_layer] = Color(COLORS[poly.material])
+            one = (1.0)
+            face.loops[lnum][vc_layer] = COLORS[poly.material] + (1.0, )
 
         bm.verts.ensure_lookup_table()
 
