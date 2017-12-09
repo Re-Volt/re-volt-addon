@@ -10,6 +10,7 @@ No release.
 
 - **Fixes**:
   - The alpha value of vertex color channels has been exposed. The add-on has been adjust acordingly.
+  - Fix the Re-Volt tab to the top of the tools panel. This is unexpected behavior of Blender. If there is a headerless panel, the tab will be at the top. A dummy panel has thus been added to the edit mode view of the tab.
 
 ## 2017-11-12
 

@@ -40,6 +40,20 @@ class RevoltScenePanel(bpy.types.Panel):
         layout.prop(props, "texture_animations")
 
 
+class EditModeHeader(bpy.types.Panel):
+    """
+    Fixes the tab at the top in edit mode.
+    """
+    bl_label = "Edit Mode Header"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "mesh_edit"
+    bl_category = "Re-Volt"
+    bl_options = {"HIDE_HEADER"}
+
+    def draw(self, context):
+        pass
+
 class RevoltIOToolPanel(bpy.types.Panel):
     """
     Tool panel in the left sidebar of the viewport for performing
@@ -467,12 +481,12 @@ class RevoltAnimationPanel(bpy.types.Panel):
         column.prop(props, "ta_current_frame_uv3")
 
 
-
-class RevoltHelpersPanel():
+class RevoltHelpersPanelObj(bpy.types.Panel):
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_category = "Re-Volt"
+    bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw_header(self, context):
@@ -496,15 +510,36 @@ class RevoltHelpersPanel():
             text="Textured Solid"
         )
 
-class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
-    """ Inherits the draw method from the main class """
+
+class RevoltHelpersPanelMesh(bpy.types.Panel):
+    bl_label = "Helpers"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_category = "Re-Volt"
     bl_context = "mesh_edit"
     bl_options = {"DEFAULT_CLOSED"}
 
-class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
-    """ Inherits the draw method from the main class """
-    bl_context = "objectmode"
-    bl_options = {"DEFAULT_CLOSED"}
+    def draw_header(self, context):
+        self.layout.label("", icon="HELP")
+
+    def draw(self, context):
+
+        layout = self.layout
+
+        box = layout.box()
+        box.label("3D View:")
+        col = box.column(align=True)
+        col.operator(
+            "helpers.enable_texture_mode",
+            icon="POTATO",
+            text="Texture"
+        )
+        col.operator(
+            "helpers.enable_textured_solid_mode",
+            icon="TEXTURE_SHADED",
+            text="Textured Solid"
+        )
+
 
 class RevoltSettingsPanel(bpy.types.Panel):
     """
