@@ -137,7 +137,9 @@ def set_face_material(self, value):
         if face.select:
             face[layer] = value
             for loop in face.loops:
-                loop[vc_layer] = COLORS[value]
+                loop[vc_layer][0] = COLORS[value][0]
+                loop[vc_layer][1] = COLORS[value][1]
+                loop[vc_layer][2] = COLORS[value][2]
 
     redraw_3d()
 
@@ -180,8 +182,11 @@ def set_face_env(self, value):
     for face in bm.faces:
         if face.select:
             for loop in face.loops:
-                loop[env_layer] = value[:3]
+                loop[env_layer][0] = value[:3][0]
+                loop[env_layer][1] = value[:3][1]
+                loop[env_layer][2] = value[:3][2]
             face[env_alpha_layer] = value[-1]
+    redraw_3d()
 
 
 def get_face_env(self):
