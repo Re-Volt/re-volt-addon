@@ -61,7 +61,9 @@ def get_average_vcol2(faces, layer):
 def set_vcol(faces, layer, color):
     for face in faces:
         for loop in face.loops:
-            loop[layer] = color
+            loop[layer][0] = color[0]
+            loop[layer][1] = color[1]
+            loop[layer][2] = color[2]
 
 
 def set_vertex_color(context, number):
@@ -81,21 +83,27 @@ def set_vertex_color(context, number):
         for face in bm.faces:
             for loop in face.loops:
                 if loop.vert.select:
-                    loop[v_layer] = color
+                    loop[v_layer][0] = color[0]
+                    loop[v_layer][1] = color[1]
+                    loop[v_layer][2] = color[2]
                     continue # since multiple select modes can be set
     # edge select mode
     elif selmode[1]:
         for face in bm.faces:
             for i, loop in enumerate(face.loops):
                 if loop.edge.select or face.loops[i-1].edge.select:
-                    loop[v_layer] = color
+                    loop[v_layer][0] = color[0]
+                    loop[v_layer][1] = color[1]
+                    loop[v_layer][2] = color[2]
                     continue
     # face select mode
     elif selmode[2]:
         for face in bm.faces:
             if face.select:
                 for loop in face.loops:
-                    loop[v_layer] = color
+                    loop[v_layer][0] = color[0]
+                    loop[v_layer][1] = color[1]
+                    loop[v_layer][2] = color[2]
 
     bmesh.update_edit_mesh(mesh, tessface=False, destructive=False)
 
