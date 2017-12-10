@@ -54,6 +54,14 @@ class ImportRV(bpy.types.Operator):
             if props.enable_tex_mode:
                 enable_any_tex_mode(context)
 
+        elif frmt == FORMAT_FIN:
+            from . import fin_in
+            fin_in.import_file(self.filepath, scene)
+
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_any_tex_mode(context)
+
         elif frmt == FORMAT_TA_CSV:
             from . import ta_csv_in
             ta_csv_in.import_file(self.filepath, scene)

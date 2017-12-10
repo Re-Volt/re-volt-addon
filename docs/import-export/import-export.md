@@ -95,6 +95,19 @@ The vertex color layer called "NCPPreview" will be ignored since it's only for p
 
 A lookup grid will be automatically exported. This can be turned off in the export settings.
 
+
+
+## Instances (.fin)
+
+### Import
+
+- All prm meshes linked in the .fin file will be loaded.
+- If the file name of a mesh is too long (> 8 characters), the first file of the containing folder with the first 8 characters matching will be chosen.
+- An empty object will be loaded of a non-existent mesh.
+- Properties are accessible in the Re-Volt panel in the Object section of the Properties editor.
+
+
+
 ## parameters.txt (Car)
 
 ### Import

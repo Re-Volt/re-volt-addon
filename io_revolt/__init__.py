@@ -48,7 +48,8 @@ if "w_in" in locals():
     imp.reload(w_in)
 if "w_out" in locals():
     imp.reload(w_out)
-
+if "fin_in" in locals():
+    imp.reload(fin_in)
 
 # Makes common variables and classes directly accessible
 from .common import *
@@ -129,3 +130,6 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+
+dprint("Re-Volt add-on registered.")
+

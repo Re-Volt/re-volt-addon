@@ -12,7 +12,7 @@ class RevoltObjectPanel(bpy.types.Panel):
         obj = context.object
         objprops = obj.revolt
 
-        # NCP Properties
+        # NCP properties
         box = layout.box()
         box.label("NCP Properties:")
         row = box.row()
@@ -24,6 +24,26 @@ class RevoltObjectPanel(bpy.types.Panel):
             box.label("BigCube Properties:")
             row = box.row()
             row.prop(objprops, "bcube_mesh_indices")
+        
+        # Instance properties
+        box = layout.box()
+        box.label("Instance Properties:")
+        box.prop(objprops, "is_instance")
+
+        if objprops.is_instance:
+            row = box.row(align=True)
+            row.prop(context.object.revolt, "fin_model_rgb", text="Model Color")
+            row.prop(context.object.revolt, "fin_col", text="")
+            row = box.row(align=True)
+            row.prop(context.object.revolt, "fin_env", text="EnvColor")
+            row.prop(context.object.revolt, "fin_envcol", text="")
+            box.prop(context.object.revolt, "fin_hide")
+            box.prop(context.object.revolt, "fin_no_mirror")
+            box.prop(context.object.revolt, "fin_no_lights")
+            box.prop(context.object.revolt, "fin_no_cam_coll")
+            box.prop(context.object.revolt, "fin_no_obj_coll")
+            box.prop(context.object.revolt, "fin_priority")
+            box.prop(context.object.revolt, "fin_lod_bias")
 
 
 class RevoltScenePanel(bpy.types.Panel):

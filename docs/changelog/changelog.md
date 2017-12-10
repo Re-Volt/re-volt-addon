@@ -8,6 +8,10 @@
 
 No release.
 
+- **Additions**:
+  - Instance (.fin) import.
+
+
 - **Changes**:
   - The edit mode tab (prm/w, ncp) now toggles which edit panels can be seen. E.g. the vertex color panel is hidden in ncp mode.
 

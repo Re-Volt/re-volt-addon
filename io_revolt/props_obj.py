@@ -43,3 +43,63 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = "",
         description = "Indices of child meshes"
     )
+
+    # Instances
+
+    is_instance = BoolProperty(
+        name = "Is Instance",
+        default = False,
+        description = "Object is an instanced mesh"
+    )
+
+    fin_col = FloatVectorProperty(
+       name="Model Color",
+       subtype='COLOR',
+       default=(1.0, 1.0, 1.0),
+       min=0.0, max=1.0,
+       description=""
+    )
+    fin_envcol = FloatVectorProperty(
+       name="Env Color",
+       subtype='COLOR',
+       default=(1.0, 1.0, 1.0, 1.0),
+       min=0.0, max=1.0,
+       description="Color of the EnvMap",
+       size=4
+    )
+    fin_priority = IntProperty(
+        name="Priority",
+        default=1
+    )
+    fin_env = BoolProperty(
+        name="Use Environment Map",
+        default=True
+    )
+    fin_model_rgb = BoolProperty(
+        name="Use Model Color",
+        default=False
+    )
+    fin_hide = BoolProperty(
+        name="Hide",
+        default=False
+    )
+    fin_no_mirror = BoolProperty(
+        name="Don't show in Mirror Mode",
+        default=False
+    )
+    fin_no_lights = BoolProperty(
+        name="Is affected by Light",
+        default=False
+    )
+    fin_no_cam_coll = BoolProperty(
+        name="No Camera Collision",
+        default=False
+    )
+    fin_no_obj_coll = BoolProperty(
+        name="No Object Collision",
+        default=False
+    )
+    fin_lod_bias = IntProperty(
+        name="LoD Bias",
+        default = 1024
+    )

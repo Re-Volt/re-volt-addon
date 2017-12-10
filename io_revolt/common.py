@@ -13,7 +13,7 @@ from .parameters import read_parameters
 TEXTURES = {}  # Gobal dict to hold texture paths
 
 # If True, more debug messages will be printed
-DEBUG = False
+DEBUG = True
 
 SCALE = 0.01
 
@@ -36,6 +36,13 @@ NCP_NON_PLANAR = 16
 NCP_NO_SKID = 32
 NCP_OIL = 64
 
+FIN_ENV = 1
+FIN_HIDE = 2
+FIN_NO_MIRROR = 4
+FIN_NO_LIGHTS = 8
+FIN_SET_MODEL_RGB = 16
+FIN_NO_OBJECT_COLLISION = 32
+FIN_NO_CAMERA_COLLISION = 64
 
 NCP_PROP_MASK = (
     NCP_DOUBLE |
@@ -265,6 +272,14 @@ def to_revolt_axis(vec):
 
 def to_revolt_scale(num):
     return num / SCALE
+
+def to_trans_matrix(matrix):
+    return Matrix((
+        ( matrix[0][0],  matrix[2][0], -matrix[1][0], 0),
+        ( matrix[0][2],  matrix[2][2], -matrix[1][2], 0),
+        (-matrix[0][1], -matrix[2][1],  matrix[1][1], 0),
+        (0, 0, 0, 1)
+        ))
 
 
 def rvbbox_from_bm(bm):
@@ -606,6 +621,8 @@ def get_format(fstr):
         return FORMAT_CAR
     elif ext == "ta.csv":
         return FORMAT_TA_CSV
+    elif ext == "fin":
+        return FORMAT_FIN
     elif ext in ["ncp"]:
         return FORMAT_NCP
     elif ext in ["prm", "m"]:

@@ -455,6 +455,16 @@ class Matrix:
         }
         return dic
 
+    def __iter__(self):
+        for elem in self.data:
+            yield elem
+
+    def __getitem__(self, i):
+        return self.data[i]
+
+    def __setitem__(self, i, value):
+        self.data[i] = value
+
 
 class Polygon:
     """
