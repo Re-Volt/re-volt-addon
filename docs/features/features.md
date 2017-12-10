@@ -13,6 +13,18 @@
 - [x] Face properties panel
 - [x] Vertex coloring panel
 - [x] Texture animation panel
+- [] Batch-set object types and properties
+- [] Select all with similar value
+
+## Instances (.fin)
+
+### Import
+- [x] Meshes
+- [x] Properties
+
+### Export
+- [] Meshes
+- [] Properties
 
 ## PRM
 
@@ -74,6 +86,7 @@
 - [x] Geometry
 - [x] Properties
 - [x] Materials
+
 ### Export
 - [x] Geometry
 - [x] Properties

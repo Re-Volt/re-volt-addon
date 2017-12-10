@@ -99,6 +99,8 @@ class RevoltIOToolPanel(bpy.types.Panel):
         row.operator("export_scene.revolt_redo", text="", icon="FILE_REFRESH")
 
 
+
+
 class RevoltHelpersPanelObj(bpy.types.Panel):
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
@@ -113,6 +115,7 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
     def draw(self, context):
 
         layout = self.layout
+        props = context.scene.revolt
 
         box = layout.box()
         box.label("3D View:")
@@ -127,6 +130,12 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
             icon="TEXTURE_SHADED",
             text="Textured Solid"
         )
+
+        box = layout.box()
+        box.label("Instances:")
+        col = box.column(align=True)
+        col.prop(props, "rename_all_name", text="")
+        col.operator("helpers.rename_all_objects")
 
 
 class RevoltHelpersPanelMesh(bpy.types.Panel):

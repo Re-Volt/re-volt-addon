@@ -9,8 +9,9 @@
 No release.
 
 - **Additions**:
-  - Instance (.fin) import.
-
+  - Instances (.fin) 
+    -Import
+    - _Rename all_ button for batch-renaming all objects (useful for instance export), located in the Helpers panels
 
 - **Changes**:
   - The edit mode tab (prm/w, ncp) now toggles which edit panels can be seen. E.g. the vertex color panel is hidden in ncp mode.
