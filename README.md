@@ -2,7 +2,10 @@
 
 * [Documentation](#documentation)
 * [Features](#features)
-* [Installation](#installation)
+
+Please download the [**dev**](https://github.com/Yethiel/re-volt-addon/tree/dev) branch for now and use it with a **nightly build of Blender 2.79** from [builder.blender.org](http://builder.blender.org).
+
+The next stable version of the add-on will be released as soon as there is a new version of Blender that includes a [fix for the UV Reset bug](https://developer.blender.org/T52723) and the [4-value vertex color layers](https://developer.blender.org/rBaae8e211006a1d9099397727b48201b865504750).
 
 ## Documentation
 The documentation can be found [here](https://yethiel.github.io/re-volt-addon/).
@@ -29,6 +32,3 @@ Generate shadow textures and coordinates for in-game use with just one click.
 
 * **Shade Meshes**:
 Shade meshes by baking light to vertex colors with just one click.
-
-## Installation
-Find a detailed guide [here](https://yethiel.github.io/re-volt-addon/installation).  
