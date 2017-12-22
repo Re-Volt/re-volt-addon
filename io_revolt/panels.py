@@ -313,6 +313,9 @@ def ncp_edit_panel(self, context):
         text="{}: Object Only".format(count[2]))
     col.prop(meshprops, "face_ncp_camera_only",
         text="{}: Camera Only".format(count[3]))
+    col.prop(meshprops, "face_ncp_nocoll",
+        text="{}: No Collision".format(count[7]))
+
 
     col = row.column(align=True)
     col.scale_x = 0.15
@@ -321,6 +324,7 @@ def ncp_edit_panel(self, context):
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OIL
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OBJECT_ONLY
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_CAMERA_ONLY
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_NOCOLL
 
     row = layout.row()
     row.label("Material:")
