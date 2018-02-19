@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Re-Volt File Structure</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="fonts.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="pygments.css">
+    
+    
+  </head>
+
+  <body class="node-structure node">
+
+    <header class="masthead">
+      <h1><a href="index.html">RV Add-On Documentation</a></h1>
+      
+        <p class="tagline">Documentation for the Re-Volt Blender Add-on</p>
+      
+      <nav class="menu">
+        <input id="menu-check" type="checkbox"/>
+        <label id="menu-label" for="menu-check" class="unselectable">
+          <span class="icon close-icon">✕</span>
+          <span class="icon open-icon">☰</span>
+          <span class="text">Menu</span>
+        </label>
+        <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="changelog.html">Changelog</a></li>
+<li><a href="features.html">Features</a></li>
+<li><a href="installation.html">Installation</a></li>
+<li><a href="tools-panel.html">Tools Panel</a><ul>
+<li><a href="tools-panel/tools-panel-settings.html">Add-On Settings</a></li>
+<li><a href="tools-panel/tools-panel-io.html">Import/Export</a></li>
+<li><a href="tools-panel/tools-panel-light.html">Light and Shadow</a></li>
+<li><a href="tools-panel/tools-panel-faceprops.html">Face Properties</a></li>
+<li><a href="tools-panel/tools-panel-vcol.html">Vertex Color</a></li>
+<li><a href="tools-panel/tools-panel-material.html">Material</a></li>
+<li><a href="tools-panel/tools-panel-texanim.html">Texture Animation</a></li>
+</ul>
+</li>
+<li><a href="properties.html">Properties</a><ul>
+<li><a href="properties/object-properties.html">Object Properties</a></li>
+<li><a href="properties/scene-properties.html">Scene Properties</a></li>
+</ul>
+</li>
+<li><a href="import-export.html">Import/Export Specifications</a></li>
+</ul>
+      </nav>
+    </header>
+
+    <article class="main">
+      <header class="title">
+        <h1>Re-Volt File Structure</h1>
+        
+        <hr>
+      </header>
+      <h2 id="files">
+Files
+</h2>
+<p>
+Levels are similar to “Instances”. They consist of two files:
+<code>level.w</code>, which is similar to <code>instance.prm</code>. It contains the “look” of the level.
+<code>level.ncp</code>, which is similar to <code>instance.ncp</code> (but not equal). Contains the “feel” (What you cannot see but drive on).
+</p>
+<h2 id="coordinate-system">
+Coordinate System
+</h2>
+<p>
+The positive X-Axis goes to the right, Y downwards and Z forwards.
+</p>
+<h2 id="basic-data-types">
+Basic Data Types
+</h2>
+<p>
+<code>rvfloat</code> is a 32-bit floating point number,
+</p>
+<p>
+<code>rvshort</code> a 16-bit integer and goes from -32768 to 32767, and
+</p>
+<p>
+<code>rvlong</code> a 32-bit floating point number. (Both <code>rvshort</code> and <code>rvlong</code> are signed unless explicit marked as unsigned)
+</p>
+<h2 id="d-structures">
+3D Structures
+</h2>
+<h3 id="mesh-file-prm">
+Mesh file (.prm)
+</h3>
+<p>
+<code>`</code>c
+struct PRM_Mesh {
+</p>
+<p>
+  test polygon_count;
+  rvshort vertex_count;
+</p>
+<p>
+  Polygon polygons[polygon_count];
+  Vertex  vertices[vertex_count];
+};
+<code>`</code>
+</p>
+<h3 id="world-file-w">
+World file (.w)
+</h3>
+<p>
+<code>`</code>c
+struct World {
+</p>
+<p>
+  rvlong       mesh_count;
+  Mesh         meshes[mesh_count];
+</p>
+<p>
+  rvlong       bigcube_count;
+  BigCube      bcube[bigcube_count];
+</p>
+<p>
+  rvlong       animation_count;
+  TexAnimation anim[animation_count]
+</p>
+<p>
+  EnvList   env_list;
+};
+<code>`</code>
+</p>
+<h3 id="mesh-w">
+Mesh (.w)
+</h3>
+<p>
+<code>`</code>c
+struct Mesh {
+</p>
+<p>
+  Vector       bound_ball_center;
+  rvfloat      bound_ball_radius;
+</p>
+<p>
+  BoundingBox  bbox;
+</p>
+<p>
+  rvshort      polygon_count;
+  rvshort      vertex_count;
+</p>
+<p>
+  Polygon      polygons[polygon_count];
+  Vertex       vertices[vertex_count];
+};
+<code>`</code>
+</p>
+<h3 id="texanimation-w">
+TexAnimation (.w)
+</h3>
+<p>
+<code>`</code>c
+struct TexAnimation {
+</p>
+<p>
+  rvlong frame_count; // the number of frames per animation
+  Frame  frames[animation_count]
+};
+<code>`</code>
+</p>
+<h3 id="frame-w">
+Frame (.w)
+</h3>
+<p>
+<code>`</code>c
+struct Frame {
+</p>
+<p>
+  rvlong  texture;
+  rvfloat delay; // in microseconds
+  UV      uv[4];
+};
+<code>`</code>
+</p>
+<h3 id="polygon">
+Polygon
+</h3>
+<p>
+<code>`</code>c
+struct Polygon {
+</p>
+<pre>
+rvshort  type;
+
+rvshort  texture;
+
+rvshort  vertex_indices[4];
+</pre>
+<p>
+  unsigned rvlong   colors[4];
+</p>
+<pre>
+UV       texcoord[4];
+</pre>
+<p>
+};
+<code>`</code>
+<strong>type</strong> is a bit field with the following values:
+</p>
+<p>
+| Bit-#  | Value | Purpose in .w                      | Purpose in .prm                    |
+| :----- | :---- | :--------------------------------- | :--------------------------------- |
+| bit 0  | 0x001 | Polygon is quadratic               | Polygon is quadratic               |
+| bit 1  | 0x002 | Polygon is double-sided            | Polygon is double-sided            |
+| bit 2  | 0x004 | is translucent                     | is translucent                     |
+| bit 8  | 0x100 | 0: Alpha, 1: Additive transmarency | 0: Alpha, 1: Additive transmarency |
+| bit 10 | 0x400 | unused                             | Disable EnvMapping                 |
+| bit 11 | 0x800 | Enable EnvMapping                  | pickup.m: sparkles                 |
+</p>
+<p>
+<strong>texture</strong> is the number of the texture page (0=levela.bmp, 1=levelb.bmp, …). If set to -1, the object won't have any texture.
+</p>
+<p>
+<strong>vertex_indices</strong> is a list of three or four indices for the list in the mesh structure. If the polygon is not double-sided, the vertices have to be given in clockwise order. (if you look at it from its “behind”, the points will be ordered ccw, and the poly is invisible)
+</p>
+<h3 id="vertex">
+Vertex
+</h3>
+<p>
+<code>`</code>c
+struct Vertex {
+</p>
+<p>
+  Vector position;
+  Vector normal;
+};
+<code>`</code>
+</p>
+<h3 id="vector">
+Vector
+</h3>
+<p>
+<code>`</code>c
+struct Vector {
+</p>
+<p>
+  rvfloat x;
+  rvfloat y;
+  rvfloat z;
+};
+<code>`</code>
+</p>
+<h3 id="uv">
+UV
+</h3>
+<p>
+<code>`</code>c
+struct UV {
+</p>
+<p>
+  rvfloat u;
+  rvfloat v;
+};
+<code>`</code>
+</p>
+<h3 id="bigcube-w">
+BigCube (.w)
+</h3>
+<p>
+<code>`</code>c
+struct BigCube {
+</p>
+<p>
+  Vector  center;
+  rvfloat size;
+</p>
+<p>
+  rvlong  mesh_count;
+  rvlong  mesh_indices[mesh_count];
+};
+<code>`</code>
+</p>
+<h3 id="ncp-w">
+NCP (.w)
+</h3>
+<p>
+<code>`</code>c
+struct WorldNCP {
+</p>
+<p>
+  rvshort    polyhedron_count;
+  Polyhedron polyhedra[polyhedron_count];
+</p>
+<p>
+  LookupGrid lookup;
+};
+<code>`</code>
+</p>
+<h3 id="polyhedron-ncp">
+Polyhedron (.ncp)
+</h3>
+<p>
+<code>`</code>c
+struct Polyhedron {
+</p>
+<p>
+  rvlong      type;
+  rvlong      surface;
+</p>
+<p>
+  Plane       plane[5];
+</p>
+<p>
+  BoundingBox bbox;
+};
+<code>`</code>
+</p>
+<h3 id="plane-ncp">
+Plane (.ncp)
+</h3>
+<p>
+<code>`</code>c
+struct Plane {
+</p>
+<p>
+  Vector  normal;
+  rvfloat distance;
+};
+<code>`</code>
+</p>
+<h3 id="lookup-grid-ncp">
+Lookup Grid (.ncp)
+</h3>
+<p>
+<code>`</code>c
+struct LookupGrid {
+</p>
+<p>
+  rvfloat    x0;
+  rvfloat    z0;
+</p>
+<p>
+  rvfloat    x_size;
+  rvfloat    z_size;
+</p>
+<p>
+  rvfloat    raster_size;
+</p>
+<p>
+  LookupList lists<a href="">z_size</a>;
+};
+<code>`</code>
+</p>
+<h3 id="env-list-w">
+Env List (.w)
+</h3>
+<p>
+<code>`</code>c
+struct EnvList {
+</p>
+<p>
+  unsigned rvlong env_color[number of bit-11-polys in file];
+};
+<code>`</code>
+</p>
+<h3 id="bounding-box-w">
+Bounding Box (.w)
+</h3>
+<p>
+<code>`</code>c
+struct BoundingBox {
+</p>
+<p>
+  rvfloat xlo, xhi;
+  rvfloat ylo, yhi;
+  rvfloat zlo, zhi;
+};
+<code>`</code>
+</p>
+<h3 id="mirror-file-rim">
+Mirror file (.rim)
+</h3>
+<p>
+<code>`</code>c
+struct RIM_File {
+</p>
+<p>
+  rvshort   entry_count;
+</p>
+<p>
+  RIM_Entry entries[entry_count];
+};
+<code>`</code>
+</p>
+<h3 id="mirror-entry-rim">
+Mirror Entry (.rim)
+</h3>
+<p>
+<code>`</code>c
+struct RIM_Entry {
+  rvulong     flags;
+</p>
+<p>
+  Vector      plane_normal;
+  rvfloat     plane_distance;
+</p>
+<p>
+  BoundingBox bbox;
+</p>
+<p>
+  Vector      vertices[4];
+};
+<code>`</code>
+</p>
+<h2 id="level-file-structures">
+Level File Structures
+</h2>
+<h3 id="position-node-file-pan">
+Position Node File (.pan)
+</h3>
+<p>
+<code>`</code>c
+struct PAN {
+    rvlong    number_nodes;
+    rvlong    start_node;
+    rvfloat   total_distance;
+</p>
+<pre>
+Node      pos_nodes[number_nodes];
+</pre>
+<p>
+}
+<code>`</code>
+</p>
+<p>
+Position nodes don't consist of much. There is the number of nodes, the ID of the node the track starts with, the total length of the track and a list of Nodes. There is a maximum number of 1024 nodes (limit is hardcoded).
+</p>
+<h3 id="node-pan">
+Node (.pan)
+</h3>
+<p>
+<code>`</code>c
+struct Node {
+    Vector      position;
+    rvfloat     distance;
+    rvlong      prev_node_ids[4];
+    rvlong      next_node_ids[4];
+}
+<code>`</code>
+The nodes from the Pos. node file are very straightforward. There is a regular vector for its position, a float for the distance to the finish line and two lists of 4 longs that give you the IDs of the previous and next IDs of the nodes the current node is connected to. There is a maximum of 4 links (limit due to file definition). If there is no link, the value(s) are <code>-1</code>.
+</p>
+<h3 id="instances-fin">
+Instances (.fin)
+</h3>
+<p>
+<code>`</code>c
+struct Fin {
+    long      instance_count;
+    Instance  instaces[instance_count];
+}
+<code>`</code>
+</p>
+<h3 id="instance-fin">
+Instance (.fin)
+</h3>
+<p>
+<code>`</code>c
+struct Instance {
+    char[9]   name;
+    unsigned rvlong   color[3];
+    unsigned rvlong   env_rgb[4];
+    Byte              priority;
+    Byte              flag;
+    Vector            position;
+    Matrix            transformation<a href="">3f</a>;
+}
+<code>`</code>
+</p>
+<h2 id="sources">
+Sources
+</h2>
+<ul>
+<li>
+<a href="http://perror.de/rv/rvstruct.html">Ali's Structure Breakdown (perror.de)</a>
+</li>
+<li>
+Kay
+</li>
+<li>
+Re-Volt source code
+</li>
+</ul>
+
+    </article>
+
+    
+
+  </body>
+</html>
