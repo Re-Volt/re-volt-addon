@@ -66,6 +66,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description = "Current env color index for importing. Internal only"
     )
 
+    rename_all_name = StringProperty(
+        name = "Rename",
+        default = "example.prm",
+        description = "Enter a new name for the selected objects"
+    )
+
     # Export properties
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",

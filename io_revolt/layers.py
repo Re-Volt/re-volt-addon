@@ -28,7 +28,7 @@ def color_from_face(context):
             context.scene.revolt.vertex_color_picker = col
 
 def get_average_vcol0(verts, layer):
-    """ Gets the average vertex color of loops all given verts """
+    """ Gets the average vertex color of loops all given VERTS """
     len_cols = 0
     r = 0
     g = 0
@@ -43,7 +43,7 @@ def get_average_vcol0(verts, layer):
     return (r / len_cols, g / len_cols, b / len_cols)
 
 def get_average_vcol2(faces, layer):
-    """ Gets the average vertex color of all loops of given faces """
+    """ Gets the average vertex color of all loops of given FACES """
     len_cols = 0
     r = 0
     g = 0
@@ -61,7 +61,9 @@ def get_average_vcol2(faces, layer):
 def set_vcol(faces, layer, color):
     for face in faces:
         for loop in face.loops:
-            loop[layer] = color
+            loop[layer][0] = color[0]
+            loop[layer][1] = color[1]
+            loop[layer][2] = color[2]
 
 
 def set_vertex_color(context, number):
@@ -71,7 +73,8 @@ def set_vertex_color(context, number):
     selmode = bpy.context.tool_settings.mesh_select_mode
     v_layer = bm.loops.layers.color.active
     if number == -1:
-        color = context.scene.revolt.vertex_color_picker
+        cpick = context.scene.revolt.vertex_color_picker
+        color = mathutils.Color((cpick[0], cpick[1], cpick[2]))
     else:
         color = mathutils.Color((number/100, number/100, number/100))
 
@@ -80,21 +83,27 @@ def set_vertex_color(context, number):
         for face in bm.faces:
             for loop in face.loops:
                 if loop.vert.select:
-                    loop[v_layer] = color
+                    loop[v_layer][0] = color[0]
+                    loop[v_layer][1] = color[1]
+                    loop[v_layer][2] = color[2]
                     continue # since multiple select modes can be set
     # edge select mode
     elif selmode[1]:
         for face in bm.faces:
             for i, loop in enumerate(face.loops):
                 if loop.edge.select or face.loops[i-1].edge.select:
-                    loop[v_layer] = color
+                    loop[v_layer][0] = color[0]
+                    loop[v_layer][1] = color[1]
+                    loop[v_layer][2] = color[2]
                     continue
     # face select mode
     elif selmode[2]:
         for face in bm.faces:
             if face.select:
                 for loop in face.loops:
-                    loop[v_layer] = color
+                    loop[v_layer][0] = color[0]
+                    loop[v_layer][1] = color[1]
+                    loop[v_layer][2] = color[2]
 
     bmesh.update_edit_mesh(mesh, tessface=False, destructive=False)
 
@@ -128,7 +137,9 @@ def set_face_material(self, value):
         if face.select:
             face[layer] = value
             for loop in face.loops:
-                loop[vc_layer] = COLORS[value]
+                loop[vc_layer][0] = COLORS[value][0]
+                loop[vc_layer][1] = COLORS[value][1]
+                loop[vc_layer][2] = COLORS[value][2]
 
     redraw_3d()
 
@@ -171,8 +182,11 @@ def set_face_env(self, value):
     for face in bm.faces:
         if face.select:
             for loop in face.loops:
-                loop[env_layer] = value[:3]
+                loop[env_layer][0] = value[:3][0]
+                loop[env_layer][1] = value[:3][1]
+                loop[env_layer][2] = value[:3][2]
             face[env_alpha_layer] = value[-1]
+    redraw_3d()
 
 
 def get_face_env(self):

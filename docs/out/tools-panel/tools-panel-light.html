@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Light and Shadow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="../theme.css">
+    <link rel="stylesheet" href="../pygments.css">
+    
+    
+  </head>
+
+  <body class="node-tools-panel-tools-panel-light node-tools-panel node">
+
+    <header class="masthead">
+      <h1><a href="../index.html">Re-Volt Add-On Docs</a></h1>
+      
+        <p class="tagline">Documentation for the Blender 2.79a Re-Volt Add-on</p>
+      
+      <nav class="menu">
+        <input id="menu-check" type="checkbox"/>
+        <label id="menu-label" for="menu-check" class="unselectable">
+          <span class="icon close-icon">✕</span>
+          <span class="icon open-icon">☰</span>
+          <span class="text">Menu</span>
+        </label>
+        <ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../changelog.html">Changelog</a></li>
+<li><a href="../features.html">Features</a></li>
+<li><a href="../installation.html">Installation</a></li>
+<li><a href="../tools-panel.html">Tools Panel</a><ul>
+<li><a href="../tools-panel/tools-panel-settings.html">Add-On Settings</a></li>
+<li><a href="../tools-panel/tools-panel-helpers.html">Helpers</a></li>
+<li><a href="../tools-panel/tools-panel-io.html">Import/Export</a></li>
+<li><a href="../tools-panel/tools-panel-light.html">Light/Shadow</a></li>
+<li><a href="../tools-panel/tools-panel-faceprops.html">Face Properties</a></li>
+<li><a href="../tools-panel/tools-panel-vcol.html">Vertex Color</a></li>
+<li><a href="../tools-panel/tools-panel-material.html">Material</a></li>
+<li><a href="../tools-panel/tools-panel-texanim.html">Texture Animation</a></li>
+</ul>
+</li>
+<li><a href="../properties.html">Properties</a><ul>
+<li><a href="../properties/object-properties.html">Object Properties</a></li>
+<li><a href="../properties/scene-properties.html">Scene Properties</a></li>
+</ul>
+</li>
+<li><a href="../import-export.html">Import/Export Specifications</a></li>
+</ul>
+      </nav>
+    </header>
+
+    <article class="main">
+      <header class="title">
+        <h1>Light and Shadow</h1>
+        
+        <hr>
+      </header>
+      <ul class="stx-toc">
+<li>
+<a href="#shade-object">Shade Object</a>
+<ul>
+<li>
+<a href="#orientation">Orientation</a>
+</li>
+<li>
+<a href="#direction">Direction</a>
+</li>
+<li>
+<a href="#light">Light</a>
+</li>
+<li>
+<a href="#intensity">Intensity</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#generate-shadow-texture">Generate Shadow Texture</a>
+<ul>
+<li>
+<a href="#method">Method</a>
+</li>
+<li>
+<a href="#quality">Quality</a>
+</li>
+<li>
+<a href="#softness">Softness</a>
+</li>
+<li>
+<a href="#resolution">Resolution</a>
+</li>
+<li>
+<a href="#table">Table</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="shade-object">
+Shade Object
+</h2>
+<p>
+Shades a mesh by baking light to the vertex color layer.
+</p>
+<h3 id="orientation">
+Orientation
+</h3>
+<p>
+Sets the orientation of the lights. The following options are available:
+<strong>Z (Vertical)</strong>: Places lights above and beneath the selected object.
+<strong>Y (Horizontal)</strong>: Places lights in the front and the back of the selected
+object
+<strong>X (Horizontal)</strong>: Places lights on the left and right of the selected object.
+</p>
+<h3 id="direction">
+Direction
+</h3>
+<p>
+Shows where the lights will be placed, depending on the chosen orientation.
+</p>
+<h3 id="light">
+Light
+</h3>
+<p>
+Three options: Hard (sun, more contrast), Soft (hemisphere, smoother) and None.
+The <strong>hard</strong> option emits light in a distinct direction
+(<a href="https://docs.blender.org/manual/de/dev/render/blender_render/lighting/lamps/sun/introduction.html">Blender docs</a>).
+The <strong>soft</strong> option emits light from a hemisphere which makes the model evenly lit
+(<a href="https://docs.blender.org/manual/de/dev/render/blender_render/lighting/lamps/hemi.html">Blender docs</a>).
+</p>
+<h3 id="intensity">
+Intensity
+</h3>
+<p>
+This defines the intensity of the light sources. This is the same setting as the lamp's energy.
+</p>
+<h2 id="generate-shadow-texture">
+Generate Shadow Texture
+</h2>
+<p>
+With this feature you can create shadows that are ready for use in-game. The shadows are negative which is a requirement by the game.
+The add-on creates the shadows with ray-tracing and then baking them to an automatically sized textured plane (takes child objects into account).
+To save the shadows, go into the UV/Image Editor, select the shadow (most recenty try has the highest number, e.g. Shadow.420) and then click Image -&gt; Save as Image.
+</p>
+<p>
+<strong>Warning</strong>: Start with low-quality settings first as Blender might hang a while during the creation of a shadow. If it appears to freeze, wait a few minutes. Depending on the settings you chose, it might take a while.
+</p>
+<h3 id="method">
+Method
+</h3>
+<p>
+There are two options:
+<em>Default</em> (Adaptive QMC), which is the faster option. I recommend this for testing the shadow settings.
+<em>High Quality</em> (Constant QMC), which is the slower and less-grainy option. I recommend using this when you're done tweaking your shadow settings.
+</p>
+<h3 id="quality">
+Quality
+</h3>
+<p>
+The amount of samples the shadow is rendered with (number of samples taken extra).
+</p>
+<h3 id="softness">
+Softness
+</h3>
+<p>
+Light size for ray shadow sampling.
+</p>
+<h3 id="resolution">
+Resolution
+</h3>
+<p>
+The resolution of the resulting texture (height and width).
+</p>
+<h3 id="table">
+Table
+</h3>
+<p>
+Shadow coordinates for use in parameters.txt of cars. Click to select all, then CTRL C to copy.
+</p>
+
+    </article>
+
+    
+
+  </body>
+</html>

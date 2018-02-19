@@ -166,11 +166,15 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
             color = [float(c) / 255 for c in colors[l].color]
             if envlist and (poly.type & FACE_ENV):
                 env_col = [float(c) / 255 for c in envlist[props.envidx].color]
-                face.loops[l][env_layer] = env_col
+                face.loops[l][env_layer][0] = env_col[0]
+                face.loops[l][env_layer][1] = env_col[1]
+                face.loops[l][env_layer][2] = env_col[2]
 
             face.loops[l][uv_layer].uv = (uvs[l].u, 1 - uvs[l].v)
-            face.loops[l][vc_layer] = Color(color)
-            face.loops[l][va_layer] = Color((alpha, alpha, alpha))
+            # face.loops[l][vc_layer] = (color[0], color[1], color[2], 1.0)
+            face.loops[l][vc_layer] = (color[0], color[1], color[2])
+            # face.loops[l][va_layer] = (alpha, alpha, alpha, 1.0)
+            face.loops[l][va_layer] = (alpha, alpha, alpha)
 
         # Enables smooth shading for that face
         face.smooth = True

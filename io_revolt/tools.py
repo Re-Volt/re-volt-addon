@@ -184,3 +184,10 @@ def bake_vertex(self, context):
     shade_obj.select = True
     scene.objects.active = shade_obj
     redraw()
+
+
+def rename_all_objects(self, context):
+    props = context.scene.revolt
+
+    for obj in context.selected_objects:
+        obj.name = props.rename_all_name

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add-On Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="../theme.css">
+    <link rel="stylesheet" href="../pygments.css">
+    
+    
+  </head>
+
+  <body class="node-tools-panel-tools-panel-settings node-tools-panel node">
+
+    <header class="masthead">
+      <h1><a href="../index.html">Re-Volt Add-On Docs</a></h1>
+      
+        <p class="tagline">Documentation for the Blender 2.79a Re-Volt Add-on</p>
+      
+      <nav class="menu">
+        <input id="menu-check" type="checkbox"/>
+        <label id="menu-label" for="menu-check" class="unselectable">
+          <span class="icon close-icon">✕</span>
+          <span class="icon open-icon">☰</span>
+          <span class="text">Menu</span>
+        </label>
+        <ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../changelog.html">Changelog</a></li>
+<li><a href="../features.html">Features</a></li>
+<li><a href="../installation.html">Installation</a></li>
+<li><a href="../tools-panel.html">Tools Panel</a><ul>
+<li><a href="../tools-panel/tools-panel-settings.html">Add-On Settings</a></li>
+<li><a href="../tools-panel/tools-panel-helpers.html">Helpers</a></li>
+<li><a href="../tools-panel/tools-panel-io.html">Import/Export</a></li>
+<li><a href="../tools-panel/tools-panel-light.html">Light/Shadow</a></li>
+<li><a href="../tools-panel/tools-panel-faceprops.html">Face Properties</a></li>
+<li><a href="../tools-panel/tools-panel-vcol.html">Vertex Color</a></li>
+<li><a href="../tools-panel/tools-panel-material.html">Material</a></li>
+<li><a href="../tools-panel/tools-panel-texanim.html">Texture Animation</a></li>
+</ul>
+</li>
+<li><a href="../properties.html">Properties</a><ul>
+<li><a href="../properties/object-properties.html">Object Properties</a></li>
+<li><a href="../properties/scene-properties.html">Scene Properties</a></li>
+</ul>
+</li>
+<li><a href="../import-export.html">Import/Export Specifications</a></li>
+</ul>
+      </nav>
+    </header>
+
+    <article class="main">
+      <header class="title">
+        <h1>Add-On Settings</h1>
+        
+        <hr>
+      </header>
+      <ul class="stx-toc">
+<li>
+<a href="#general-settings">General Settings</a>
+<ul>
+<li>
+<a href="#prefer-textured-solid-mode">Prefer Textured Solid Mode</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#import-settings">Import Settings</a>
+<ul>
+<li>
+<a href="#texture-mode-after-import">Texture Mode after Import</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#export-settings">Export Settings</a>
+<ul>
+<li>
+<a href="#triangulate-n-gons">Triangulate n-gons</a>
+</li>
+<li>
+<a href="#use-number-for-textures">Use Number for Textures</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#export-prm-prm-m">Export PRM (.prm/.m)</a>
+<ul>
+<li>
+<a href="#apply-scale">Apply Scale</a>
+</li>
+<li>
+<a href="#apply-rotation">Apply Rotation</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#import-world-w">Import World (.w)</a>
+<ul>
+<li>
+<a href="#parent-w-meshes-to-empty">Parent .w meshes to Empty</a>
+</li>
+<li>
+<a href="#import-bound-boxes">Import Bound Boxes</a>
+</li>
+<li>
+<a href="#import-cubes">Import Cubes</a>
+</li>
+<li>
+<a href="#import-big-cubes">Import Big Cubes</a>
+</li>
+<li>
+<a href="#-import-layers">* Import Layers</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#export-collision-ncp">Export Collision (.ncp)</a>
+<ul>
+<li>
+<a href="#export-collision-grid-w">Export Collision Grid (.w)</a>
+</li>
+</ul>
+</li>
+</ul>
+<p>
+These settings can also be found when importing/exporting files in the bottom left.
+</p>
+<h2 id="general-settings">
+General Settings
+</h2>
+<h3 id="prefer-textured-solid-mode">
+Prefer Textured Solid Mode
+</h3>
+<p>
+There are two encouraged ways to view textured meshes: Texture mode and Solid mode with <em>Textured Solid</em> shading enabled.
+</p>
+<p>
+If this setting is enabled, the add-on will switch to Textured Solid mode instead of Texture mode.
+In Textured Solid mode, objects have additional shading which makes white and untextured models a lot easier to work with.
+</p>
+<h2 id="import-settings">
+Import Settings
+</h2>
+<h3 id="texture-mode-after-import">
+Texture Mode after Import
+</h3>
+<p>
+Switches to texture display mode when a mesh has been imported (applies to .prm
+and .w).
+</p>
+<h2 id="export-settings">
+Export Settings
+</h2>
+<h3 id="triangulate-n-gons">
+Triangulate n-gons
+</h3>
+<p>
+Triangulates faces with more than 4 vertices (also called n-gons).
+This will only affect the exported object, the mesh itself will not be
+triangulated.
+Deselecting this might result in broken exports.
+</p>
+<h3 id="use-number-for-textures">
+Use Number for Textures
+</h3>
+<p>
+Instead of using the texture file to determine the texture number, the number
+set in the face properties panel will be used for exporting.
+</p>
+<h2 id="export-prm-prm-m">
+Export PRM (.prm/.m)
+</h2>
+<h3 id="apply-scale">
+Apply Scale
+</h3>
+<p>
+Applies the scale of the object when exporting.
+</p>
+<h3 id="apply-rotation">
+Apply Rotation
+</h3>
+<p>
+Applies the rotation of the object when exporting.
+</p>
+<h2 id="import-world-w">
+Import World (.w)
+</h2>
+<h3 id="parent-w-meshes-to-empty">
+Parent .w meshes to Empty
+</h3>
+<p>
+Creates an empty object with the imported file's name and parents all meshes
+contained in the .w file to it. This makes the object outliner a lot less
+cluttered.
+</p>
+<h3 id="import-bound-boxes">
+Import Bound Boxes
+</h3>
+<p>
+Imports the bound box for every single mesh of the .w file.
+</p>
+<h3 id="import-cubes">
+Import Cubes
+</h3>
+<p>
+Imports the cubes for every single mesh of the .w file.
+</p>
+<h3 id="import-big-cubes">
+Import Big Cubes
+</h3>
+<p>
+Imports the big cubes surrounding multiple meshes of the .w file.
+</p>
+<h3 id="-import-layers">
+* Import Layers
+</h3>
+<p>
+This option will be given as soon as one of the above debug settings have been
+enabled (boundary boxes, spheres and big cubes):
+Selector for the layer(s) the debug objects will be placed on. Multiple layers
+can be selected by <code>Shift</code>-clicking or dragging.
+By default, all objects will be imported to the first layer.
+</p>
+<p>
+When imported, the actual meshes are going to be on the first layer while the
+debug objects potentially are on other layers.
+To view multiple layers at once, hold down <code>Shift</code> and press numbers, e.g.
+<code>1</code> and then <code>2</code>. While doing that, make sure the mouse cursor hovers over the 3D view.
+</p>
+<h2 id="export-collision-ncp">
+Export Collision (.ncp)
+</h2>
+<h3 id="export-collision-grid-w">
+Export Collision Grid (.w)
+</h3>
+<p>
+This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).
+NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).
+</p>
+
+    </article>
+
+    
+
+  </body>
+</html>
