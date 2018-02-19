@@ -76,7 +76,7 @@ def import_file(filepath, scene):
 
         # Skips the poly if no intersection was found
         if None in verts:
-            dprint('Skipping polyhedron (not intersection).')
+            dprint('Skipping polyhedron (no intersection).')
             continue
 
         # Creates the bmverts and face
@@ -91,7 +91,9 @@ def import_file(filepath, scene):
 
         # Sets preview colors
         for lnum in range(len(face.loops)):
-            face.loops[lnum][vc_layer] = Color(COLORS[poly.material])
+            one = (1.0)
+            # face.loops[lnum][vc_layer] = COLORS[poly.material] + (1.0, )
+            face.loops[lnum][vc_layer] = COLORS[poly.material]
 
         bm.verts.ensure_lookup_table()
 

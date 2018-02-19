@@ -6,6 +6,10 @@ from .common import *
 from .layers import *
 from .texanim import *
 
+"""
+IMPORT AND EXPORT -------------------------------------------------------------
+"""
+
 class ImportRV(bpy.types.Operator):
     """
     Import Operator for all file types
@@ -49,6 +53,14 @@ class ImportRV(bpy.types.Operator):
         elif frmt == FORMAT_NCP:
             from . import ncp_in
             ncp_in.import_file(self.filepath, scene)
+
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_any_tex_mode(context)
+
+        elif frmt == FORMAT_FIN:
+            from . import fin_in
+            fin_in.import_file(self.filepath, scene)
 
             # Enables texture mode after import
             if props.enable_tex_mode:
@@ -232,8 +244,8 @@ def exec_export(filepath, context):
     return {"FINISHED"}
 
 
-""" BUTTONS
-    Button operators for the user interface
+"""
+BUTTONS ------------------------------------------------------------------------
 """
 
 class ButtonReExport(bpy.types.Operator):
@@ -246,6 +258,7 @@ class ButtonReExport(bpy.types.Operator):
         res = exec_export(props.last_exported_filepath, context)
         return res
 
+
 class ButtonSelectFaceProp(bpy.types.Operator):
     bl_idname = "faceprops.select"
     bl_label = "sel"
@@ -256,6 +269,7 @@ class ButtonSelectFaceProp(bpy.types.Operator):
         select_faces(context, self.prop)
         return{"FINISHED"}
 
+
 class ButtonSelectNCPFaceProp(bpy.types.Operator):
     bl_idname = "ncpfaceprops.select"
     bl_label = "sel"
@@ -265,6 +279,7 @@ class ButtonSelectNCPFaceProp(bpy.types.Operator):
     def execute(self, context):
         select_ncp_faces(context, self.prop)
         return{"FINISHED"}
+
 
 class ButtonSelectNCPMaterial(bpy.types.Operator):
     bl_idname = "ncpmaterial.select"
@@ -277,7 +292,9 @@ class ButtonSelectNCPMaterial(bpy.types.Operator):
         props.select_material = meshprops.face_material
         return{"FINISHED"}
 
-# VERTEX COLORS
+"""
+VERTEX COLROS -----------------------------------------------------------------
+"""
 
 class ButtonColorFromActive(bpy.types.Operator):
     bl_idname = "vertexcolor.copycolor"
@@ -300,6 +317,7 @@ class ButtonVertexColorSet(bpy.types.Operator):
         set_vertex_color(context, self.number)
         return{"FINISHED"}
 
+
 class ButtonVertexColorCreateLayer(bpy.types.Operator):
     bl_idname = "vertexcolor.create_layer"
     bl_label = "Create Vertex Color Layer"
@@ -309,6 +327,7 @@ class ButtonVertexColorCreateLayer(bpy.types.Operator):
         create_color_layer(context)
         return{"FINISHED"}
 
+
 class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
     bl_idname = "alphacolor.create_layer"
     bl_label = "Create Alpha Color Layer"
@@ -317,23 +336,10 @@ class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
         create_alpha_layer(context)
         return{"FINISHED"}
 
-class ButtonEnableTextureMode(bpy.types.Operator):
-    bl_idname = "helpers.enable_texture_mode"
-    bl_label = "Enable Texture Mode"
-    bl_description = "Enables texture mode so textures can be seen"
 
-    def execute(self, context):
-        enable_texture_mode()
-        return{"FINISHED"}
-
-class ButtonEnableTexturedSolidMode(bpy.types.Operator):
-    bl_idname = "helpers.enable_textured_solid_mode"
-    bl_label = "Enable Textured Solid Mode"
-    bl_description = "Enables texture mode so textures can be seen"
-
-    def execute(self, context):
-        enable_textured_solid_mode()
-        return{"FINISHED"}
+"""
+LIGHT TOOLS -------------------------------------------------------------------
+"""
 
 class ButtonBakeShadow(bpy.types.Operator):
     bl_idname = "lighttools.bakeshadow"
@@ -344,6 +350,7 @@ class ButtonBakeShadow(bpy.types.Operator):
         tools.bake_shadow(self, context)
         return{"FINISHED"}
 
+
 class ButtonBakeLightToVertex(bpy.types.Operator):
     bl_idname = "lighttools.bakevertex"
     bl_label = "Bake light"
@@ -351,4 +358,41 @@ class ButtonBakeLightToVertex(bpy.types.Operator):
 
     def execute(self, context):
         tools.bake_vertex(self, context)
+        return{"FINISHED"}
+
+"""
+HELPERS -----------------------------------------------------------------------
+"""
+
+class ButtonEnableTextureMode(bpy.types.Operator):
+    bl_idname = "helpers.enable_texture_mode"
+    bl_label = "Enable Texture Mode"
+    bl_description = "Enables texture mode so textures can be seen"
+
+    def execute(self, context):
+        enable_texture_mode()
+        return{"FINISHED"}
+
+
+class ButtonEnableTexturedSolidMode(bpy.types.Operator):
+    bl_idname = "helpers.enable_textured_solid_mode"
+    bl_label = "Enable Textured Solid Mode"
+    bl_description = "Enables texture mode so textures can be seen"
+
+    def execute(self, context):
+        enable_textured_solid_mode()
+        return{"FINISHED"}
+
+
+class ButtonRenameAllObjects(bpy.types.Operator):
+    bl_idname = "helpers.rename_all_objects"
+    bl_label = "Rename selected"
+    bl_description = (
+        "Renames all objects for instance export:\n"
+        "(example.prm, example.prm.001, ...)"
+    )
+
+    def execute(self, context):
+        tools.rename_all_objects(self, context)
+
         return{"FINISHED"}

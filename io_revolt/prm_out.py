@@ -174,10 +174,10 @@ def export_mesh(me, obj, scene, filepath, world=None):
                 white = Color((1, 1, 1))
                 color = face.loops[i][vc_layer] if vc_layer else white
                 alpha = face.loops[i][va_layer] if va_layer else white
-                col = rvstruct.Color(color=(int(color.r * 255),
-                                            int(color.g * 255),
-                                            int(color.b * 255)),
-                                     alpha=int((alpha.v) * 255))
+                col = rvstruct.Color(color=(int(color[0] * 255),
+                                            int(color[1] * 255),
+                                            int(color[2] * 255)),
+                                     alpha=int(((alpha[0] + alpha[1] + alpha[2]) * 255)  / 3))
                 poly.colors.append(col)
             else:
                 # Writes opaque white

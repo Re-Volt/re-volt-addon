@@ -154,3 +154,9 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         set=lambda s, v: set_face_ncp_property(s, v, NCP_OIL),
         description="Ground is oil"
     )
+    face_ncp_nocoll = BoolProperty(
+        name = "No Collision",
+        get=lambda s: bool(get_face_ncp_property(s) & NCP_NOCOLL),
+        set=lambda s, v: set_face_ncp_property(s, v, NCP_NOCOLL),
+        description="Face will be ignored when exporting"
+    )

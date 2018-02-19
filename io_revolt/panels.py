@@ -12,7 +12,7 @@ class RevoltObjectPanel(bpy.types.Panel):
         obj = context.object
         objprops = obj.revolt
 
-        # NCP Properties
+        # NCP properties
         box = layout.box()
         box.label("NCP Properties:")
         row = box.row()
@@ -24,6 +24,26 @@ class RevoltObjectPanel(bpy.types.Panel):
             box.label("BigCube Properties:")
             row = box.row()
             row.prop(objprops, "bcube_mesh_indices")
+        
+        # Instance properties
+        box = layout.box()
+        box.label("Instance Properties:")
+        box.prop(objprops, "is_instance")
+
+        if objprops.is_instance:
+            row = box.row(align=True)
+            row.prop(context.object.revolt, "fin_model_rgb", text="Model Color")
+            row.prop(context.object.revolt, "fin_col", text="")
+            row = box.row(align=True)
+            row.prop(context.object.revolt, "fin_env", text="EnvColor")
+            row.prop(context.object.revolt, "fin_envcol", text="")
+            box.prop(context.object.revolt, "fin_hide")
+            box.prop(context.object.revolt, "fin_no_mirror")
+            box.prop(context.object.revolt, "fin_no_lights")
+            box.prop(context.object.revolt, "fin_no_cam_coll")
+            box.prop(context.object.revolt, "fin_no_obj_coll")
+            box.prop(context.object.revolt, "fin_priority")
+            box.prop(context.object.revolt, "fin_lod_bias")
 
 
 class RevoltScenePanel(bpy.types.Panel):
@@ -39,6 +59,23 @@ class RevoltScenePanel(bpy.types.Panel):
 
         layout.prop(props, "texture_animations")
 
+
+class EditModeHeader(bpy.types.Panel):
+    """
+    Fixes the tab at the top in edit mode.
+    """
+    bl_label = "Edit Mode Header"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "mesh_edit"
+    bl_category = "Re-Volt"
+    bl_options = {"HIDE_HEADER"}
+
+    def draw(self, context):
+        props = context.scene.revolt
+        row  = self.layout.row()
+        # PRM/NCP toggle
+        row.prop(props, "face_edit_mode", expand=True)
 
 class RevoltIOToolPanel(bpy.types.Panel):
     """
@@ -62,6 +99,76 @@ class RevoltIOToolPanel(bpy.types.Panel):
         row.operator("export_scene.revolt_redo", text="", icon="FILE_REFRESH")
 
 
+
+
+class RevoltHelpersPanelObj(bpy.types.Panel):
+    bl_label = "Helpers"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_category = "Re-Volt"
+    bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
+
+    def draw_header(self, context):
+        self.layout.label("", icon="HELP")
+
+    def draw(self, context):
+
+        layout = self.layout
+        props = context.scene.revolt
+
+        box = layout.box()
+        box.label("3D View:")
+        col = box.column(align=True)
+        col.operator(
+            "helpers.enable_texture_mode",
+            icon="POTATO",
+            text="Texture"
+        )
+        col.operator(
+            "helpers.enable_textured_solid_mode",
+            icon="TEXTURE_SHADED",
+            text="Textured Solid"
+        )
+
+        box = layout.box()
+        box.label("Instances:")
+        col = box.column(align=True)
+        col.prop(props, "rename_all_name", text="")
+        col.operator("helpers.rename_all_objects")
+
+
+class RevoltHelpersPanelMesh(bpy.types.Panel):
+    bl_label = "Helpers"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_category = "Re-Volt"
+    bl_context = "mesh_edit"
+    bl_options = {"DEFAULT_CLOSED"}
+
+    def draw_header(self, context):
+        self.layout.label("", icon="HELP")
+
+    def draw(self, context):
+
+        layout = self.layout
+
+        box = layout.box()
+        box.label("3D View:")
+        col = box.column(align=True)
+        col.operator(
+            "helpers.enable_texture_mode",
+            icon="POTATO",
+            text="Texture"
+        )
+        col.operator(
+            "helpers.enable_textured_solid_mode",
+            icon="TEXTURE_SHADED",
+            text="Textured Solid"
+        )
+
+
+
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"
     bl_space_type = "VIEW_3D"
@@ -77,10 +184,6 @@ class RevoltFacePropertiesPanel(bpy.types.Panel):
 
     def draw(self, context):
         props = context.scene.revolt
-
-        row  = self.layout.row()
-        # PRM/NCP toggle
-        row.prop(props, "face_edit_mode", expand=True)
 
         if props.face_edit_mode == "prm":
             prm_edit_panel(self, context)
@@ -210,6 +313,9 @@ def ncp_edit_panel(self, context):
         text="{}: Object Only".format(count[2]))
     col.prop(meshprops, "face_ncp_camera_only",
         text="{}: Camera Only".format(count[3]))
+    col.prop(meshprops, "face_ncp_nocoll",
+        text="{}: No Collision".format(count[7]))
+
 
     col = row.column(align=True)
     col.scale_x = 0.15
@@ -218,6 +324,7 @@ def ncp_edit_panel(self, context):
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OIL
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_OBJECT_ONLY
     col.operator("ncpfaceprops.select", text="sel").prop = NCP_CAMERA_ONLY
+    col.operator("ncpfaceprops.select", text="sel").prop = NCP_NOCOLL
 
     row = layout.row()
     row.label("Material:")
@@ -257,7 +364,15 @@ class RevoltVertexPanel(bpy.types.Panel):
     def draw_header(self, context):
         self.layout.label("", icon="COLOR")
 
+    @classmethod
+    def poll(self, context):
+        # Only shows up in NPC mode
+        props = context.scene.revolt
+        return props.face_edit_mode != "ncp"
+
     def draw(self, context):
+
+
         obj = context.object
         row = self.layout.row(align=True)
 
@@ -400,6 +515,12 @@ class RevoltAnimationPanel(bpy.types.Panel):
     bl_category = "Re-Volt"
     bl_options = {"DEFAULT_CLOSED"}
 
+    @classmethod
+    def poll(self, context):
+        # Only shows up in NPC mode
+        props = context.scene.revolt
+        return props.face_edit_mode == "prm"
+
     def draw_header(self, context):
         self.layout.label("", icon="CAMERA_DATA")
 
@@ -468,43 +589,6 @@ class RevoltAnimationPanel(bpy.types.Panel):
 
 
 
-class RevoltHelpersPanel():
-    bl_label = "Helpers"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
-    bl_category = "Re-Volt"
-    bl_options = {"DEFAULT_CLOSED"}
-
-    def draw_header(self, context):
-        self.layout.label("", icon="HELP")
-
-    def draw(self, context):
-
-        layout = self.layout
-
-        box = layout.box()
-        box.label("3D View:")
-        col = box.column(align=True)
-        col.operator(
-            "helpers.enable_texture_mode",
-            icon="POTATO",
-            text="Texture"
-        )
-        col.operator(
-            "helpers.enable_textured_solid_mode",
-            icon="TEXTURE_SHADED",
-            text="Textured Solid"
-        )
-
-class RevoltHelpersPanelEdit(RevoltHelpersPanel, bpy.types.Panel):
-    """ Inherits the draw method from the main class """
-    bl_context = "mesh_edit"
-    bl_options = {"DEFAULT_CLOSED"}
-
-class RevoltHelpersPanelObj(RevoltHelpersPanel, bpy.types.Panel):
-    """ Inherits the draw method from the main class """
-    bl_context = "objectmode"
-    bl_options = {"DEFAULT_CLOSED"}
 
 class RevoltSettingsPanel(bpy.types.Panel):
     """
