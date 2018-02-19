@@ -22,14 +22,14 @@ N-gons will be triangulate by default. This can be disabled in the export settin
 ### Export
 The UV map of the mesh can be found on the default UV layer (UVMap).
 ### Export
-Only the uv map called _UVMap_ will be exported.
+Only the uv map called *UVMap* will be exported.
 
 ## Vertex Colors
 ### Import
 The vertex colors can be found on the Col and Alpha layers.  
 On the alpha channel, white is fully transparent while black is opaque.
 ### Export
-Only the layers _Col_ and _Alpha_ will be exported.
+Only the layers *Col* and *Alpha* will be exported.
 
 ## Level of Detail (LOD)
 ### Import
@@ -46,10 +46,10 @@ If a texture with the same name already exist, it will be used instead.
 
 The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting.
 ### Export
-To set the texture using this number layer, the _Use Number for Textures_ setting has to be set in the export settings.  
+To set the texture using this number layer, the *Use Number for Textures* setting has to be set in the export settings.  
 When exporting, the texture number will be taken from the layer instead of being determined by the texture file assigned to the face.
 
-If there is no texture present on a face, texture page 0 (A) will be used. If you actually want to export a mesh without a texture, enable the _Use Number for Textures_ and set the number to `-1`.
+If there is no texture present on a face, texture page 0 (A) will be used. If you actually want to export a mesh without a texture, enable the *Use Number for Textures* and set the number to `-1`.
 
 ## Face Type
 ### Import
@@ -67,8 +67,8 @@ All selected face type properties will be set when exporting.
 
 See PRM. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.  
 
-The environment color is accessible on a vertex color layer called _Env_.
-The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (_EnvAlpha_).
+The environment color is accessible on a vertex color layer called *Env*.
+The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (*EnvAlpha*).
 
 Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.
 
@@ -90,7 +90,7 @@ NCP flags and materials are written to the integer layers "NCPFlags" and "Materi
 
 ### Export
 
-All objects of the scene will  be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the _ignore_ object property set (Properties Editor).  
+All objects of the scene will  be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the *ignore* object property set (Properties Editor).  
 Faces that have the material `NONE` assigned to them will not be exported.  
 The vertex color layer called "NCPPreview" will be ignored since it's only for previewing purposes.
 

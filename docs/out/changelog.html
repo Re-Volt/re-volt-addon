@@ -87,16 +87,24 @@
 </h2>
 <ul>
 <li>
-<strong>Fixes</strong>:
-</li>
+<strong>Fixes</strong>
+<ul>
 <li>
+<p>
 Prepared the add-on for 2.79a. All features now work as expected.
+</p>
+</li>
+</ul>
 </li>
 <li>
 <strong>Misc.</strong>
-</li>
+<ul>
 <li>
+<p>
 Documentation is now generated with Ivy
+</p>
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-11-12">
@@ -107,8 +115,8 @@ Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10
 </p>
 <ul>
 <li>
-<strong>Fixes</strong>:
-</li>
+<strong>Fixes</strong>
+<ul>
 <li>
 Fixed the following crash: Import mesh, clear .blend, import mesh again (reported by Zorbah)
 </li>
@@ -118,11 +126,17 @@ Shadowtable not added to the UI (reported by Mladen)
 <li>
 Required vertex color layers weren't created on export (<a href="https://github.com/Yethiel/re-volt-addon/issues/16">Issue #16</a>, reported by progwolff)
 </li>
-<li>
-<strong>Additions</strong>:
+</ul>
 </li>
 <li>
+<strong>Additions</strong>
+<ul>
+<li>
+<p>
 NCP: Setting for collision grid size (requested by Zorbah). Higher values = faster export (might slow down the game in return)
+</p>
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-10-25">
@@ -133,16 +147,12 @@ Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10
 </p>
 <ul>
 <li>
-<strong>Fixes</strong> (reported by Gotolei):
-</li>
-<li>
-Animation slot count can now be set to 10
-</li>
-<li>
-Frame count for animations reset itself
-</li>
-<li>
-Animation export didn't work in some cases
+<p>
+<strong>Fixes</strong> (reported by Gotolei)
+* Animation slot count can now be set to 10
+* Frame count for animations reset itself
+* Animation export didn't work in some cases
+</p>
 </li>
 </ul>
 <h2 id="-10-24">
@@ -154,18 +164,20 @@ Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10
 <ul>
 <li>
 <strong>Additions</strong>
-</li>
+<ul>
 <li>
 <strong>Texture Animation</strong>: Transform animation feature (animates from frame A to frame B), Grid animation feature (for creating animations like the mars animation found in Museum 2). Added a <a href="http://learn.re-volt.io/tracks-blender/resources">resources</a> link to the documentation which will include texture animation sheets ready to be used with the add-on.
 </li>
 <li>
 <strong>Re-Export Button</strong>: Press the button next to the Export button to export to the same file again.
 </li>
-<li>
-<strong>Fixes</strong>
+</ul>
 </li>
 <li>
-The vertex color picker now picks from selected faces _or_ vertices. (Contribution by Boy80)
+<strong>Fixes</strong>
+<ul>
+<li>
+The vertex color picker now picks from selected faces <em>or</em> vertices. (Contribution by Boy80)
 </li>
 <li>
 Fixed persisting QUAD flag by removing it from the export mask. (Reported by Boy80)
@@ -173,9 +185,11 @@ Fixed persisting QUAD flag by removing it from the export mask. (Reported by Boy
 <li>
 Importing cars with the same texture name resulted in them having the same texture. (Reported by Gotolei)
 </li>
+</ul>
+</li>
 <li>
 <strong>UI</strong>
-</li>
+<ul>
 <li>
 Added icons to panels
 </li>
@@ -191,14 +205,18 @@ Fixed the import/export panel to the top
 <li>
 Notifications now have an icon
 </li>
+</ul>
+</li>
 <li>
 <strong>Misc.</strong>
-</li>
+<ul>
 <li>
 Huge code refactoring and some fixes
 </li>
 <li>
 Restructured the documentation
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-10-17">
@@ -210,12 +228,12 @@ Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10
 <ul>
 <li>
 <strong>Additions</strong>
-</li>
+<ul>
 <li>
 <strong>NCP</strong> (collision): Import and export is now supported. The face properties panel has a section for NCP now (face flags and materials).
 </li>
 <li>
-<strong>Settings</strong>: _Prefer Textured Solid mode_ setting, enabled by default. This makes the add-on use textured solid mode (easier for editing NCP/untextured meshes).
+<strong>Settings</strong>: <em>Prefer Textured Solid mode</em> setting, enabled by default. This makes the add-on use textured solid mode (easier for editing NCP/untextured meshes).
 </li>
 <li>
 <strong>Import/Export</strong>: Import and export operators now show the matching settings in the bottom left.
@@ -223,14 +241,18 @@ Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10
 <li>
 <strong>Vertex Colors</strong>: Button for getting the color from the active face (requested by Boy80)
 </li>
+</ul>
+</li>
 <li>
 <strong>Fixes</strong>
-</li>
+<ul>
 <li>
 The y coordinates of bounding boxes were swapped.
 </li>
 <li>
 Faces can now be exported with no texture (reported by Boy80).
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-10-10">
@@ -245,21 +267,25 @@ Added Re-Volt file structure specifications to the documentation
 </li>
 <li>
 <strong>Fixes</strong>
-</li>
+<ul>
 <li>
 <strong>Light Baking Tool</strong>: Reverse horizontal X direction (light was shining from the wrong direction)
 </li>
 <li>
 <strong>Export .w</strong>, <strong>export .prm</strong>: Apply scale and rotation correctly. Parented objects should now be exported correctly.
 </li>
+</ul>
+</li>
 <li>
 <strong>Debug</strong>
-</li>
+<ul>
 <li>
 Rename bound spheres to cubes
 </li>
 <li>
 Import cubes instead of spheres
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-10-09">
@@ -271,30 +297,44 @@ Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.10
 <ul>
 <li>
 <strong>Export .w</strong>
-</li>
+<ul>
 <li>
+<p>
 Export complete .w files with meshes, boundary boxes/spheres, env colors and texture animation
+</p>
+</li>
+</ul>
 </li>
 <li>
 <strong>Texture animation panel</strong>
-</li>
+<ul>
 <li>
+<p>
 Added buttons for copying UV from and to selected faces.
+</p>
+</li>
+</ul>
 </li>
 <li>
 <strong>Settings panel completed</strong>
-</li>
+<ul>
 <li>
 <em>Parent .w meshes to Empty</em> now disabled by default to avoid confusion
 </li>
 <li>
 New layout
 </li>
-<li>
-<strong>Misc</strong>
+</ul>
 </li>
 <li>
+<strong>Misc</strong>
+<ul>
+<li>
+<p>
 Decreased shadow table accuracy to 4 decimal places
+</p>
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-10-07">
@@ -312,20 +352,24 @@ Fixed a bug where the tool panels became unusable after CTRL Z.
 </li>
 <li>
 <strong>Import .w</strong>
-</li>
+<ul>
 <li>
-Bound boxes, bound spheres and big cubes, each of which can be imported on
-different layers
+Bound boxes, bound spheres and big cubes, each of which can be imported on different layers
 </li>
 <li>
 Env colors with GUI implementation
 </li>
-<li>
-<strong>Import .prm completed</strong>
+</ul>
 </li>
 <li>
-Apply scale and rotation on export by default (no need for manual apply,
-can be disabled in the options)
+<strong>Import .prm completed</strong>
+<ul>
+<li>
+<p>
+Apply scale and rotation on export by default (no need for manual apply, can be disabled in the options)
+</p>
+</li>
+</ul>
 </li>
 </ul>
 
