@@ -14,7 +14,7 @@
 
 # Choose the theme to use when building your site. This variable should
 # specify the name of a theme directory in your site's 'lib' folder.
-theme = "graphite"
+theme = "docphite"
 
 
 # ------------------------------------------------------------------------------
@@ -22,10 +22,10 @@ theme = "graphite"
 # ------------------------------------------------------------------------------
 
 # Site title - how this is displayed depends on the theme.
-title = "RV Add-On Documentation"
+title = "Re-Volt Add-On Docs"
 
 # Site tagline - how this is displayed depends on the theme.
-tagline = "Documentation for the Re-Volt Blender Add-on"
+tagline = "Documentation for the Blender 2.79a Re-Volt Add-on"
 
 
 # ------------------------------------------------------------------------------

@@ -183,7 +183,7 @@ dd {
  */
 
 a {
-    color: black;
+    color: #195a9d;
     text-decoration: none;
     padding-bottom: 2px;
     border-bottom: 1px solid;
@@ -237,7 +237,7 @@ body {
     width: 600px;
     padding: 32px 50px 20px;
     margin-left: 360px;
-    border-left: 3px solid black;
+    border-left: 2px dashed #b1b1b1;
     min-height: calc(100vh - 80px);
 }
 
@@ -257,6 +257,7 @@ body {
 }
 
 .masthead h1 a {
+    color: black;
     border-bottom: none;
 }
 
@@ -267,11 +268,13 @@ body {
 
 .masthead .menu {
     margin-right: 20px;
-    direction: rtl;
+    /*direction: rtl;*/
 }
 
 .masthead .menu a {
     direction: ltr;
+    color: black;
+    border-bottom: none;
 }
 
 .masthead .menu ul ul {
@@ -450,7 +453,7 @@ th, td {
         text-align: center;
         margin-left: 40px;
         margin-right: 40px;
-        border-bottom: 3px solid black;
+        border-bottom: 2px dashed #b1b1b1;
     }
 
     .main {

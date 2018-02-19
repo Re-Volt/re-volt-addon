@@ -4,10 +4,12 @@ title: Changelog
 
 :insert toc
 
-## 2018-02-
+## 2018-02-19
+Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
+
 
 * **Fixes**
-    * Prepared the add-on for 2.79a. All features now work as expected.
+    * Prepared the add-on for 2.79a. All features should now work as expected.
 * **Misc.**
     * Documentation is now generated with Ivy
 
@@ -24,6 +26,7 @@ Version [`rva_17.1012`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
 * **Additions**
     * NCP: Setting for collision grid size (requested by Zorbah). Higher values = faster export (might slow down the game in return)
 
+
 ## 2017-10-25
 
 Version [`rva_17.1025`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
@@ -32,6 +35,7 @@ Version [`rva_17.1025`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     * Animation slot count can now be set to 10
     * Frame count for animations reset itself
     * Animation export didn't work in some cases
+
 
 ## 2017-10-24
 

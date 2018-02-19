@@ -76,7 +76,7 @@ def import_file(filepath, scene):
 
         # Skips the poly if no intersection was found
         if None in verts:
-            dprint('Skipping polyhedron (not intersection).')
+            dprint('Skipping polyhedron (no intersection).')
             continue
 
         # Creates the bmverts and face
