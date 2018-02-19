@@ -7,10 +7,15 @@ title: Changelog
 ## 2018-02-19
 Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
 
-
+* **Additions**
+	* Instance (.fin) import
+	* Batch-rename feature (Helpers panel)
+	* *No collision* flag for NCP (face properties)
 * **Fixes**
     * Prepared the add-on for 2.79a. All features should now work as expected.
+    * Various Import/Export fixes
 * **Misc.**
+	* Improved UI
     * Documentation is now generated with Ivy
 
 
