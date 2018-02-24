@@ -1,11 +1,10 @@
 """
-PRM IMPORT
-Meshes used for cars, game objects and track instances.
+Parameters IMPORT
 """
 if "bpy" in locals():
     import imp
     imp.reload(common)
-    imp.reload(parameters)
+    imp.reload(carinfo)
     imp.reload(prm_in)
 
 import os
@@ -13,7 +12,7 @@ import bpy
 import bmesh
 from mathutils import Vector
 from . import common
-from . import parameters
+from . import carinfo
 from . import prm_in
 
 from .common import *
@@ -24,53 +23,53 @@ def import_file(filepath, scene):
     Imports a parameters.txt file and loads car body and wheels.
     """
     params = None
-    try:
-        params = parameters.read_parameters(filepath)
-    except Exception as e:
-        msg_box("Could not read parameters.txt\n{}".format(e))
+    params = carinfo.read_parameters(filepath)
+    # try:
+    # except Exception as e:
+    #     msg_box("Could not read parameters.txt\n{}".format(e))
 
     if params:
         import_car(scene, params, filepath)
 
 
 def import_car(scene, params, filepath):
-    body = params["model {}".format(params["body"]["modelnum"])]
+    body = params["model"][params["body"]["modelnum"]]
     body_loc = to_blender_coord(params["body"]["offset"])
-    wheel0loc = to_blender_coord(params["wheel 0"]["offset1"])
-    wheel1loc = to_blender_coord(params["wheel 1"]["offset1"])
-    wheel2loc = to_blender_coord(params["wheel 2"]["offset1"])
-    wheel3loc = to_blender_coord(params["wheel 3"]["offset1"])
+    wheel0loc = to_blender_coord(params["wheel"][0]["offset1"])
+    wheel1loc = to_blender_coord(params["wheel"][1]["offset1"])
+    wheel2loc = to_blender_coord(params["wheel"][2]["offset1"])
+    wheel3loc = to_blender_coord(params["wheel"][3]["offset1"])
 
     folder = os.sep.join(filepath.split(os.sep)[:-1])
 
     # Checks if the wheel models exist
-    wheel0_modelnum = int(params["wheel 0"]["modelnum"])
+    wheel0_modelnum = int(params["wheel"][0]["modelnum"])
     if wheel0_modelnum >= 0:
-        wheel0 = params["model {}".format(wheel0_modelnum)]
+        wheel0 = params["model"][wheel0_modelnum]
         if wheel0.split(os.sep)[-1] in os.listdir(folder):
                 wheel0path = os.sep.join([folder, wheel0.split(os.sep)[-1]])
     else:
         wheel0 = None
 
-    wheel1_modelnum = int(params["wheel 1"]["modelnum"])
+    wheel1_modelnum = int(params["wheel"][1]["modelnum"])
     if wheel1_modelnum >= 0:
-        wheel1 = params["model {}".format(wheel1_modelnum)]
+        wheel1 = params["model"][wheel1_modelnum]
         if wheel1.split(os.sep)[-1] in os.listdir(folder):
                 wheel1path = os.sep.join([folder, wheel1.split(os.sep)[-1]])
     else:
         wheel1 = None
 
-    wheel2_modelnum = int(params["wheel 2"]["modelnum"])
+    wheel2_modelnum = int(params["wheel"][2]["modelnum"])
     if wheel2_modelnum >= 0:
-        wheel2 = params["model {}".format(wheel2_modelnum)]
+        wheel2 = params["model"][wheel2_modelnum]
         if wheel2.split(os.sep)[-1] in os.listdir(folder):
                 wheel2path = os.sep.join([folder, wheel2.split(os.sep)[-1]])
     else:
         wheel2 = None
 
-    wheel3_modelnum = int(params["wheel 3"]["modelnum"])
+    wheel3_modelnum = int(params["wheel"][3]["modelnum"])
     if wheel3_modelnum >= 0:
-        wheel3 = params["model {}".format(wheel3_modelnum)]
+        wheel3 = params["model"][wheel3_modelnum]
         if wheel3.split(os.sep)[-1] in os.listdir(folder):
                 wheel3path = os.sep.join([folder, wheel3.split(os.sep)[-1]])
     else:

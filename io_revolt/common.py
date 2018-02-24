@@ -8,7 +8,7 @@ import os
 
 from math import sqrt
 from mathutils import Color, Matrix
-from .parameters import read_parameters
+from .carinfo import read_parameters
 
 TEXTURES = {}  # Gobal dict to hold texture paths
 

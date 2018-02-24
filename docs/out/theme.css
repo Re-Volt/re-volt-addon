@@ -183,7 +183,7 @@ dd {
  */
 
 a {
-    color: #195a9d;
+    color: black;
     text-decoration: none;
     padding-bottom: 2px;
     border-bottom: 1px solid;
@@ -237,7 +237,7 @@ body {
     width: 600px;
     padding: 32px 50px 20px;
     margin-left: 360px;
-    border-left: 2px dashed #b1b1b1;
+    border-left: 2px dashed #696969;
     min-height: calc(100vh - 80px);
 }
 
@@ -257,7 +257,6 @@ body {
 }
 
 .masthead h1 a {
-    color: black;
     border-bottom: none;
 }
 
@@ -273,7 +272,6 @@ body {
 
 .masthead .menu a {
     direction: ltr;
-    color: black;
     border-bottom: none;
 }
 
@@ -453,7 +451,7 @@ th, td {
         text-align: center;
         margin-left: 40px;
         margin-right: 40px;
-        border-bottom: 2px dashed #b1b1b1;
+        border-bottom: 2px dashed #696969;
     }
 
     .main {
