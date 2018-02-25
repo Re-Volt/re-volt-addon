@@ -21,8 +21,8 @@ from mathutils import Color, Matrix
 from .carinfo import read_parameters
 
 # Global dictionaries
-if "common" not in locals():
-    ERRORS = {}  # Dictionary that holds error messages
+global ERRORS
+ERRORS = {}  # Dictionary that holds error messages
 TEXTURES = {}  # Gobal dict to hold texture paths
 PARAMETERS = {}  # Glocal dict to hold parameters
 
@@ -261,11 +261,11 @@ BAKE_SHADOW_METHODS = [
 
 TA_CSV_HEADER = "Slot,Frame,Texture,Delay,U0,V0,U1,V1,U2,V2,U3,V3"
 
+
 """
 Conversion functions for Re-Volt structures.
 Axes are saved differently and many indices are saved in reverse order.
 """
-
 
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
@@ -396,7 +396,7 @@ def get_edit_bmesh(obj):
         return bm
 
 
-def objects_to_bmesh(objs):
+def objects_to_bmesh(objs, transform=True):
     """ Merges multiple objects into one bmesh for export """
 
     # Creates the mesh used to merge the entire scene
@@ -424,12 +424,13 @@ def objects_to_bmesh(objs):
             space=spc,
             verts=bm.verts
         )
-        bmesh.ops.transform(
-            bm,
-            matrix=Matrix.Translation(obj.location),
-            space=spc,
-            verts=bm.verts
-        )
+        if transform:
+            bmesh.ops.transform(
+                bm,
+                matrix=Matrix.Translation(obj.location),
+                space=spc,
+                verts=bm.verts
+            )
         bmesh.ops.rotate(
             bm,
             cent=obj.location,
@@ -489,18 +490,20 @@ def msg_box(message, icon="INFO"):
 
 def queue_error(action, error_message):
     """ Adds an error message to the error dict """
+    global ERRORS
     print("Error while {}: {}".format(action, error_message))
     ERRORS[action] = error_message
 
 
 def get_errors():
+    global ERRORS
     if ERRORS:
         errors = "The following errors have been encountered:\n"
         for error in ERRORS:
             errors += "Error while {}: {}\n".format(error, ERRORS[error])
         errors += "Check the console for more information."
     else:
-        errors = "Import successful."
+        errors = "Successfully completed."
 
     # Clears the error messages
     ERRORS = {}

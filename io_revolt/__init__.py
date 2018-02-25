@@ -1,4 +1,12 @@
-""" Marv's Add-On for Re-Volt """
+"""
+Name:    init
+Purpose: Init file for the Blender Add-On
+
+Description:
+Marv's Add-On for Re-Volt 
+
+"""
+
 import bpy
 import os
 import os.path
@@ -16,6 +24,7 @@ from . import (
     texanim,
     tools
 )
+
 # Reloads potentially changed modules on reload (F8 in Blender)
 imp.reload(common)
 imp.reload(layers)
@@ -63,13 +72,12 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (18, 2, 19),
-"blender": (2, 79, 0),
+"version": (18, 2, 25),
+"blender": (2, 79, 1),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",
-"tracker_url": "http://z3.invisionfree.com/Our_ReVolt_Pub/"
-               "index.php?showtopic=2296",
+"tracker_url": "https://forum.re-volt.io/viewtopic.php?f=11&p=99",
 "support": 'COMMUNITY',
 "category": "Import-Export"
 }

@@ -4,15 +4,19 @@ title: Changelog
 
 :insert toc
 
-## 2018-02-
+## 2018-02-25
+Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)
 
+* **Additions**
+    * NCP: *Only export selected* option added (check the documentation for details)
 * **Fixes**
     * Rewrote the parameters.txt parser, should now load all cars
+    * The light panel now only shows up if at least one object is selected
 * **Misc**
     * New system for handling import and export errors
 
 ## 2018-02-19
-Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
+Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0219)
 
 * **Additions**
     * Instance (.fin) import
@@ -25,11 +29,9 @@ Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     * Improved UI
     * Documentation is now generated with Ivy
 
-
-
 ## 2017-11-12
 
-Version [`rva_17.1012`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)
+Version [`rva_17.1112`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1112)
 
 * **Fixes**
     * Fixed the following crash: Import mesh, clear .blend, import mesh again (reported by Zorbah)
@@ -114,9 +116,7 @@ Version [`rva_17.1009`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
 Version `rva_17.1007`
 
 * **Tool panels**
-  * Fixed a bug where the tool panels became unusable after CTRL Z.
-
-
+    * Fixed a bug where the tool panels became unusable after CTRL Z.
 * **Import .w**
     * Bound boxes, bound spheres and big cubes, each of which can be imported on different layers
     * Env colors with GUI implementation

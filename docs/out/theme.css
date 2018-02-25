@@ -46,7 +46,7 @@ img {
 body {
     font-size: 17px;
     color: black;
-    font-family: 'Crimson Text', serif;
+    font-family: 'Vollkorn', serif;
     line-height: 1.75;
 }
 
@@ -183,10 +183,9 @@ dd {
  */
 
 a {
-    color: black;
+    color: #1C1481;
     text-decoration: none;
     padding-bottom: 2px;
-    border-bottom: 1px solid;
 }
 
 a:hover {
@@ -222,7 +221,7 @@ img {
  */
 
 body {
-    width: 960px;
+    width: 1160px;
     margin: 0 auto;
     padding: 40px 0;
 }
@@ -234,7 +233,7 @@ body {
 }
 
 .main {
-    width: 600px;
+    width: 800px;
     padding: 32px 50px 20px;
     margin-left: 360px;
     border-left: 2px dashed #696969;
@@ -252,11 +251,12 @@ body {
     margin-bottom: 34px;
     padding: 0;
     text-align: right;
-    font-size: 46px;
+    font-size: 40px;
     line-height: 58px;
 }
 
 .masthead h1 a {
+    color: black;
     border-bottom: none;
 }
 

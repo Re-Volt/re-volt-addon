@@ -1,3 +1,12 @@
+"""
+Name:    w_in
+Purpose: Imports Re-Volt level world files (.w)
+
+Description:
+World files contain meshes, optimization data and texture animations.
+
+"""
+
 import os
 import bpy
 import bmesh

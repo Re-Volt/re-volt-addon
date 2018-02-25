@@ -1,3 +1,14 @@
+"""
+Name:    ta_csv_in
+Purpose: Imports texture animation data saved as csv files
+
+Description:
+Texture animations are usually contained within world files (.w).
+This module provides an easy way to transfer texture animations from one
+file to another, as well as edit them in an external spread sheet program.
+
+"""
+
 if "common" in locals():
     import imp
     imp.reload(common)

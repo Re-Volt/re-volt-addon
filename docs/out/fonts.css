@@ -5,33 +5,30 @@
  */
 
 @font-face {
-  font-family: 'Crimson Text';
+  font-family: 'Vollkorn';
   font-style: normal;
   font-weight: 400;
-  src: local('Crimson Text Regular'),
-       local('CrimsonText-Regular'),
-       url(fonts/CrimsonText-Regular.woff2) format('woff2'),
-       url(fonts/CrimsonText-Regular.ttf) format('truetype');
+  src: local('Vollkorn Regular'),
+       local('Vollkorn-Regular'),
+       url(fonts/Vollkorn-Regular.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'Crimson Text';
+  font-family: 'Vollkorn';
   font-style: italic;
   font-weight: 400;
-  src: local('Crimson Text Italic'),
-       local('CrimsonText-Italic'),
-       url(fonts/CrimsonText-Italic.woff2) format('woff2'),
-       url(fonts/CrimsonText-Italic.ttf) format('truetype');
+  src: local('Vollkorn Italic'),
+       local('Vollkorn-Italic'),
+       url(fonts/Vollkorn-Italic.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'Crimson Text';
+  font-family: 'Vollkorn';
   font-style: normal;
   font-weight: 700;
-  src: local('Crimson Text Bold'),
-       local('CrimsonText-Bold'),
-       url(fonts/CrimsonText-Bold.woff2) format('woff2'),
-       url(fonts/CrimsonText-Bold.ttf) format('truetype');
+  src: local('Vollkorn Bold'),
+       local('Vollkorn-Bold'),
+       url(fonts/Vollkorn-Bold.ttf) format('truetype');
 }
 
 /*
@@ -41,32 +38,32 @@
 
 /*
 @font-face {
-  font-family: 'Crimson Text';
+  font-family: 'Vollkorn';
   font-style: italic;
   font-weight: 700;
-  src: local('Crimson Text Bold Italic'),
-       local('CrimsonText-BoldItalic'),
-       url(fonts/CrimsonText-BoldItalic.woff2) format('woff2'),
-       url(fonts/CrimsonText-BoldItalic.ttf) format('truetype');
+  src: local('Vollkorn Bold Italic'),
+       local('Vollkorn-BoldItalic'),
+       url(fonts/Vollkorn-BoldItalic.woff2) format('woff2'),
+       url(fonts/Vollkorn-BoldItalic.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'Crimson Text';
+  font-family: 'Vollkorn';
   font-style: normal;
   font-weight: 600;
-  src: local('Crimson Text SemiBold'),
-       local('CrimsonText-SemiBold'),
-       url(fonts/CrimsonText-SemiBold.woff2) format('woff2'),
-       url(fonts/CrimsonText-SemiBold.ttf) format('truetype');
+  src: local('Vollkorn SemiBold'),
+       local('Vollkorn-SemiBold'),
+       url(fonts/Vollkorn-SemiBold.woff2) format('woff2'),
+       url(fonts/Vollkorn-SemiBold.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'Crimson Text';
+  font-family: 'Vollkorn';
   font-style: italic;
   font-weight: 600;
-  src: local('Crimson Text SemiBold Italic'),
-       local('CrimsonText-SemiBoldItalic'),
-       url(fonts/CrimsonText-SemiBoldItalic.woff2) format('woff2'),
-       url(fonts/CrimsonText-SemiBoldItalic.ttf) format('truetype');
+  src: local('Vollkorn SemiBold Italic'),
+       local('Vollkorn-SemiBoldItalic'),
+       url(fonts/Vollkorn-SemiBoldItalic.woff2) format('woff2'),
+       url(fonts/Vollkorn-SemiBoldItalic.ttf) format('truetype');
 }
 */

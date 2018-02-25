@@ -40,24 +40,28 @@ def export_file(filepath, scene):
 
     # Collects objects for export
     objs = []
-    for obj in scene.objects:
-        conditions = (
-            obj.data and
-            obj.type == "MESH" and
-            not obj.revolt.is_cube and
-            not obj.revolt.is_bcube and
-            not obj.revolt.is_bbox and
-            not obj.revolt.ignore_ncp
-        )
-        if conditions:
-            objs.append(obj)
+    if props.ncp_export_selected:
+        objs = [ob for ob in scene.objects if ob.select]
+    else:
+        for obj in scene.objects:
+            conditions = (
+                obj.data and
+                obj.type == "MESH" and
+                not obj.revolt.is_cube and
+                not obj.revolt.is_bcube and
+                not obj.revolt.is_bbox and
+                not obj.revolt.ignore_ncp
+            )
+            if conditions:
+                objs.append(obj)
 
     if objs == []:
         common.queue_error("exporting NCP", "No suitable objects in scene.")
         return
 
-    # Creates a mesh for the entire scene
-    bm = objects_to_bmesh(objs)
+    # Creates a mesh for all objects
+    transform = not (props.ncp_export_selected and len(objs) == 1)
+    bm = objects_to_bmesh(objs, transform)
 
     if props.triangulate_ngons:
         num_ngons = triangulate_ngons(bm)

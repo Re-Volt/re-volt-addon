@@ -98,7 +98,7 @@ class ImportRV(bpy.types.Operator):
         errors = get_errors()
 
         # Defines the icon depending on the errors
-        if errors == "Import successful.":
+        if errors == "Successfully completed.":
             ico = "FILE_TICK"
         else:
             ico = "ERROR"
@@ -106,7 +106,7 @@ class ImportRV(bpy.types.Operator):
         # Displays a message box with the import results
         msg_box(
             "Import of {} done in {:.3f} seconds.\n{}".format(
-                FORMATS[frmt], end_time, get_errors()),
+                FORMATS[frmt], end_time, errors),
             icon=ico
         )
 
@@ -179,8 +179,10 @@ class ExportRV(bpy.types.Operator):
         # NCP settings
         if frmt == FORMAT_NCP:
             box = layout.box()
+            box.prop(props, "ncp_export_selected")
             box.prop(props, "ncp_export_collgrid")
             box.prop(props, "ncp_collgrid_size")
+
 
         # Texture mesh settings
         if frmt in [FORMAT_PRM, FORMAT_W]:
@@ -256,10 +258,21 @@ def exec_export(filepath, context):
 
     context.window.cursor_set("DEFAULT")
 
+    # Gets any encountered errors
+    errors = get_errors()
+
+    # Defines the icon depending on the errors
+    if errors == "Successfully completed.":
+        ico = "FILE_TICK"
+    else:
+        ico = "ERROR"
+
+    # Displays a message box with the import results
     end_time = time.time() - start_time
     msg_box(
-        "Export to {} done in {:.3f} seconds.".format(FORMATS[frmt], end_time),
-        icon="FILE_TICK"
+        "Export to {} done in {:.3f} seconds.\n{}".format(
+            FORMATS[frmt], end_time, errors),
+        icon=ico
     )
 
     return {"FINISHED"}
