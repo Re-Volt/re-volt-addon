@@ -1,3 +1,12 @@
+"""
+Name:    carinfo
+Purpose: Reading parameters.txt files
+
+Description:
+Used to import entire cars and getting texture paths for models.
+
+"""
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

@@ -1,3 +1,13 @@
+"""
+Name:    ncp_in
+Purpose: Exports Re-Volt collisision files (.ncp)
+
+Description:
+Exports collision files.
+
+"""
+
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

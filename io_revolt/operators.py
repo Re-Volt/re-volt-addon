@@ -1,3 +1,14 @@
+"""
+Name:    operators
+Purpose: Provides operators for importing and exporting and other buttons.
+
+Description:
+These operators are used for importing and exporting files, as well as
+providing the functions behind the UI buttons.
+
+"""
+
+
 import bpy
 import time
 

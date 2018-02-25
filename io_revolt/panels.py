@@ -1,3 +1,14 @@
+"""
+Name:    panels
+Purpose: User interface of the add-on
+
+Description:
+Contains all classes for the add-on's user interface which can be found
+in the toolbar and in the object properties editor.
+
+"""
+
+
 import bpy
 from .common import *
 

@@ -1,3 +1,13 @@
+"""
+Name:    props_obj
+Purpose: Provides the object data class for Re-Volt meshes
+
+Description:
+Objects in Re-Volt can be of different types or used for debugging only.
+Especially instances make use of this (.fin).
+
+"""
+
 import bpy
 
 from bpy.props import (

@@ -1,4 +1,8 @@
 """
+Name:    rvstruct
+Purpose: Reading and writing RV files
+
+Description:
 This is a module for reading and writing Re-Volt binary files.
 Todo:
 - Rework representations and string representations

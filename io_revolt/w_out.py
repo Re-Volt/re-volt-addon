@@ -1,3 +1,13 @@
+"""
+Name:    w_out
+Purpose: Exports Re-Volt level world files (.w)
+
+Description:
+World files contain meshes, optimization data and texture animations.
+
+"""
+
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

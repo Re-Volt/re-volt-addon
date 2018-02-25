@@ -1,3 +1,13 @@
+"""
+Name:    props_scene
+Purpose: Provides the scene data class for Re-Volt meshes
+
+Description:
+The scene properties are misused for storing settings as well as 
+level information.
+
+"""
+
 import bpy
 
 from bpy.props import (

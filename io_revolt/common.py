@@ -1,3 +1,13 @@
+"""
+Name:    common
+Purpose: Providing variables and functions available for all modules
+
+Description:
+Contains values that are specific to Re-Volt, functions for converting units
+and helper functions for Blender. 
+
+"""
+
 # Prevents the global dict from being reloaded
 if "bpy" not in locals():
     dic = {}  # dict to hold the mesh for edit mode

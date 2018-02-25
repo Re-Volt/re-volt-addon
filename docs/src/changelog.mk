@@ -3,10 +3,13 @@ title: Changelog
 ---
 
 :insert toc
+
 ## 2018-02-
 
 * **Fixes**
-    * Rewrote the parameter.txt parser, should now load all cars.
+    * Rewrote the parameters.txt parser, should now load all cars
+* **Misc**
+    * New system for handling import and export errors
 
 ## 2018-02-19
 Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025)

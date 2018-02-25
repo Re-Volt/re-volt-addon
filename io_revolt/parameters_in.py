@@ -1,6 +1,12 @@
 """
-Parameters IMPORT
+Name:    parameters_in
+Purpose: Importing cars using the parameters.txt file
+
+Description:
+Imports entire cars using the carinfo module.
+
 """
+
 if "bpy" in locals():
     import imp
     imp.reload(common)
@@ -22,7 +28,7 @@ def import_file(filepath, scene):
     """
     Imports a parameters.txt file and loads car body and wheels.
     """
-    
+
     PARAMETERS[filepath] = carinfo.read_parameters(filepath)
 
     # Imports the car with all supported files
