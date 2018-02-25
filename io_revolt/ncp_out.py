@@ -43,7 +43,7 @@ def export_file(filepath, scene):
             objs.append(obj)
 
     if objs == []:
-        msg_box("No suitable objects in scene.")
+        common.queue_error("exporting NCP", "No suitable objects in scene.")
         return
 
     # Creates a mesh for the entire scene

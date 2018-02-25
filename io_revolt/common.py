@@ -10,7 +10,12 @@ from math import sqrt
 from mathutils import Color, Matrix
 from .carinfo import read_parameters
 
+# Global dictionaries
+if "common" not in locals():
+    ERRORS = {}  # Dictionary that holds error messages
 TEXTURES = {}  # Gobal dict to hold texture paths
+PARAMETERS = {}  # Glocal dict to hold parameters
+
 
 # If True, more debug messages will be printed
 DEBUG = True
@@ -472,6 +477,27 @@ def msg_box(message, icon="INFO"):
     bpy.ops.revolt.dialog("INVOKE_DEFAULT")
 
 
+def queue_error(action, error_message):
+    """ Adds an error message to the error dict """
+    print("Error while {}: {}".format(action, error_message))
+    ERRORS[action] = error_message
+
+
+def get_errors():
+    if ERRORS:
+        errors = "The following errors have been encountered:\n"
+        for error in ERRORS:
+            errors += "Error while {}: {}\n".format(error, ERRORS[error])
+        errors += "Check the console for more information."
+    else:
+        errors = "Import successful."
+
+    # Clears the error messages
+    ERRORS = {}
+
+    return errors
+
+
 def redraw():
     redraw_3d()
     redraw_uvedit()
@@ -588,8 +614,11 @@ def get_texture_path(filepath, tex_num):
 
     # The file is part of a car
     if "parameters.txt" in os.listdir(path):
-        params = read_parameters(os.path.join(path, "parameters.txt"))
-        tpage = params["tpage"].replace("\\", os.sep).split(os.sep)[-1]
+        filepath = os.path.join(path, "parameters.txt")
+        if not filepath in PARAMETERS:
+            PARAMETERS[filepath] = read_parameters(filepath)
+        tpage = PARAMETERS[filepath]["tpage"].split(os.sep)[-1]
+
         return os.path.join(path, tpage)
 
     # The file is part of a track

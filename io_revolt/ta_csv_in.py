@@ -15,9 +15,9 @@ def import_file(filepath, scene):
     lines = f.readlines()
 
     if not TA_CSV_HEADER in lines[0]:
-        msg_box(
+        common.queue_error(
+            "reading texture animation file",
             "File does not include texture animation header."
-            "ERROR"
         )
     # Removes the header
     lines = lines[1:]

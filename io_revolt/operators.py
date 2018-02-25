@@ -82,11 +82,21 @@ class ImportRV(bpy.types.Operator):
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 
         end_time = time.time() - start_time
-        print("Import done in {0:.3f} seconds.".format(end_time))
 
+        # Gets any encountered errors
+        errors = get_errors()
+
+        # Defines the icon depending on the errors
+        if errors == "Import successful.":
+            ico = "FILE_TICK"
+        else:
+            ico = "ERROR"
+
+        # Displays a message box with the import results
         msg_box(
-            "Import of {} done in {:.3f} seconds.".format(FORMATS[frmt], end_time),
-            icon="FILE_TICK"
+            "Import of {} done in {:.3f} seconds.\n{}".format(
+                FORMATS[frmt], end_time, get_errors()),
+            icon=ico
         )
 
         context.window.cursor_set("DEFAULT")

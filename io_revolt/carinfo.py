@@ -1,5 +1,14 @@
-import json
+if "bpy" in locals():
+    import imp
+    imp.reload(common)
+
 import os
+import bpy
+from . import common
+
+# Action name for error reporting
+action_name = "reading parameters"
+
 
 # Structure block name (used for the second "trans" value in the spinner block)
 global block
@@ -13,7 +22,7 @@ def read_word(fd):
     ch = fd.read(1)
 
     if ch == "":
-        print("Error: End of file reached.")
+        common.queue_error(action_name, "End of file reached.")
         return None
 
     while is_space(ch) and ch != "":
@@ -35,12 +44,14 @@ def read_word(fd):
 
     return word
 
+
 def read_model(fd):
     """ Reads the model index and path """
     index = read_int(fd)
     path = read_path(fd)
 
     return {index: path}
+
 
 def read_int(fd):
     """ Reads a word and interprets it as an integer """
@@ -236,10 +247,10 @@ def process_words(fd):
                 val = dispatcher[word](fd)
             except Exception as e:
                 val = None
-                print(
-                    "Error (parameters): Could not read {}\n".format(word)
+                common.queue_error(
+                    action_name,
+                    "Could not read {}\n{}".format(word, e)
                 )
-                print(e)
             if isinstance(val, dict):
                 global block
                 block = word
@@ -285,7 +296,6 @@ dispatcher = {
     "topend":          read_float,
     "acc":             read_float,
     "weight":          read_float,
-    "trans":           read_ambivalent,
     
     "model":           read_model,
     "tpage":           read_path,
@@ -319,6 +329,7 @@ dispatcher = {
     "camattached":     read_struct,
 
     # Misc./shared data
+    "trans":           read_ambivalent,
     "modelnum":        read_int,
     "offset":          read_vector_float,
     "mass":            read_float,
@@ -385,6 +396,7 @@ dispatcher = {
 
 
 def read_parameters(filepath):
+    print("Reading {}...".format(filepath))
     with open(filepath) as fd:
         parameters = read_struct(fd)
         return parameters

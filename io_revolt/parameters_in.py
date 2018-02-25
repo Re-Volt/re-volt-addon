@@ -22,14 +22,14 @@ def import_file(filepath, scene):
     """
     Imports a parameters.txt file and loads car body and wheels.
     """
-    params = None
-    params = carinfo.read_parameters(filepath)
-    # try:
-    # except Exception as e:
-    #     msg_box("Could not read parameters.txt\n{}".format(e))
+    
+    PARAMETERS[filepath] = carinfo.read_parameters(filepath)
 
-    if params:
-        import_car(scene, params, filepath)
+    # Imports the car with all supported files
+    import_car(scene, PARAMETERS[filepath], filepath)
+
+    # Removes parameters from dict so they can be reloaded next time
+    PARAMETERS.pop(filepath)
 
 
 def import_car(scene, params, filepath):
