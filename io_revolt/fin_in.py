@@ -1,6 +1,10 @@
 """
-FIN IMPORT
+Name:    fin_in
+Purpose: Imports Re-Volt instance files (.fin)
+
+Description:
 Imports Instance files.
+
 """
 
 if "bpy" in locals():

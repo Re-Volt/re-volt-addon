@@ -1,3 +1,13 @@
+"""
+Name:    tools
+Purpose: Provides functions for operators
+
+Description:
+Some functions that are called by operators 
+(e.g. the light panel, helpers, etc.).
+
+"""
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

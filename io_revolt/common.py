@@ -1,3 +1,13 @@
+"""
+Name:    common
+Purpose: Providing variables and functions available for all modules
+
+Description:
+Contains values that are specific to Re-Volt, functions for converting units
+and helper functions for Blender. 
+
+"""
+
 # Prevents the global dict from being reloaded
 if "bpy" not in locals():
     dic = {}  # dict to hold the mesh for edit mode
@@ -8,9 +18,14 @@ import os
 
 from math import sqrt
 from mathutils import Color, Matrix
-from .parameters import read_parameters
+from .carinfo import read_parameters
 
+# Global dictionaries
+global ERRORS
+ERRORS = {}  # Dictionary that holds error messages
 TEXTURES = {}  # Gobal dict to hold texture paths
+PARAMETERS = {}  # Glocal dict to hold parameters
+
 
 # If True, more debug messages will be printed
 DEBUG = True
@@ -246,11 +261,11 @@ BAKE_SHADOW_METHODS = [
 
 TA_CSV_HEADER = "Slot,Frame,Texture,Delay,U0,V0,U1,V1,U2,V2,U3,V3"
 
+
 """
 Conversion functions for Re-Volt structures.
 Axes are saved differently and many indices are saved in reverse order.
 """
-
 
 def to_blender_axis(vec):
     return (vec[0], vec[2], -vec[1])
@@ -381,7 +396,7 @@ def get_edit_bmesh(obj):
         return bm
 
 
-def objects_to_bmesh(objs):
+def objects_to_bmesh(objs, transform=True):
     """ Merges multiple objects into one bmesh for export """
 
     # Creates the mesh used to merge the entire scene
@@ -409,12 +424,13 @@ def objects_to_bmesh(objs):
             space=spc,
             verts=bm.verts
         )
-        bmesh.ops.transform(
-            bm,
-            matrix=Matrix.Translation(obj.location),
-            space=spc,
-            verts=bm.verts
-        )
+        if transform:
+            bmesh.ops.transform(
+                bm,
+                matrix=Matrix.Translation(obj.location),
+                space=spc,
+                verts=bm.verts
+            )
         bmesh.ops.rotate(
             bm,
             cent=obj.location,
@@ -470,6 +486,29 @@ def msg_box(message, icon="INFO"):
     dialog_message = message
     dialog_icon = icon
     bpy.ops.revolt.dialog("INVOKE_DEFAULT")
+
+
+def queue_error(action, error_message):
+    """ Adds an error message to the error dict """
+    global ERRORS
+    print("Error while {}: {}".format(action, error_message))
+    ERRORS[action] = error_message
+
+
+def get_errors():
+    global ERRORS
+    if ERRORS:
+        errors = "The following errors have been encountered:\n"
+        for error in ERRORS:
+            errors += "Error while {}: {}\n".format(error, ERRORS[error])
+        errors += "Check the console for more information."
+    else:
+        errors = "Successfully completed."
+
+    # Clears the error messages
+    ERRORS = {}
+
+    return errors
 
 
 def redraw():
@@ -588,8 +627,11 @@ def get_texture_path(filepath, tex_num):
 
     # The file is part of a car
     if "parameters.txt" in os.listdir(path):
-        params = read_parameters(os.path.join(path, "parameters.txt"))
-        tpage = params["tpage"].replace("\\", os.sep).split(os.sep)[-1]
+        filepath = os.path.join(path, "parameters.txt")
+        if not filepath in PARAMETERS:
+            PARAMETERS[filepath] = read_parameters(filepath)
+        tpage = PARAMETERS[filepath]["tpage"].split(os.sep)[-1]
+
         return os.path.join(path, tpage)
 
     # The file is part of a track

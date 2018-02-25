@@ -1,6 +1,10 @@
 """
-NCP IMPORT
+Name:    ncp_in
+Purpose: Imports Re-Volt collisision files (.ncp)
+
+Description:
 Imports collision files.
+
 """
 
 if "bpy" in locals():

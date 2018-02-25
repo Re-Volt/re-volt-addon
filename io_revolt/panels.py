@@ -1,3 +1,14 @@
+"""
+Name:    panels
+Purpose: User interface of the add-on
+
+Description:
+Contains all classes for the add-on's user interface which can be found
+in the toolbar and in the object properties editor.
+
+"""
+
+
 import bpy
 from .common import *
 
@@ -429,7 +440,7 @@ class RevoltLightPanel(bpy.types.Panel):
 
     @classmethod
     def poll(self, context):
-        return (context.scene.objects.active is not None)
+        return len(context.selected_objects) >= 1 and context.object.type == "MESH"
 
     def draw_header(self, context):
         self.layout.label("", icon="RENDER_STILL")
@@ -646,6 +657,7 @@ class RevoltSettingsPanel(bpy.types.Panel):
 
         # NCP Export settings
         layout.label("Export Collision (.ncp):")
+        layout.prop(props, "ncp_export_selected")
         layout.prop(props, "ncp_export_collgrid")
         layout.prop(props, "ncp_collgrid_size")
 

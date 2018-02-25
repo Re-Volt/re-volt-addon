@@ -5,9 +5,9 @@ title: Re-Volt Add-On Documentation
 ![logo](rva_small.png)
 
 This is the documentation for Marv's Add-On for Re-Volt files.  
-It is intended to be used with **Blender 2.79a**. It does **not** work with 2.79.
+It is intended to be used with [**Blender 2.79a**](https://www.blender.org/download/). It does **not** work with 2.79.
 
-[**Download** (rva_18.0218)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0218)
+[**Download** (rva_18.0225)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)
 
 :p ||
 	[Tutorial](http://learn.re-volt.io)  

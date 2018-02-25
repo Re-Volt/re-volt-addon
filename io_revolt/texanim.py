@@ -1,3 +1,12 @@
+"""
+Name:    texanim
+Purpose: Provides operators and functions for the texture animation panel
+
+Description:
+Moved from operators and panels here to reduce script line amount
+
+"""
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

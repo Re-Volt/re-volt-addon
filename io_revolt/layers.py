@@ -1,13 +1,19 @@
-import bpy
-import mathutils
-from .common import *
-
 """
+Name:    layers
+Purpose: Provides functions for accessing and modifying layer values.
+
+Description:
 These property getters and setters use the bmesh from the global dict that gets
 updated by the scene update handler found in init.
 Creating bmeshes in the panels is bad practice as it causes unexpected
 behavior.
+
 """
+
+import bpy
+import mathutils
+from .common import *
+
 
 def color_from_face(context):
     obj = context.object

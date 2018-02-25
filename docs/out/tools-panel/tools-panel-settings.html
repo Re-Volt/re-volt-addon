@@ -14,7 +14,7 @@
   <body class="node-tools-panel-tools-panel-settings node-tools-panel node">
 
     <header class="masthead">
-      <h1><a href="../index.html">Re-Volt Add-On Docs</a></h1>
+      <h1><a href="../index.html">Re-Volt Add-On Documentation</a></h1>
       
         <p class="tagline">Documentation for the Blender 2.79a Re-Volt Add-on</p>
       
@@ -47,6 +47,13 @@
 </ul>
 </li>
 <li><a href="../import-export.html">Import/Export Specifications</a></li>
+<li><a href="../rvdocs.html">Re-Volt Documentation</a><ul>
+<li><a href="../rvdocs/cars.html">Cars</a><ul>
+<li><a href="../rvdocs/cars/parameters.html">Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
       </nav>
     </header>
@@ -120,7 +127,13 @@
 <a href="#export-collision-ncp">Export Collision (.ncp)</a>
 <ul>
 <li>
+<a href="#only-export-selected">Only export selected</a>
+</li>
+<li>
 <a href="#export-collision-grid-w">Export Collision Grid (.w)</a>
+</li>
+<li>
+<a href="#grid-size">Grid Size</a>
 </li>
 </ul>
 </li>
@@ -233,12 +246,26 @@ To view multiple layers at once, hold down <code>Shift</code> and press numbers,
 <h2 id="export-collision-ncp">
 Export Collision (.ncp)
 </h2>
+<h3 id="only-export-selected">
+Only export selected
+</h3>
+<p>
+When this setting is enabled, only selected objects will be exported to the NCP.
+If only one object is selected, the location of the object will be ignored and the center
+of the NCP will be the center of the selected object (useful for exporting NCPs for single PRM files).
+</p>
 <h3 id="export-collision-grid-w">
 Export Collision Grid (.w)
 </h3>
 <p>
 This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).
 NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).
+</p>
+<h3 id="grid-size">
+Grid Size
+</h3>
+<p>
+Defines the size of the lookup grid that is written to the end of the NCP file. The size defines the size of the single "cells". Choosing a higher number will result in a faster export but poorer performance in-game.
 </p>
 
     </article>

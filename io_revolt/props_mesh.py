@@ -1,3 +1,14 @@
+"""
+Name:    props_mesh
+Purpose: Provides the mesh data class for Re-Volt meshes
+
+Description:
+Meshes in Re-Volt have special properties which can be accessed and modified
+using the mesh data defined here.
+
+"""
+
+
 import bpy
 
 from bpy.props import (

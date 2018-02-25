@@ -1,3 +1,13 @@
+"""
+Name:    props_scene
+Purpose: Provides the scene data class for Re-Volt meshes
+
+Description:
+The scene properties are misused for storing settings as well as 
+level information.
+
+"""
+
 import bpy
 
 from bpy.props import (
@@ -157,14 +167,19 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = True,
         description = "Export a collision grid to the .ncp file:\n\n"
                       "Enable this if you want to export a level (.w) "
-                      ".ncp file."
+                      ".ncp file"
     )
     ncp_collgrid_size = IntProperty(
         name = "Grid Size",
         default = 1024,
         min = 512,
         max = 8192,
-        description = "Size of the lookup grid."
+        description = "Size of the lookup grid"
+    )
+    ncp_export_selected = BoolProperty(
+        name = "Only export selected",
+        default = False,
+        description = "Only exports the selected objects"
     )
 
     # Light tools

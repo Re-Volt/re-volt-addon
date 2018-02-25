@@ -1,7 +1,12 @@
 """
-PRM IMPORT
+Name:    prm_in
+Purpose: Imports Probe mesh files (.prm)
+
+Description:
 Meshes used for cars, game objects and track instances.
+
 """
+
 if "bpy" in locals():
     import imp
     imp.reload(common)

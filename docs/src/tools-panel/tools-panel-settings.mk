@@ -81,7 +81,17 @@ To view multiple layers at once, hold down `Shift` and press numbers, e.g.
 
 ## Export Collision (.ncp)
 
+### Only export selected
+
+When this setting is enabled, only selected objects will be exported to the NCP.
+If only one object is selected, the location of the object will be ignored and the center
+of the NCP will be the center of the selected object (useful for exporting NCPs for single PRM files).
+
 ### Export Collision Grid (.w)
 
 This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).  
 NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).
+
+### Grid Size
+
+Defines the size of the lookup grid that is written to the end of the NCP file. The size defines the size of the single "cells". Choosing a higher number will result in a faster export but poorer performance in-game.
