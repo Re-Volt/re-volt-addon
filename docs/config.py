@@ -22,7 +22,7 @@ theme = "docphite"
 # ------------------------------------------------------------------------------
 
 # Site title - how this is displayed depends on the theme.
-title = "Re-Volt Add-On Docs"
+title = "Re-Volt Add-On Documentation"
 
 # Site tagline - how this is displayed depends on the theme.
 tagline = "Documentation for the Blender 2.79a Re-Volt Add-on"

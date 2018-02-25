@@ -77,7 +77,7 @@ bl_info = {
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",
-"tracker_url": "https://forum.re-volt.io/viewtopic.php?f=11&p=99",
+"tracker_url": "https://github.com/Yethiel/re-volt-addon/issues",
 "support": 'COMMUNITY',
 "category": "Import-Export"
 }
