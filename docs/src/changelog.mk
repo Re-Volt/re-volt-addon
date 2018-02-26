@@ -4,6 +4,12 @@ title: Changelog
 
 :insert toc
 
+
+## 2018-02-xx
+
+* **Fixes**
+    * Textures are now loaded when importing a mesh from the custom folder (reported by Gotolei)
+
 ## 2018-02-25
 Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)
 

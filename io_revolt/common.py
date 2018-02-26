@@ -619,8 +619,14 @@ Non-Blender helper functions
 def get_texture_path(filepath, tex_num):
     """ Gets the full texture path when given a file and its
         polygon texture number. """
+
     path, fname = filepath.rsplit(os.sep, 1)
-    folder = filepath.split(os.sep)[-2]
+
+    # Checks if the loaded model is located in the custom folder
+    folder = path.rsplit(os.sep, 1)[1]
+    if folder == "custom":
+        path = path.rsplit(os.sep, 1)[0]
+        folder = path.rsplit(os.sep, 1)[1]
 
     if not os.path.isdir(path):
         return None
@@ -636,7 +642,7 @@ def get_texture_path(filepath, tex_num):
 
     # The file is part of a track
     elif is_track_folder(path):
-        tpage = filepath.split(os.sep)[-2].lower() + chr(97 + tex_num) + ".bmp"
+        tpage = folder.lower() + chr(97 + tex_num) + ".bmp"
         return os.path.join(path, tpage)
     else:
         return os.path.join(path, "dummy{}.bmp".format(chr(97 + tex_num)))
