@@ -617,9 +617,36 @@ class RevoltSettingsPanel(bpy.types.Panel):
 
     def draw(self, context):
         props = context.scene.revolt
-        # box = self.layout.box()
         layout = self.layout
+
         # General settings
+        
+        layout.label("Re-Volt Directory:")
+        box = self.layout.box()
+        box.prop(props, "revolt_dir", text="")
+        if props.revolt_dir == "":
+            box.label("Detected on import", icon="FILE_TICK")
+        elif os.path.isdir(props.revolt_dir):
+            if "rvgl.exe" in os.listdir(props.revolt_dir):
+                box.label(
+                    "Folder exists (RVGL for Windows)", 
+                    icon="FILE_TICK"
+                )
+            elif "rvgl" in os.listdir(props.revolt_dir):
+                box.label(
+                    "Folder exists (RVGL for Linux)", 
+                    icon="FILE_TICK"
+                )
+            else:
+                box.label(
+                    "Folder exists, RVGL not found", 
+                    icon="INFO"
+                )
+
+        else:
+            box.label("Not found", icon="ERROR")
+
+
         layout.label("General:")
         layout.prop(props, "prefer_tex_solid_mode")
         layout.separator()

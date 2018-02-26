@@ -81,6 +81,13 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = "example.prm",
         description = "Enter a new name for the selected objects"
     )
+    revolt_dir = StringProperty(
+        name = "Re-Volt Directory",
+        default = "",
+        description = "Manually define a Re-Volt installation for loading "
+                      "stock files. If left empty, the directory will be "
+                      "automatically detected"
+    )
 
     # Export properties
     triangulate_ngons = BoolProperty(

@@ -1204,3 +1204,96 @@ class LookupList:
                "polyhedron_idcs": self.polyhedron_idcs
                }
         return dic
+
+
+class Hull:
+    def __init__(self, file=None):
+        self.chull_count = 0
+        self.chulls = []  # ConvexHulls
+
+        self.interior = Interior()
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        pass
+
+    def write(self, file):
+        pass
+
+
+class ConvexHull:
+    def __init__(self, file=None):
+        self.vertex_count = 0
+        self.edge_count = 0
+        self.face_count = 0
+
+        self.bbox = BoundingBox()
+        self.bbox_offset = Vector()
+
+        self.vertices = []  # Vectors
+        self.edges = []  # Edges
+        self.faces = []  # Planes
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.vertex_count = struct.unpack("<h", file.read(2))
+        self.edge_count = struct.unpack("<h", file.read(2))
+        self.face_count = struct.unpack("<h", file.read(2))
+
+        self.bbox = BoundingBox(file)
+        self.bbox_offset = Vector(file)
+
+        self.vertices = [Vector(file) for x in range(self.vertex_count)]
+        self.edges = [Edge(file) for x in range(self.edge_count)]
+        self.faces = [Plane(file) for x in range(self.face_count)]
+
+    def write(self, file):
+        pass
+
+
+class Edge:
+    def __init__(self, file=None):
+        self.vertices = []  # Integer indices
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        pass
+
+    def write(self, file):
+        pass
+
+
+class Interior:
+    def __init__(self, file=None):
+        self.sphere_count = 0
+        self.spheres = []  # Spheres
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        pass
+
+    def write(self, file):
+        pass
+
+
+class Sphere:
+    def __init__(self, file=None):
+        self.center = Vector()
+        self.radius = 0.0
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        pass
+
+    def write(self, file):
+        pass
