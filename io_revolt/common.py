@@ -23,7 +23,6 @@ from .carinfo import read_parameters
 # Global dictionaries
 global ERRORS
 ERRORS = {}  # Dictionary that holds error messages
-TEXTURES = {}  # Gobal dict to hold texture paths
 PARAMETERS = {}  # Glocal dict to hold parameters
 
 

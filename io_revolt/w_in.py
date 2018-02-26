@@ -34,7 +34,7 @@ def import_file(filepath, scene):
     """
 
     # Clears textures since they might not exist anymore
-    common.TEXTURES = {}
+    # common.TEXTURES = {}
 
     props = scene.revolt
     # Resets the index of the current env color
