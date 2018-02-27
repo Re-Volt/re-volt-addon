@@ -1217,7 +1217,11 @@ class Hull:
             self.read(file)
 
     def read(self, file):
-        pass
+        self.chull_count = struct.unpack("<h", file.read(2))[0]
+        self.vertices = [ConvexHull(file) for x in range(self.chull_count)]
+
+        self.interior = Interior(file)
+
 
     def write(self, file):
         pass
@@ -1240,9 +1244,9 @@ class ConvexHull:
             self.read(file)
 
     def read(self, file):
-        self.vertex_count = struct.unpack("<h", file.read(2))
-        self.edge_count = struct.unpack("<h", file.read(2))
-        self.face_count = struct.unpack("<h", file.read(2))
+        self.vertex_count = struct.unpack("<h", file.read(2))[0]
+        self.edge_count = struct.unpack("<h", file.read(2))[0]
+        self.face_count = struct.unpack("<h", file.read(2))[0]
 
         self.bbox = BoundingBox(file)
         self.bbox_offset = Vector(file)
@@ -1263,7 +1267,7 @@ class Edge:
             self.read(file)
 
     def read(self, file):
-        pass
+        self.vertices = [struct.unpack("<h", file.read(2)) for x in range(2)]
 
     def write(self, file):
         pass
@@ -1278,7 +1282,8 @@ class Interior:
             self.read(file)
 
     def read(self, file):
-        pass
+        self.sphere_count = struct.unpack("<h", file.read(2))[0]
+        self.spheres = [Sphere(file) for x in range(self.sphere_count)]
 
     def write(self, file):
         pass
@@ -1293,7 +1298,8 @@ class Sphere:
             self.read(file)
 
     def read(self, file):
-        pass
+        self.center = Vector(file)
+        self.radius = struct.unpack("<f", file.read(4))[0]
 
     def write(self, file):
         pass

@@ -37,6 +37,8 @@ imp.reload(texanim)
 imp.reload(tools)
 
 # Reloaded here because it's used in a class which is instanced here
+if "hul_in" in locals():
+    imp.reload(hul_in)
 if "img_in" in locals():
     imp.reload(img_in)
 if "prm_in" in locals():

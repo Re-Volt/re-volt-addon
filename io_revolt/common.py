@@ -672,6 +672,8 @@ def get_format(fstr):
         return FORMAT_TA_CSV
     elif ext == "fin":
         return FORMAT_FIN
+    elif ext == "hul":
+        return FORMAT_HUL
     elif ext in ["ncp"]:
         return FORMAT_NCP
     elif ext in ["prm", "m"]:
