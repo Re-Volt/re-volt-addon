@@ -22,12 +22,45 @@ from . import prm_in
 
 from .rvstruct import Hull
 from .common import *
-from mathutils import Color
+from mathutils import Color, Vector
 
-def import_hull(filepath):
+def import_hull(filepath, scene):
+    # Reads the full file
     with open(filepath, "rb") as fd:
         hull = Hull(fd)
-    
+
+    # Imports the convex hulls
+    for chull in hull.chulls:
+        import_chull(chull, scene, filepath.rsplit(os.sep, 1)[1])
+
+
+
+
+def import_chull(chull, scene, filename):
+    dprint("Importing convex hull...")
+
+    me = bpy.data.meshes.new(filename)
+    bm = bmesh.new()
+
+    for vert in chull.vertices:
+        position = to_blender_coord(vert)
+        normal = to_blender_axis(vert)
+
+        # Creates vertices
+        bm.verts.new(Vector((position[0], position[1], position[2])))
+
+        # Ensures lookup table (potentially puts out an error otherwise)
+        bm.verts.ensure_lookup_table()
+
+    # Converts the bmesh back to a mesh and frees resources
+    bm.normal_update()
+    bm.to_mesh(me)
+    bm.free()
+
+    ob = bpy.data.objects.new(filename, me)
+    scene.objects.link(ob)
+    scene.objects.active = ob
+
 
 def import_file(filepath, scene):
-    return import_hull(filepath)
+    return import_hull(filepath, scene)

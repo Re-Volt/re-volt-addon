@@ -1218,7 +1218,7 @@ class Hull:
 
     def read(self, file):
         self.chull_count = struct.unpack("<h", file.read(2))[0]
-        self.vertices = [ConvexHull(file) for x in range(self.chull_count)]
+        self.chulls = [ConvexHull(file) for x in range(self.chull_count)]
 
         self.interior = Interior(file)
 
