@@ -44,13 +44,15 @@ def import_chull(chull, scene, filename):
 
     for vert in chull.vertices:
         position = to_blender_coord(vert)
-        normal = to_blender_axis(vert)
 
         # Creates vertices
         bm.verts.new(Vector((position[0], position[1], position[2])))
 
-        # Ensures lookup table (potentially puts out an error otherwise)
         bm.verts.ensure_lookup_table()
+
+    for edge in chull.edges:
+        bm.edges.new([bm.verts[edge[0]], bm.verts[edge[1]]])
+
 
     # Converts the bmesh back to a mesh and frees resources
     bm.normal_update()

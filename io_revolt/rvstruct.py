@@ -1267,10 +1267,13 @@ class Edge:
             self.read(file)
 
     def read(self, file):
-        self.vertices = [struct.unpack("<h", file.read(2)) for x in range(2)]
+        self.vertices = [struct.unpack("<h", file.read(2))[0] for x in range(2)]
 
     def write(self, file):
         pass
+
+    def __getitem__(self, i):
+        return self.vertices[i]
 
 
 class Interior:
