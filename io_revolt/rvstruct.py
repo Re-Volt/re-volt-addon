@@ -1115,6 +1115,21 @@ class Plane:
         if file:
             self.read(file)
 
+    def contains_vertex(self, vertex):
+        # Get one point of the plane
+
+        q = self.normal * self.distance
+
+        qp = vertex - q
+
+        result = self.normal.scalar(qp)
+
+        if abs(result) < 0.0001:
+            return True
+        else:
+            print(result)
+            return False
+
     def read(self, file):
         self.normal = Vector(file=file)
         self.distance = struct.unpack("<f", file.read(4))[0]
