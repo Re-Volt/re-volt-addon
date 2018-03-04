@@ -9,6 +9,10 @@ title: Changelog
 
 * **Fixes**
     * Textures are now loaded when importing a mesh from the custom folder (reported by Gotolei)
+* **Additions**
+	* *Select by name* button in the Instances helper panel that allows users to select all objects with a similar name
+* **Modifications**
+	* Fixed all Re-Volt panels to the top (object and scene properties) so they're easier to find. This makes the add-on a lot more intrusive but most people using this add-on use Blender exclusively for Re-Volt.
 
 ## 2018-02-25
 Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)
