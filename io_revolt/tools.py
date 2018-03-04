@@ -201,3 +201,11 @@ def rename_all_objects(self, context):
 
     for obj in context.selected_objects:
         obj.name = props.rename_all_name
+
+
+def select_by_name(self, context):
+    props = context.scene.revolt
+
+    for obj in context.scene.objects:
+        if props.rename_all_name in obj.name:
+            obj.select = True

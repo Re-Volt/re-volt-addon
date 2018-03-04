@@ -438,3 +438,15 @@ class ButtonRenameAllObjects(bpy.types.Operator):
         tools.rename_all_objects(self, context)
 
         return{"FINISHED"}
+
+
+class SelectByName(bpy.types.Operator):
+    bl_idname = "helpers.select_by_name"
+    bl_label = "Select by name"
+    bl_description = (
+        "Selects all objects that contain the name"
+        )
+
+    def execute(self, context):
+        tools.select_by_name(self, context)
+        return{"FINISHED"}

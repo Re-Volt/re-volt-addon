@@ -17,11 +17,15 @@ class RevoltObjectPanel(bpy.types.Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"
+    bl_options = {"HIDE_HEADER"}
+
 
     def draw(self, context):
         layout = self.layout
         obj = context.object
         objprops = obj.revolt
+
+        layout.label("Re-Volt Properties")
 
         # NCP properties
         box = layout.box()
@@ -63,10 +67,14 @@ class RevoltScenePanel(bpy.types.Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
+    bl_options = {"HIDE_HEADER"}
+
 
     def draw(self, context):
         props = context.scene.revolt
         layout = self.layout
+
+        layout.label("Re-Volt Properties")
 
         layout.prop(props, "texture_animations")
 
@@ -147,6 +155,7 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
         col = box.column(align=True)
         col.prop(props, "rename_all_name", text="")
         col.operator("helpers.rename_all_objects")
+        col.operator("helpers.select_by_name")
 
 
 class RevoltHelpersPanelMesh(bpy.types.Panel):
