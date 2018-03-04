@@ -20,14 +20,20 @@ from . import common
 from . import rvstruct
 from . import prm_in
 
-from .rvstruct import Instances, Vector
+from .rvstruct import Instances, Instance, Vector
 from .common import *
 from mathutils import Color
 
 
 def export_file(filepath, scene):
-	fin = Instances()
+    fin = Instances()
 
-	# Gather list of instance objects
-	objs = [obj for obj in scene.objects if obj.revolt.is_instance]
+    # Gathers list of instance objects
+    objs = [obj for obj in scene.objects if obj.revolt.is_instance]
+
+    for obj in objs:
+        instance = Instance()
+
+
+
 

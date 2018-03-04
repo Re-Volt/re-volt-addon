@@ -435,7 +435,8 @@ class ButtonRenameAllObjects(bpy.types.Operator):
     )
 
     def execute(self, context):
-        tools.rename_all_objects(self, context)
+        n = tools.rename_all_objects(self, context)
+        msg_box("Renamed {} objects".format(n))
 
         return{"FINISHED"}
 
@@ -448,5 +449,32 @@ class SelectByName(bpy.types.Operator):
         )
 
     def execute(self, context):
-        tools.select_by_name(self, context)
+        n = tools.select_by_name(self, context)
+        msg_box("Selected {} objects".format(n))
+        return{"FINISHED"}
+
+
+class SelectByData(bpy.types.Operator):
+    bl_idname = "helpers.select_by_data"
+    bl_label = "Select by data"
+    bl_description = (
+        "Selects all objects with the same object data (mesh)"
+    )
+
+    def execute(self, context):
+        n = tools.select_by_data(self, context)
+        msg_box("Selected {} objects".format(n))
+        return{"FINISHED"}
+
+
+class SetInstanceProperty(bpy.types.Operator):
+    bl_idname = "helpers.set_instance_property"
+    bl_label = "Mark as Instance"
+    bl_description = (
+        "Marks all selected objects as instances"
+    )
+
+    def execute(self, context):
+        n = tools.set_property_to_selected(self, context, "is_instance", True)
+        msg_box("Marked {} objects as instances".format(n))
         return{"FINISHED"}

@@ -17,6 +17,7 @@ Supported Formats:
 - .ncp (Collision)
 
 Missing Formats:
+- .hul (Hull collision)
 - .fan (AiNodes)
 - .taz (TrackZones)
 - .fob (Objects)
@@ -24,7 +25,6 @@ Missing Formats:
 - .lit (Lights)
 - .tri (Triggers)
 - .rim (Mirrors)
-- .hul (Hull collision)
 """
 
 import os
@@ -834,7 +834,7 @@ class Instance:
     Reads and writes properties of an instanced object found in .fin files.
     """
     def __init__(self, file=None):
-        self.name = ""                            # first 9 letters of file name
+        self.name = ""                            # first 8 letters of file name
         self.color = Color(color=[0, 0, 0])       # model % RGB color
         self.env_color = Color(color=[0, 0, 0], alpha=True) # envMap color
         self.priority = 0                         # priority for multiplayer
@@ -865,7 +865,7 @@ class Instance:
         self.or_matrix = Matrix(file)
 
     def write(self, file):
-        # Writes the first 9 letters of the prm file name
+        # Writes the first 8 letters of the prm file name
         name = str.encode(self.name)
         file.write(struct.pack("9s", name))
         self.color.write(file)

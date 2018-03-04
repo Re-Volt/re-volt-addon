@@ -202,10 +202,33 @@ def rename_all_objects(self, context):
     for obj in context.selected_objects:
         obj.name = props.rename_all_name
 
+    return len(context.selected_objects)
+
 
 def select_by_name(self, context):
     props = context.scene.revolt
+    sce = context.scene
 
-    for obj in context.scene.objects:
-        if props.rename_all_name in obj.name:
+    objs = [obj for obj in sce.objects if props.rename_all_name in obj.name]
+
+    for obj in objs:
+        obj.select = True
+
+    return len(objs)
+
+def select_by_data(self, context):
+    sce = context.scene
+    compare = context.object
+
+    objs = [obj for obj in sce.objects if obj.data == compare.data]
+
+    for obj in objs:
             obj.select = True
+
+    return len(objs)
+
+
+def set_property_to_selected(self, context, prop, value):
+    for obj in context.selected_objects:
+        setattr(obj.revolt, prop, value)
+    return len(context.selected_objects)

@@ -152,11 +152,13 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
 
         box = layout.box()
         box.label("Instances:")
+        box.operator("helpers.select_by_data")
         col = box.column(align=True)
         col.prop(props, "rename_all_name", text="")
         col.operator("helpers.rename_all_objects")
         col.operator("helpers.select_by_name")
 
+        box.operator("helpers.set_instance_property")
 
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"
