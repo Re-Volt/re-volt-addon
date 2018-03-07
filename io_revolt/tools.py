@@ -232,3 +232,10 @@ def set_property_to_selected(self, context, prop, value):
     for obj in context.selected_objects:
         setattr(obj.revolt, prop, value)
     return len(context.selected_objects)
+
+
+def batch_bake(self, context):
+    for obj in context.selected_objects:
+        context.scene.objects.active = obj
+        bpy.ops.object.bake_image()
+    return len(context.selected_objects)

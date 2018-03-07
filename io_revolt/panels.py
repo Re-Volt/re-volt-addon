@@ -151,7 +151,7 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
         )
 
         box = layout.box()
-        box.label("Instances:")
+        box.label("Instances: {}".format(len([obj for obj in context.scene.objects if obj.revolt.is_instance])))
         box.operator("helpers.select_by_data")
         col = box.column(align=True)
         col.prop(props, "rename_all_name", text="")
@@ -159,6 +159,8 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
         col.operator("helpers.select_by_name")
 
         box.operator("helpers.set_instance_property")
+        box.operator("helpers.rem_instance_property")
+        box.operator("helpers.batch_bake")
 
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"

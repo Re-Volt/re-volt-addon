@@ -243,6 +243,11 @@ def exec_export(filepath, context):
             from . import prm_out
             prm_out.export_file(filepath, scene)
 
+        elif frmt == FORMAT_FIN:
+            from . import fin_out
+            print("Exporting to .fin...")
+            fin_out.export_file(filepath, scene)
+
         elif frmt == FORMAT_NCP:
             from . import ncp_out
             print("Exporting to .ncp...")
@@ -477,4 +482,30 @@ class SetInstanceProperty(bpy.types.Operator):
     def execute(self, context):
         n = tools.set_property_to_selected(self, context, "is_instance", True)
         msg_box("Marked {} objects as instances".format(n))
+        return{"FINISHED"}
+
+
+class RemoveInstanceProperty(bpy.types.Operator):
+    bl_idname = "helpers.rem_instance_property"
+    bl_label = "Remove Instance property"
+    bl_description = (
+        ""
+    )
+
+    def execute(self, context):
+        n = tools.set_property_to_selected(self, context, "is_instance", False)
+        msg_box("Marked {} objects as instances".format(n))
+        return{"FINISHED"}
+
+
+class BatchBake(bpy.types.Operator):
+    bl_idname = "helpers.batch_bake"
+    bl_label = "Bake all selected"
+    bl_description = (
+        ""
+    )
+
+    def execute(self, context):
+        n = tools.batch_bake(self, context)
+        msg_box("Baked {} objects".format(n))
         return{"FINISHED"}

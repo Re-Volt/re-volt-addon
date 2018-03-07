@@ -37,6 +37,10 @@ imp.reload(texanim)
 imp.reload(tools)
 
 # Reloaded here because it's used in a class which is instanced here
+if "fin_in" in locals():
+    imp.reload(fin_in)
+if "fin_out" in locals():
+    imp.reload(fin_out)
 if "hul_in" in locals():
     imp.reload(hul_in)
 if "img_in" in locals():
@@ -59,8 +63,7 @@ if "w_in" in locals():
     imp.reload(w_in)
 if "w_out" in locals():
     imp.reload(w_out)
-if "fin_in" in locals():
-    imp.reload(fin_in)
+
 
 # Makes common variables and classes directly accessible
 from .common import *

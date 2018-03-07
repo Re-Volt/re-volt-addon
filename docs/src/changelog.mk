@@ -11,6 +11,7 @@ title: Changelog
 
 * **Additions**
     * **Initial hull support**: Import
+    * **Instances (.fin)**: Export (full support)
     * *Select by name* button in the Instances helper panel that allows users to select all objects with a similar name
     * *Mark as Instance* button in the Instances helper panel that sets the instance properties on all selected objects
 * **Fixes**
