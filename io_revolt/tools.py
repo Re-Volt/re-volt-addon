@@ -235,7 +235,74 @@ def set_property_to_selected(self, context, prop, value):
 
 
 def batch_bake(self, context):
+    rd = context.scene.render
+
+    # Saves old render settings
+    old_bake_vcol = rd.use_bake_to_vertex_color
+    old_bake_type = rd.bake_type
+
+    # Sets render settings
+    rd.use_bake_to_vertex_color = True
+    rd.bake_type = "FULL"
+
+    # Bakes all selected objects
     for obj in context.selected_objects:
+        print("Looking at {}...".format(obj.name))
         context.scene.objects.active = obj
+
+        # Gets currently selected layers
+        old_active_render_layer = ""
+        old_active = ""
+        for layer in obj.data.vertex_colors:
+            if layer.active_render:
+                old_active_render_layer = layer.name
+            if layer.active:
+                old_active = layer.name
+        
+        # Creates a temporary layer for baking a full render to
+        if not "temp" in obj.data.vertex_colors:
+            obj.data.vertex_colors.new("temp")
+        layer = obj.data.vertex_colors["temp"]
+        layer.active = True
+        layer.active_render = True
+        
+        # Bakes the image onto that layer
+        print("Baking...")
         bpy.ops.object.bake_image()
-    return len(context.selected_objects)
+        print("done.")
+        
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+        print("Bmesh")
+        vcol_layer = bm.loops.layers.color.get("temp")
+        
+        avg_col = [0.0, 0.0, 0.0]
+        
+        for face in bm.faces:
+            for loop in face.loops:
+                for c in range(3):
+                    avg_col[c] += loop[vcol_layer][c]
+                    
+        inf_col = [c / len(bm.verts) for c in avg_col]
+        bm.free()
+        print("freed")
+        for c in range(3):
+            obj.revolt.fin_col[c] = inf_col[c]
+            
+        obj.revolt.fin_model_rgb = True
+
+        # Restores previously selected layers
+        for layer in obj.data.vertex_colors:
+            if layer.name == old_active_render_layer:
+                layer.active_render = True
+            if layer.name == old_active:
+                layer.active = True
+
+        # Removes the temporary render layer
+        obj.data.vertex_colors.remove(layer)
+        print("done.")
+
+    # Restores baking settings
+    rd.use_bake_to_vertex_color = old_bake_vcol
+    rd.bake_type = old_bake_type
+    print(len(context.selected_objects))
