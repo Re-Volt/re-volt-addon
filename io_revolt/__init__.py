@@ -77,8 +77,8 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (18, 2, 26),
-"blender": (2, 79, 1),
+"version": (18, 4, 17),
+"blender": (2, 79, 2),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",
