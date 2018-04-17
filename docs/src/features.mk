@@ -76,3 +76,7 @@ title: Features
 - [x] Geometry
 - [x] Properties
 - [x] Materials
+
+## HULL
+### Import
+- [x] Convex hull (without faces)

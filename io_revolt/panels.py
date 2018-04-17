@@ -219,6 +219,8 @@ def prm_edit_panel(self, context):
     obj = context.object
     layout = self.layout
 
+    props = context.scene.revolt
+
     mesh = obj.data
     meshprops = obj.data.revolt
     bm = get_edit_bmesh(obj)
@@ -280,24 +282,24 @@ def prm_edit_panel(self, context):
     col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
     col.operator("faceprops.select", text="sel").prop = FACE_SKIP
 
-    row = layout.row()
-    row.label("Texture:")
-
-    row = layout.row()
-    if len(self.selection) > 1:
-        if context.object.data.revolt.face_texture == -2:
+    if props.use_tex_num:
+        row = layout.row()
+        row.label("Texture:")
+        row = layout.row()
+        if len(self.selection) > 1:
+            if context.object.data.revolt.face_texture == -2:
+                row.prop(context.object.data.revolt, "face_texture",
+                    text="Texture (different numbers)")
+            else:
+                row.prop(context.object.data.revolt, "face_texture",
+                    text="Texture (set for all)")
+        elif len(self.selection) == 0:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture (different numbers)")
+                text="Texture (no selection)")
         else:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture (set for all)")
-    elif len(self.selection) == 0:
-        row.prop(context.object.data.revolt, "face_texture",
-            text="Texture (no selection)")
-    else:
-        row.prop(context.object.data.revolt, "face_texture",
-            text="Texture".format(""))
-    row.active = context.object.data.revolt.face_texture != -3
+                text="Texture".format(""))
+        row.active = context.object.data.revolt.face_texture != -3
 
 
 def ncp_edit_panel(self, context):
@@ -505,6 +507,7 @@ class RevoltLightPanel(bpy.types.Panel):
             # Shadow tool
             box = self.layout.box()
             box.label(text="Generate Shadow Texture")
+            row = box.row()
             row.prop(props, "shadow_method")
             col = box.column(align=True)
             col.prop(props, "shadow_quality")
