@@ -160,7 +160,6 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
 
         box.operator("helpers.set_instance_property")
         box.operator("helpers.rem_instance_property")
-        box.operator("helpers.batch_bake")
 
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"
@@ -453,7 +452,7 @@ class RevoltLightPanel(bpy.types.Panel):
 
     @classmethod
     def poll(self, context):
-        return len(context.selected_objects) >= 1 and context.object.type == "MESH"
+        return context.object and len(context.selected_objects) >= 1 and context.object.type == "MESH"
 
     def draw_header(self, context):
         self.layout.label("", icon="RENDER_STILL")
@@ -506,7 +505,6 @@ class RevoltLightPanel(bpy.types.Panel):
             # Shadow tool
             box = self.layout.box()
             box.label(text="Generate Shadow Texture")
-            row = box.row()
             row.prop(props, "shadow_method")
             col = box.column(align=True)
             col.prop(props, "shadow_quality")
@@ -518,6 +516,12 @@ class RevoltLightPanel(bpy.types.Panel):
                          icon="LAMP_SPOT")
             row = box.row()
             row.prop(props, "shadow_table", text="Table")
+
+            # Batch baking tool
+            box = self.layout.box()
+            box.label(text="Batch Bake Light")
+            box.operator("helpers.batch_bake")
+
 
 
 class MenuAnimModes(bpy.types.Menu):
