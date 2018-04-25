@@ -25,7 +25,7 @@ The positive X-Axis goes to the right, Y downwards and Z forwards.
 ```c
 struct PRM_Mesh {
 
-  test polygon_count;
+  rvshort polygon_count;
   rvshort vertex_count;
 
   Polygon polygons[polygon_count];
