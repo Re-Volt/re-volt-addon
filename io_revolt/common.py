@@ -355,7 +355,8 @@ def texture_to_int(string):
 
     # Checks if the last letter of the file name matches naming convention
     elif ".bmp" in string:
-        num = ord(string[-5]) - 97
+        base, ext = string.split(".", 1)
+        num = ord(base[-1]) - 97
 
         # Returns texture A if it's not a fitting track texture
         if num > 9 or num < 0:
