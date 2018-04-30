@@ -35,6 +35,7 @@
 <li><a href="tools-panel/tools-panel-helpers.html">Helpers</a></li>
 <li><a href="tools-panel/tools-panel-io.html">Import/Export</a></li>
 <li><a href="tools-panel/tools-panel-light.html">Light/Shadow</a></li>
+<li><a href="tools-panel/tools-panel-instances.html">Instances</a></li>
 <li><a href="tools-panel/tools-panel-faceprops.html">Face Properties</a></li>
 <li><a href="tools-panel/tools-panel-vcol.html">Vertex Color</a></li>
 <li><a href="tools-panel/tools-panel-material.html">Material</a></li>
@@ -77,13 +78,19 @@
 <li>
 <a href="#import-2">Import</a>
 </li>
+<li>
+<a href="#export">Export</a>
+</li>
 </ul>
 </li>
 <li>
 <a href="#uv-map">UV Map</a>
 <ul>
 <li>
-<a href="#export">Export</a>
+<a href="#export-2">Export</a>
+</li>
+<li>
+<a href="#export-3">Export</a>
 </li>
 </ul>
 </li>
@@ -92,6 +99,9 @@
 <ul>
 <li>
 <a href="#import-3">Import</a>
+</li>
+<li>
+<a href="#export-4">Export</a>
 </li>
 </ul>
 </li>
@@ -109,6 +119,9 @@
 <li>
 <a href="#import-5">Import</a>
 </li>
+<li>
+<a href="#export-5">Export</a>
+</li>
 </ul>
 </li>
 <li>
@@ -116,6 +129,9 @@
 <ul>
 <li>
 <a href="#import-6">Import</a>
+</li>
+<li>
+<a href="#export-6">Export</a>
 </li>
 </ul>
 </li>
@@ -137,7 +153,7 @@
 </ul>
 </li>
 <li>
-<a href="#export-2">Export</a>
+<a href="#export-7">Export</a>
 </li>
 </ul>
 </li>
@@ -148,7 +164,7 @@
 <a href="#import-8">Import</a>
 </li>
 <li>
-<a href="#export-3">Export</a>
+<a href="#export-8">Export</a>
 </li>
 </ul>
 </li>
@@ -182,18 +198,26 @@ Import
 </h3>
 <p>
 An object with the mesh will be linked to the current scene. Meshes consist of quads and tris.
-### Export
+</p>
+<h3 id="export">
+Export
+</h3>
+<p>
 N-gons will be triangulate by default. This can be disabled in the export settings.
 </p>
 <h2 id="uv-map">
 UV Map
 </h2>
-<h3 id="export">
+<h3 id="export-2">
 Export
 </h3>
 <p>
 The UV map of the mesh can be found on the default UV layer (UVMap).
-### Export
+</p>
+<h3 id="export-3">
+Export
+</h3>
+<p>
 Only the uv map called <em>UVMap</em> will be exported.
 </p>
 <h2 id="vertex-colors">
@@ -205,7 +229,11 @@ Import
 <p>
 The vertex colors can be found on the Col and Alpha layers.
 On the alpha channel, white is fully transparent while black is opaque.
-### Export
+</p>
+<h3 id="export-4">
+Export
+</h3>
+<p>
 Only the layers <em>Col</em> and <em>Alpha</em> will be exported.
 </p>
 <h2 id="level-of-detail-lod">
@@ -233,7 +261,11 @@ If a texture with the same name already exist, it will be used instead.
 </p>
 <p>
 The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting.
-### Export
+</p>
+<h3 id="export-5">
+Export
+</h3>
+<p>
 To set the texture using this number layer, the <em>Use Number for Textures</em> setting has to be set in the export settings.
 When exporting, the texture number will be taken from the layer instead of being determined by the texture file assigned to the face.
 </p>
@@ -251,7 +283,11 @@ The face types can be accessed with the Mesh properties which each have setter a
 The face type layer is called "Type".
 There is a Re-Volt tab in the Tool panel of the 3D view that allows users
 to set face properties in Edit mode.
-### Export
+</p>
+<h3 id="export-6">
+Export
+</h3>
+<p>
 All selected face type properties will be set when exporting.
 </p>
 <h2 id="world-w">
@@ -285,7 +321,7 @@ Debug
 <p>
 Bounding boxes, bounding spheres and "big cubes" (spheres) can be imported to selected layers. They are for debug purposes only and they will not affect the export in any way.
 </p>
-<h3 id="export-2">
+<h3 id="export-7">
 Export
 </h3>
 <p>
@@ -300,7 +336,7 @@ Import
 <p>
 NCP flags and materials are written to the integer layers "NCPFlags" and "Material". A preview color for the materials is written to the "NCPPreview" vertex color channel.
 </p>
-<h3 id="export-3">
+<h3 id="export-8">
 Export
 </h3>
 <p>

@@ -56,7 +56,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     )
     prefer_tex_solid_mode = BoolProperty(
         name = "Prefer Textured Solid Mode",
-        default = True,
+        default = False,
         description = "Prefer Textured Solid mode instead of Texture mode for "
                       "3D view:\n\nThis makes it easier to work with "
                       "untextured meshes.\nThis setting affects widgets that "

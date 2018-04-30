@@ -150,17 +150,6 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
             text="Textured Solid"
         )
 
-        box = layout.box()
-        box.label("Instances: {}".format(len([obj for obj in context.scene.objects if obj.revolt.is_instance])))
-        box.operator("helpers.select_by_data")
-        col = box.column(align=True)
-        col.prop(props, "rename_all_name", text="")
-        col.operator("helpers.rename_all_objects")
-        col.operator("helpers.select_by_name")
-
-        box.operator("helpers.set_instance_property")
-        box.operator("helpers.rem_instance_property")
-
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
@@ -521,10 +510,41 @@ class RevoltLightPanel(bpy.types.Panel):
             row.prop(props, "shadow_table", text="Table")
 
             # Batch baking tool
-            box = self.layout.box()
-            box.label(text="Batch Bake Light")
-            box.operator("helpers.batch_bake")
+            # box = self.layout.box()
+            # box.label(text="Batch Bake Light")
 
+
+class RevoltInstancesPanel(bpy.types.Panel):
+    bl_label = "Instances"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "objectmode"
+    bl_category = "Re-Volt"
+
+    @classmethod
+    def poll(self, context):
+        return context.object and len(context.selected_objects) >= 1 and context.object.type == "MESH"
+
+    def draw_header(self, context):
+        self.layout.label("", icon="OUTLINER_OB_GROUP_INSTANCE")
+
+    def draw(self, context):
+        view = context.space_data
+        obj = context.object
+        props = context.scene.revolt
+        layout = self.layout
+
+        layout.label("Instances: {}".format(len([obj for obj in context.scene.objects if obj.revolt.is_instance])))
+        layout.operator("helpers.select_by_data")
+        col = layout.column(align=True)
+        col.prop(props, "rename_all_name", text="")
+        col.operator("helpers.rename_all_objects")
+        col.operator("helpers.select_by_name")
+
+        layout.operator("helpers.set_instance_property")
+        layout.operator("helpers.rem_instance_property")
+
+        layout.operator("helpers.batch_bake_model_rgb")
 
 
 class MenuAnimModes(bpy.types.Menu):
@@ -641,30 +661,30 @@ class RevoltSettingsPanel(bpy.types.Panel):
 
         # General settings
         
-        layout.label("Re-Volt Directory:")
-        box = self.layout.box()
-        box.prop(props, "revolt_dir", text="")
-        if props.revolt_dir == "":
-            box.label("Detected on import", icon="FILE_TICK")
-        elif os.path.isdir(props.revolt_dir):
-            if "rvgl.exe" in os.listdir(props.revolt_dir):
-                box.label(
-                    "Folder exists (RVGL for Windows)", 
-                    icon="FILE_TICK"
-                )
-            elif "rvgl" in os.listdir(props.revolt_dir):
-                box.label(
-                    "Folder exists (RVGL for Linux)", 
-                    icon="FILE_TICK"
-                )
-            else:
-                box.label(
-                    "Folder exists, RVGL not found", 
-                    icon="INFO"
-                )
+        # layout.label("Re-Volt Directory:")
+        # box = self.layout.box()
+        # box.prop(props, "revolt_dir", text="")
+        # if props.revolt_dir == "":
+        #     box.label("Detected on import", icon="FILE_TICK")
+        # elif os.path.isdir(props.revolt_dir):
+        #     if "rvgl.exe" in os.listdir(props.revolt_dir):
+        #         box.label(
+        #             "Folder exists (RVGL for Windows)", 
+        #             icon="FILE_TICK"
+        #         )
+        #     elif "rvgl" in os.listdir(props.revolt_dir):
+        #         box.label(
+        #             "Folder exists (RVGL for Linux)", 
+        #             icon="FILE_TICK"
+        #         )
+        #     else:
+        #         box.label(
+        #             "Folder exists, RVGL not found", 
+        #             icon="INFO"
+        #         )
 
-        else:
-            box.label("Not found", icon="ERROR")
+        # else:
+        #     box.label("Not found", icon="ERROR")
 
 
         layout.label("General:")

@@ -14,13 +14,15 @@ There also is a button in the Re-Volt tab of the tool shelf of the 3D view.
 ## PRM
 ## Mesh Data
 ### Import
-An object with the mesh will be linked to the current scene. Meshes consist of quads and tris.  
+An object with the mesh will be linked to the current scene. Meshes consist of quads and tris.
+
 ### Export
 N-gons will be triangulate by default. This can be disabled in the export settings.
 
 ## UV Map
 ### Export
 The UV map of the mesh can be found on the default UV layer (UVMap).
+
 ### Export
 Only the uv map called *UVMap* will be exported.
 
@@ -28,6 +30,7 @@ Only the uv map called *UVMap* will be exported.
 ### Import
 The vertex colors can be found on the Col and Alpha layers.  
 On the alpha channel, white is fully transparent while black is opaque.
+
 ### Export
 Only the layers *Col* and *Alpha* will be exported.
 
@@ -45,6 +48,7 @@ If a texture file cannot be found, a 512x512 dummy texture will be generated.
 If a texture with the same name already exist, it will be used instead.
 
 The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting.
+
 ### Export
 To set the texture using this number layer, the *Use Number for Textures* setting has to be set in the export settings.  
 When exporting, the texture number will be taken from the layer instead of being determined by the texture file assigned to the face.
@@ -52,11 +56,13 @@ When exporting, the texture number will be taken from the layer instead of being
 If there is no texture present on a face, texture page 0 (A) will be used. If you actually want to export a mesh without a texture, enable the *Use Number for Textures* and set the number to `-1`.
 
 ## Face Type
+
 ### Import
 The face types can be accessed with the Mesh properties which each have setter and getter functions that operate on int layers via bmesh.  
 The face type layer is called "Type".
 There is a Re-Volt tab in the Tool panel of the 3D view that allows users
 to set face properties in Edit mode.
+
 ### Export
 All selected face type properties will be set when exporting.
 

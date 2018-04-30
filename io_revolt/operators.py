@@ -499,10 +499,11 @@ class RemoveInstanceProperty(bpy.types.Operator):
 
 
 class BatchBake(bpy.types.Operator):
-    bl_idname = "helpers.batch_bake"
-    bl_label = "Bake all selected"
+    bl_idname = "helpers.batch_bake_model_rgb"
+    bl_label = "Bake all selected (Model RGB)"
     bl_description = (
-        ""
+        "Bakes the light cast by lamps in the current scene to the Instance"
+        "model RGB color"
     )
 
     def execute(self, context):

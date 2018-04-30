@@ -5,23 +5,26 @@ title: Changelog
 :insert toc
 
 
-## 2018-04-xx
+## 2018-04-30
 
-**Topics**: Instance (.fin), Hull (.hul), UI, Bugfixes
+**Topics**: Instance (.fin), UI, Bugfixes
 
 * **Additions**
-    * **Initial hull support**: Import
+    * **Initial hull support**: Import (unfinished)
     * **Instances (.fin)**: Export (full support)
-    * *Select by name* button in the Instances helper panel that allows users to select all objects with a similar name
-    * *Mark as Instance* button in the Instances helper panel that sets the instance properties on all selected objects
-    * *Batch baking* feature in the Lights panel
+    * *Select by name* button in the Instances panel that allows users to select all objects with a similar name
+    * *Mark as Instance* button in the Instances panel that sets the instance properties on all selected objects
+    * *Batch baking* feature for instance RGB in the Instances panel
 * **Fixes**
     * Textures are now loaded when importing a mesh from the custom folder (reported by Gotolei)
+    * Ensure that NCP layers exist when exporting: All Material layers and Type layers are now kept. This fixes missing materials when exporting NCP. (reported by LoScassatore, Gorgonzola)
 * **Modifications**
+    * Moved the instances helper section to a dedicated Instances panel.
     * Objects marked as instance (*Is Instance*) will no longer be exported when exporting to .w, use .fin instead
     * Fixed all Re-Volt panels to the top (object and scene properties) so they're easier to find. This makes the add-on a lot more intrusive but most people using this add-on use Blender exclusively for Re-Volt.
     * Message boxes for confirming actions in the helpers panel
     * Texture number face property only shows when *Use Number for Textures* option is enabled
+    * *Prefer Solid Textured Mode* is now disabled by default
 
 ## 2018-02-25
 Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)

@@ -35,6 +35,7 @@
 <li><a href="tools-panel/tools-panel-helpers.html">Helpers</a></li>
 <li><a href="tools-panel/tools-panel-io.html">Import/Export</a></li>
 <li><a href="tools-panel/tools-panel-light.html">Light/Shadow</a></li>
+<li><a href="tools-panel/tools-panel-instances.html">Instances</a></li>
 <li><a href="tools-panel/tools-panel-faceprops.html">Face Properties</a></li>
 <li><a href="tools-panel/tools-panel-vcol.html">Vertex Color</a></li>
 <li><a href="tools-panel/tools-panel-material.html">Material</a></li>
@@ -66,6 +67,9 @@
       </header>
       <ul class="stx-toc">
 <li>
+<a href="#-04-30">2018-04-30</a>
+</li>
+<li>
 <a href="#-02-25">2018-02-25</a>
 </li>
 <li>
@@ -91,6 +95,68 @@
 </li>
 <li>
 <a href="#-10-07">2017-10-07</a>
+</li>
+</ul>
+<h2 id="-04-30">
+2018-04-30
+</h2>
+<p>
+<strong>Topics</strong>: Instance (.fin), UI, Bugfixes
+</p>
+<ul>
+<li>
+<strong>Additions</strong>
+<ul>
+<li>
+<strong>Initial hull support</strong>: Import (unfinished)
+</li>
+<li>
+<strong>Instances (.fin)</strong>: Export (full support)
+</li>
+<li>
+<em>Select by name</em> button in the Instances panel that allows users to select all objects with a similar name
+</li>
+<li>
+<em>Mark as Instance</em> button in the Instances panel that sets the instance properties on all selected objects
+</li>
+<li>
+<em>Batch baking</em> feature for instance RGB in the Instances panel
+</li>
+</ul>
+</li>
+<li>
+<strong>Fixes</strong>
+<ul>
+<li>
+Textures are now loaded when importing a mesh from the custom folder (reported by Gotolei)
+</li>
+<li>
+Ensure that NCP layers exist when exporting: All Material layers and Type layers are now kept. This fixes missing materials when exporting NCP. (reported by LoScassatore, Gorgonzola)
+</li>
+</ul>
+</li>
+<li>
+<strong>Modifications</strong>
+<ul>
+<li>
+Moved the instances helper section to a dedicated Instances panel.
+</li>
+<li>
+Objects marked as instance (<em>Is Instance</em>) will no longer be exported when exporting to .w, use .fin instead
+</li>
+<li>
+Fixed all Re-Volt panels to the top (object and scene properties) so they're easier to find. This makes the add-on a lot more intrusive but most people using this add-on use Blender exclusively for Re-Volt.
+</li>
+<li>
+Message boxes for confirming actions in the helpers panel
+</li>
+<li>
+Texture number face property only shows when <em>Use Number for Textures</em> option is enabled
+</li>
+<li>
+<em>Prefer Solid Textured Mode</em> is now disabled by default
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="-02-25">
