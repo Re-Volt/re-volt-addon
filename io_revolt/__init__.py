@@ -37,6 +37,12 @@ imp.reload(texanim)
 imp.reload(tools)
 
 # Reloaded here because it's used in a class which is instanced here
+if "fin_in" in locals():
+    imp.reload(fin_in)
+if "fin_out" in locals():
+    imp.reload(fin_out)
+if "hul_in" in locals():
+    imp.reload(hul_in)
 if "img_in" in locals():
     imp.reload(img_in)
 if "prm_in" in locals():
@@ -57,8 +63,7 @@ if "w_in" in locals():
     imp.reload(w_in)
 if "w_out" in locals():
     imp.reload(w_out)
-if "fin_in" in locals():
-    imp.reload(fin_in)
+
 
 # Makes common variables and classes directly accessible
 from .common import *
@@ -72,8 +77,8 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (18, 2, 25),
-"blender": (2, 79, 1),
+"version": (18, 4, 30),
+"blender": (2, 79, 2),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",

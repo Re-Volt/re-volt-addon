@@ -23,7 +23,6 @@ from .carinfo import read_parameters
 # Global dictionaries
 global ERRORS
 ERRORS = {}  # Dictionary that holds error messages
-TEXTURES = {}  # Gobal dict to hold texture paths
 PARAMETERS = {}  # Glocal dict to hold parameters
 
 
@@ -298,6 +297,13 @@ def to_trans_matrix(matrix):
         (0, 0, 0, 1)
         ))
 
+def to_or_matrix(matrix):
+    return [
+        (matrix[0][0], -matrix[2][0],  matrix[1][0]),
+        (-matrix[0][2],  matrix[2][2], -matrix[1][2]),
+        (matrix[0][1], -matrix[2][1],  matrix[1][1])
+    ]
+
 
 def rvbbox_from_bm(bm):
     """ The bbox of Blender objects has all edge coordinates. RV just stores the
@@ -349,7 +355,8 @@ def texture_to_int(string):
 
     # Checks if the last letter of the file name matches naming convention
     elif ".bmp" in string:
-        num = ord(string[-5]) - 97
+        base, ext = string.split(".", 1)
+        num = ord(base[-1]) - 97
 
         # Returns texture A if it's not a fitting track texture
         if num > 9 or num < 0:
@@ -619,8 +626,14 @@ Non-Blender helper functions
 def get_texture_path(filepath, tex_num):
     """ Gets the full texture path when given a file and its
         polygon texture number. """
+
     path, fname = filepath.rsplit(os.sep, 1)
-    folder = filepath.split(os.sep)[-2]
+
+    # Checks if the loaded model is located in the custom folder
+    folder = path.rsplit(os.sep, 1)[1]
+    if folder == "custom":
+        path = path.rsplit(os.sep, 1)[0]
+        folder = path.rsplit(os.sep, 1)[1]
 
     if not os.path.isdir(path):
         return None
@@ -636,7 +649,7 @@ def get_texture_path(filepath, tex_num):
 
     # The file is part of a track
     elif is_track_folder(path):
-        tpage = filepath.split(os.sep)[-2].lower() + chr(97 + tex_num) + ".bmp"
+        tpage = folder.lower() + chr(97 + tex_num) + ".bmp"
         return os.path.join(path, tpage)
     else:
         return os.path.join(path, "dummy{}.bmp".format(chr(97 + tex_num)))
@@ -667,6 +680,8 @@ def get_format(fstr):
         return FORMAT_TA_CSV
     elif ext == "fin":
         return FORMAT_FIN
+    elif ext == "hul":
+        return FORMAT_HUL
     elif ext in ["ncp"]:
         return FORMAT_NCP
     elif ext in ["prm", "m"]:

@@ -134,6 +134,7 @@ def get_face_material(self):
 def set_face_material(self, value):
     eo = bpy.context.edit_object
     bm = get_edit_bmesh(eo)
+    mesh = eo.data
     layer = (bm.faces.layers.int.get("Material") or
              bm.faces.layers.int.new("Material"))
     vc_layer = (bm.loops.layers.color.get("NCPPreview") or
@@ -146,7 +147,7 @@ def set_face_material(self, value):
                 loop[vc_layer][0] = COLORS[value][0]
                 loop[vc_layer][1] = COLORS[value][1]
                 loop[vc_layer][2] = COLORS[value][2]
-
+    bmesh.update_edit_mesh(mesh, tessface=False, destructive=False)
     redraw_3d()
 
 

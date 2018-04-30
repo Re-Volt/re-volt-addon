@@ -56,7 +56,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     )
     prefer_tex_solid_mode = BoolProperty(
         name = "Prefer Textured Solid Mode",
-        default = True,
+        default = False,
         description = "Prefer Textured Solid mode instead of Texture mode for "
                       "3D view:\n\nThis makes it easier to work with "
                       "untextured meshes.\nThis setting affects widgets that "
@@ -80,6 +80,13 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Rename",
         default = "example.prm",
         description = "Enter a new name for the selected objects"
+    )
+    revolt_dir = StringProperty(
+        name = "Re-Volt Directory",
+        default = "",
+        description = "Manually define a Re-Volt installation for loading "
+                      "stock files. If left empty, the directory will be "
+                      "automatically detected"
     )
 
     # Export properties

@@ -17,11 +17,15 @@ class RevoltObjectPanel(bpy.types.Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"
+    bl_options = {"HIDE_HEADER"}
+
 
     def draw(self, context):
         layout = self.layout
         obj = context.object
         objprops = obj.revolt
+
+        layout.label("Re-Volt Properties")
 
         # NCP properties
         box = layout.box()
@@ -63,10 +67,14 @@ class RevoltScenePanel(bpy.types.Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
+    bl_options = {"HIDE_HEADER"}
+
 
     def draw(self, context):
         props = context.scene.revolt
         layout = self.layout
+
+        layout.label("Re-Volt Properties")
 
         layout.prop(props, "texture_animations")
 
@@ -142,13 +150,6 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
             text="Textured Solid"
         )
 
-        box = layout.box()
-        box.label("Instances:")
-        col = box.column(align=True)
-        col.prop(props, "rename_all_name", text="")
-        col.operator("helpers.rename_all_objects")
-
-
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
@@ -206,6 +207,8 @@ def prm_edit_panel(self, context):
     """  """
     obj = context.object
     layout = self.layout
+
+    props = context.scene.revolt
 
     mesh = obj.data
     meshprops = obj.data.revolt
@@ -268,24 +271,24 @@ def prm_edit_panel(self, context):
     col.operator("faceprops.select", text="sel").prop = FACE_CLOTH
     col.operator("faceprops.select", text="sel").prop = FACE_SKIP
 
-    row = layout.row()
-    row.label("Texture:")
-
-    row = layout.row()
-    if len(self.selection) > 1:
-        if context.object.data.revolt.face_texture == -2:
+    if props.use_tex_num:
+        row = layout.row()
+        row.label("Texture:")
+        row = layout.row()
+        if len(self.selection) > 1:
+            if context.object.data.revolt.face_texture == -2:
+                row.prop(context.object.data.revolt, "face_texture",
+                    text="Texture (different numbers)")
+            else:
+                row.prop(context.object.data.revolt, "face_texture",
+                    text="Texture (set for all)")
+        elif len(self.selection) == 0:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture (different numbers)")
+                text="Texture (no selection)")
         else:
             row.prop(context.object.data.revolt, "face_texture",
-                text="Texture (set for all)")
-    elif len(self.selection) == 0:
-        row.prop(context.object.data.revolt, "face_texture",
-            text="Texture (no selection)")
-    else:
-        row.prop(context.object.data.revolt, "face_texture",
-            text="Texture".format(""))
-    row.active = context.object.data.revolt.face_texture != -3
+                text="Texture".format(""))
+        row.active = context.object.data.revolt.face_texture != -3
 
 
 def ncp_edit_panel(self, context):
@@ -440,7 +443,7 @@ class RevoltLightPanel(bpy.types.Panel):
 
     @classmethod
     def poll(self, context):
-        return len(context.selected_objects) >= 1 and context.object.type == "MESH"
+        return context.object and len(context.selected_objects) >= 1 and context.object.type == "MESH"
 
     def draw_header(self, context):
         self.layout.label("", icon="RENDER_STILL")
@@ -505,6 +508,43 @@ class RevoltLightPanel(bpy.types.Panel):
                          icon="LAMP_SPOT")
             row = box.row()
             row.prop(props, "shadow_table", text="Table")
+
+            # Batch baking tool
+            # box = self.layout.box()
+            # box.label(text="Batch Bake Light")
+
+
+class RevoltInstancesPanel(bpy.types.Panel):
+    bl_label = "Instances"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    bl_context = "objectmode"
+    bl_category = "Re-Volt"
+
+    @classmethod
+    def poll(self, context):
+        return context.object and len(context.selected_objects) >= 1 and context.object.type == "MESH"
+
+    def draw_header(self, context):
+        self.layout.label("", icon="OUTLINER_OB_GROUP_INSTANCE")
+
+    def draw(self, context):
+        view = context.space_data
+        obj = context.object
+        props = context.scene.revolt
+        layout = self.layout
+
+        layout.label("Instances: {}".format(len([obj for obj in context.scene.objects if obj.revolt.is_instance])))
+        layout.operator("helpers.select_by_data")
+        col = layout.column(align=True)
+        col.prop(props, "rename_all_name", text="")
+        col.operator("helpers.rename_all_objects")
+        col.operator("helpers.select_by_name")
+
+        layout.operator("helpers.set_instance_property")
+        layout.operator("helpers.rem_instance_property")
+
+        layout.operator("helpers.batch_bake_model_rgb")
 
 
 class MenuAnimModes(bpy.types.Menu):
@@ -617,9 +657,36 @@ class RevoltSettingsPanel(bpy.types.Panel):
 
     def draw(self, context):
         props = context.scene.revolt
-        # box = self.layout.box()
         layout = self.layout
+
         # General settings
+        
+        # layout.label("Re-Volt Directory:")
+        # box = self.layout.box()
+        # box.prop(props, "revolt_dir", text="")
+        # if props.revolt_dir == "":
+        #     box.label("Detected on import", icon="FILE_TICK")
+        # elif os.path.isdir(props.revolt_dir):
+        #     if "rvgl.exe" in os.listdir(props.revolt_dir):
+        #         box.label(
+        #             "Folder exists (RVGL for Windows)", 
+        #             icon="FILE_TICK"
+        #         )
+        #     elif "rvgl" in os.listdir(props.revolt_dir):
+        #         box.label(
+        #             "Folder exists (RVGL for Linux)", 
+        #             icon="FILE_TICK"
+        #         )
+        #     else:
+        #         box.label(
+        #             "Folder exists, RVGL not found", 
+        #             icon="INFO"
+        #         )
+
+        # else:
+        #     box.label("Not found", icon="ERROR")
+
+
         layout.label("General:")
         layout.prop(props, "prefer_tex_solid_mode")
         layout.separator()

@@ -39,6 +39,7 @@ def export_file(filepath, scene):
         conditions = (
             obj.data and
             obj.type == "MESH" and
+            not obj.revolt.is_instance and
             not obj.revolt.is_cube and
             not obj.revolt.is_bcube and
             not obj.revolt.is_bbox

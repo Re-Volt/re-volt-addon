@@ -17,6 +17,7 @@ Supported Formats:
 - .ncp (Collision)
 
 Missing Formats:
+- .hul (Hull collision)
 - .fan (AiNodes)
 - .taz (TrackZones)
 - .fob (Objects)
@@ -24,7 +25,6 @@ Missing Formats:
 - .lit (Lights)
 - .tri (Triggers)
 - .rim (Mirrors)
-- .hul (Hull collision)
 """
 
 import os
@@ -834,7 +834,7 @@ class Instance:
     Reads and writes properties of an instanced object found in .fin files.
     """
     def __init__(self, file=None):
-        self.name = ""                            # first 9 letters of file name
+        self.name = ""                            # first 8 letters of file name
         self.color = Color(color=[0, 0, 0])       # model % RGB color
         self.env_color = Color(color=[0, 0, 0], alpha=True) # envMap color
         self.priority = 0                         # priority for multiplayer
@@ -865,7 +865,7 @@ class Instance:
         self.or_matrix = Matrix(file)
 
     def write(self, file):
-        # Writes the first 9 letters of the prm file name
+        # Writes the first 8 letters of the prm file name
         name = str.encode(self.name)
         file.write(struct.pack("9s", name))
         self.color.write(file)
@@ -1115,6 +1115,21 @@ class Plane:
         if file:
             self.read(file)
 
+    def contains_vertex(self, vertex):
+        # Get one point of the plane
+
+        q = self.normal * self.distance
+
+        qp = vertex - q
+
+        result = self.normal.scalar(qp)
+
+        if abs(result) < 0.0001:
+            return True
+        else:
+            print(result)
+            return False
+
     def read(self, file):
         self.normal = Vector(file=file)
         self.distance = struct.unpack("<f", file.read(4))[0]
@@ -1204,3 +1219,105 @@ class LookupList:
                "polyhedron_idcs": self.polyhedron_idcs
                }
         return dic
+
+
+class Hull:
+    def __init__(self, file=None):
+        self.chull_count = 0
+        self.chulls = []  # ConvexHulls
+
+        self.interior = Interior()
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.chull_count = struct.unpack("<h", file.read(2))[0]
+        self.chulls = [ConvexHull(file) for x in range(self.chull_count)]
+
+        self.interior = Interior(file)
+
+
+    def write(self, file):
+        pass
+
+
+class ConvexHull:
+    def __init__(self, file=None):
+        self.vertex_count = 0
+        self.edge_count = 0
+        self.face_count = 0
+
+        self.bbox = BoundingBox()
+        self.bbox_offset = Vector()
+
+        self.vertices = []  # Vectors
+        self.edges = []  # Edges
+        self.faces = []  # Planes
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.vertex_count = struct.unpack("<h", file.read(2))[0]
+        self.edge_count = struct.unpack("<h", file.read(2))[0]
+        self.face_count = struct.unpack("<h", file.read(2))[0]
+
+        self.bbox = BoundingBox(file)
+        self.bbox_offset = Vector(file)
+
+        self.vertices = [Vector(file) for x in range(self.vertex_count)]
+        self.edges = [Edge(file) for x in range(self.edge_count)]
+        self.faces = [Plane(file) for x in range(self.face_count)]
+
+    def write(self, file):
+        pass
+
+
+class Edge:
+    def __init__(self, file=None):
+        self.vertices = []  # Integer indices
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.vertices = [struct.unpack("<h", file.read(2))[0] for x in range(2)]
+
+    def write(self, file):
+        pass
+
+    def __getitem__(self, i):
+        return self.vertices[i]
+
+
+class Interior:
+    def __init__(self, file=None):
+        self.sphere_count = 0
+        self.spheres = []  # Spheres
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.sphere_count = struct.unpack("<h", file.read(2))[0]
+        self.spheres = [Sphere(file) for x in range(self.sphere_count)]
+
+    def write(self, file):
+        pass
+
+
+class Sphere:
+    def __init__(self, file=None):
+        self.center = Vector()
+        self.radius = 0.0
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.center = Vector(file)
+        self.radius = struct.unpack("<f", file.read(4))[0]
+
+    def write(self, file):
+        pass

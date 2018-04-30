@@ -77,6 +77,14 @@ class ImportRV(bpy.types.Operator):
             if props.enable_tex_mode:
                 enable_any_tex_mode(context)
 
+        elif frmt == FORMAT_HUL:
+            from . import hul_in
+            hul_in.import_file(self.filepath, scene)
+
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_any_tex_mode(context)
+
         elif frmt == FORMAT_TA_CSV:
             from . import ta_csv_in
             ta_csv_in.import_file(self.filepath, scene)
@@ -234,6 +242,11 @@ def exec_export(filepath, context):
 
             from . import prm_out
             prm_out.export_file(filepath, scene)
+
+        elif frmt == FORMAT_FIN:
+            from . import fin_out
+            print("Exporting to .fin...")
+            fin_out.export_file(filepath, scene)
 
         elif frmt == FORMAT_NCP:
             from . import ncp_out
@@ -427,6 +440,73 @@ class ButtonRenameAllObjects(bpy.types.Operator):
     )
 
     def execute(self, context):
-        tools.rename_all_objects(self, context)
+        n = tools.rename_all_objects(self, context)
+        msg_box("Renamed {} objects".format(n))
 
+        return{"FINISHED"}
+
+
+class SelectByName(bpy.types.Operator):
+    bl_idname = "helpers.select_by_name"
+    bl_label = "Select by name"
+    bl_description = (
+        "Selects all objects that contain the name"
+        )
+
+    def execute(self, context):
+        n = tools.select_by_name(self, context)
+        msg_box("Selected {} objects".format(n))
+        return{"FINISHED"}
+
+
+class SelectByData(bpy.types.Operator):
+    bl_idname = "helpers.select_by_data"
+    bl_label = "Select by data"
+    bl_description = (
+        "Selects all objects with the same object data (mesh)"
+    )
+
+    def execute(self, context):
+        n = tools.select_by_data(self, context)
+        msg_box("Selected {} objects".format(n))
+        return{"FINISHED"}
+
+
+class SetInstanceProperty(bpy.types.Operator):
+    bl_idname = "helpers.set_instance_property"
+    bl_label = "Mark as Instance"
+    bl_description = (
+        "Marks all selected objects as instances"
+    )
+
+    def execute(self, context):
+        n = tools.set_property_to_selected(self, context, "is_instance", True)
+        msg_box("Marked {} objects as instances".format(n))
+        return{"FINISHED"}
+
+
+class RemoveInstanceProperty(bpy.types.Operator):
+    bl_idname = "helpers.rem_instance_property"
+    bl_label = "Remove Instance property"
+    bl_description = (
+        ""
+    )
+
+    def execute(self, context):
+        n = tools.set_property_to_selected(self, context, "is_instance", False)
+        msg_box("Marked {} objects as instances".format(n))
+        return{"FINISHED"}
+
+
+class BatchBake(bpy.types.Operator):
+    bl_idname = "helpers.batch_bake_model_rgb"
+    bl_label = "Bake all selected (Model RGB)"
+    bl_description = (
+        "Bakes the light cast by lamps in the current scene to the Instance"
+        "model RGB color"
+    )
+
+    def execute(self, context):
+        n = tools.batch_bake(self, context)
+        msg_box("Baked {} objects".format(n))
         return{"FINISHED"}

@@ -1,5 +1,5 @@
 # Blender Add-On for Re-Volt File Formats
 
 ## Documentation
-The documentation can be found [here](https://yethiel.github.io/re-volt-addon/).
 
+The documentation can be found [here](https://yethiel.github.io/re-volt-addon/).
