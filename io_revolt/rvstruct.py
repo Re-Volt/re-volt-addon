@@ -332,7 +332,7 @@ class Vector:
 
     def read(self, file):
         # Reads the coordinates
-        self.data = struct.unpack("<3f", file.read(12))
+        self.data = [c for c in struct.unpack("<3f", file.read(12))]
 
     def write(self, file):
         # Writes all coordinates
@@ -1117,14 +1117,13 @@ class Plane:
 
     def contains_vertex(self, vertex):
         # Get one point of the plane
+        p = -1 * self.normal.scale(self.distance)
+        result = self.normal.dot(vertex-p)
 
-        q = self.normal * self.distance
+        # result = (vertex[0] - p[0]) * self.normal[0] + (vertex[1] - p[1]) * self.normal[1] + (vertex[2] - p[2]) * self.normal[2]
+        #Where (x, y, z) is the point your testing, (x0, y0, z0) is the point derived from the normal and (Dx, Dy, Dz) is the normal itself
 
-        qp = vertex - q
-
-        result = self.normal.scalar(qp)
-
-        if abs(result) < 0.0001:
+        if abs(result) < 0.1:
             return True
         else:
             print(result)
