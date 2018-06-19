@@ -647,6 +647,7 @@ def get_format(fstr):
     """
     Gets the format by the ending and returns an int
     """
+    fstr = fstr.lower()
     if os.sep in fstr:
         fstr = fstr.split(os.sep)[-1]
     try:
