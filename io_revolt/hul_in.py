@@ -44,8 +44,6 @@ def import_hull(filepath, scene):
         import_chull(chull, scene, filepath.rsplit(os.sep, 1)[1])
 
 
-
-
 def import_chull(chull, scene, filename):
     dprint("Importing convex hull...")
 
@@ -67,11 +65,8 @@ def import_chull(chull, scene, filename):
         print("FACE-----------------")
         verts = []
         for vert in chull.vertices:
-            # print(vert)
             if face.contains_vertex(vert):
-                print("   FOUND FITTING VERTEX")
                 position = to_blender_coord(vert)
-
                 # Creates vertices
                 v = bm.verts.new(Vector((position[0], position[1], position[2])))
                 verts.append(v)
