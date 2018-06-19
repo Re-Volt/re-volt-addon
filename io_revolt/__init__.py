@@ -78,7 +78,7 @@ bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
 "version": (18, 4, 30),
-"blender": (2, 79, 2),
+"blender": (2, 79, 0),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",
@@ -145,4 +145,3 @@ if __name__ == "__main__":
     register()
 
 dprint("Re-Volt add-on registered.")
-

@@ -31,6 +31,8 @@ import os
 import struct
 from math import ceil, sqrt
 
+# TODO check signed/unsigned types
+
 class World:
     """
     Reads a .w file and stores all sub-structures
@@ -57,7 +59,7 @@ class World:
 
     def read(self, file):
         # Reads the mesh count (one rvlong)
-        self.mesh_count = struct.unpack("<l", file.read(4))[0]
+        self.mesh_count = struct.unpack("<L", file.read(4))[0]
 
         # Reads the meshes. Gives the meshes a reference to itself so env_count
         # can be set by the Polygon objects
@@ -65,14 +67,14 @@ class World:
             self.meshes.append(Mesh(file, self))
 
         # Reads the amount of bigcubes
-        self.bigcube_count = struct.unpack("<l", file.read(4))[0]
+        self.bigcube_count = struct.unpack("<L", file.read(4))[0]
 
         # Reads all BigCubes
         for bcube in range(self.bigcube_count):
             self.bigcubes.append(BigCube(file))
 
         # Reads texture animation count
-        self.animation_count = struct.unpack("<l", file.read(4))[0]
+        self.animation_count = struct.unpack("<L", file.read(4))[0]
 
         # Reads all animations
         for anim in range(self.animation_count):
@@ -84,21 +86,21 @@ class World:
 
     def write(self, file):
         # Writes the mesh count
-        file.write(struct.pack("<l", self.mesh_count))
+        file.write(struct.pack("<L", self.mesh_count))
 
         # Writes all meshes, gives reference to self for env count
         for mesh in self.meshes:
             mesh.write(file)
 
         # Writes the count of BigCubes
-        file.write(struct.pack("<l", self.bigcube_count))
+        file.write(struct.pack("<L", self.bigcube_count))
 
         # Writes all BigCubes
         for bcube in self.bigcubes:
             bcube.write(file)
 
         # Writes the count of texture animations
-        file.write(struct.pack("<l", self.animation_count))
+        file.write(struct.pack("<L", self.animation_count))
 
         # Writes all texture animations
         for anim in self.animations:
@@ -168,8 +170,8 @@ class PRM:
         return "PRM"
 
     def read(self, file):
-        self.polygon_count = struct.unpack("<h", file.read(2))[0]
-        self.vertex_count = struct.unpack("<h", file.read(2))[0]
+        self.polygon_count = struct.unpack("<H", file.read(2))[0]
+        self.vertex_count = struct.unpack("<H", file.read(2))[0]
 
         for polygon in range(self.polygon_count):
             self.polygons.append(Polygon(file))
@@ -179,8 +181,8 @@ class PRM:
 
     def write(self, file):
         # Writes amount of polygons/vertices and the structures themselves
-        file.write(struct.pack("<h", self.polygon_count))
-        file.write(struct.pack("<h", self.vertex_count))
+        file.write(struct.pack("<H", self.polygon_count))
+        file.write(struct.pack("<H", self.vertex_count))
 
         for polygon in self.polygons:
             polygon.write(file)
@@ -235,8 +237,8 @@ class Mesh:
         self.bbox = BoundingBox(file)
 
         # Reads amount of polygons/vertices and the structures themselves
-        self.polygon_count = struct.unpack("<h", file.read(2))[0]
-        self.vertex_count = struct.unpack("<h", file.read(2))[0]
+        self.polygon_count = struct.unpack("<H", file.read(2))[0]
+        self.vertex_count = struct.unpack("<H", file.read(2))[0]
 
         # Also give the polygon a reference to w so it can report if env is on
         for polygon in range(self.polygon_count):
@@ -251,8 +253,8 @@ class Mesh:
         file.write(struct.pack("<f", self.bound_ball_radius))
         self.bbox.write(file)
 
-        file.write(struct.pack("<h", self.polygon_count))
-        file.write(struct.pack("<h", self.vertex_count))
+        file.write(struct.pack("<H", self.polygon_count))
+        file.write(struct.pack("<H", self.vertex_count))
 
         # Also give the polygon a reference to w so it can write the env bit
         for polygon in self.polygons:
@@ -493,11 +495,11 @@ class Polygon:
 
     def read(self, file):
         # Reads the type bitfield and the texture index
-        self.type = struct.unpack("<h", file.read(2))[0]
+        self.type = struct.unpack("<H", file.read(2))[0]
         self.texture = struct.unpack("<h", file.read(2))[0]
 
         # Reads indices of the polygon's vertices and their vertex colors
-        self.vertex_indices = struct.unpack("<4h", file.read(8))
+        self.vertex_indices = struct.unpack("<4H", file.read(8))
         self.colors = [
             Color(file=file, alpha=True),
             Color(file=file, alpha=True), Color(file=file, alpha=True),
@@ -513,12 +515,12 @@ class Polygon:
 
     def write(self, file):
         # Writes the type bitfield and the texture index
-        file.write(struct.pack("<h", self.type))
+        file.write(struct.pack("<H", self.type))
         file.write(struct.pack("<h", self.texture))
 
         # Writes indices of the polygon's vertices and their vertex colors
         for ind in self.vertex_indices:
-            file.write(struct.pack("<h", ind))
+            file.write(struct.pack("<H", ind))
         for col in self.colors:
             col.write(file)
             # file.write(struct.pack("<L", col))
@@ -669,7 +671,7 @@ class TexAnimation:
 
     def read(self, file):
         # Reads the amount of frames
-        self.frame_count = struct.unpack("<l", file.read(4))[0]
+        self.frame_count = struct.unpack("<L", file.read(4))[0]
 
         # Reads the frames themselves
         for frame in range(self.frame_count):
@@ -677,7 +679,7 @@ class TexAnimation:
 
     def write(self, file):
         # Writes the amount of frames
-        file.write(struct.pack("<l", self.frame_count))
+        file.write(struct.pack("<L", self.frame_count))
 
         # Writes the frames
         for frame in self.frames[:self.frame_count]:
@@ -719,7 +721,7 @@ class Frame:
         # Reads the texture id
         self.texture = struct.unpack("<l", file.read(4))[0]
         # Reads the delay
-        self.delay = struct.unpack("<f", file.read(4))[0]
+        self.delay = struct.unpack("<F", file.read(4))[0]
 
         # Reads the UV coordinates for this frame
         for uv in range(4):
@@ -729,7 +731,7 @@ class Frame:
         # Writes the texture id
         file.write(struct.pack("<l", self.texture))
         # Writes the delay
-        file.write(struct.pack("<f", self.delay))
+        file.write(struct.pack("<F", self.delay))
 
         # Writes the UV coordinates for this frame
         for uv in self.uv[:4]:
