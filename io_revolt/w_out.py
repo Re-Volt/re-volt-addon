@@ -52,7 +52,13 @@ def export_file(filepath, scene):
         me = obj.data
         print("Exporting mesh for {}".format(obj.name))
         mesh = export_mesh(me, obj, scene, filepath, world=world)
-        world.meshes.append(mesh)
+        if mesh:
+            world.meshes.append(mesh)
+        else:
+            queue_error(
+                "exporting World",
+                "A mesh could not be exported."
+            )
 
     world.mesh_count = len(world.meshes)
     # Generates one big cube (sphere) around the scene

@@ -49,14 +49,14 @@ class World:
         self.animations = []            # sequence of TexAnimation structures
 
         self.env_count = 0              # amount of faces with env enabled
-        self.env_list = []            # an EnvList structure
+        self.env_list = []              # list of environment colors
 
         # Immediately starts reading if an opened file is supplied
         if file:
             self.read(file)
 
     def read(self, file):
-        # Reads the mesh count (one rvlong)
+        # Reads the mesh count (num_cubes in RVGL)
         self.mesh_count = struct.unpack("<l", file.read(4))[0]
 
         # Reads the meshes. Gives the meshes a reference to itself so env_count

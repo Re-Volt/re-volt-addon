@@ -127,7 +127,8 @@ def register():
     bpy.types.INFO_MT_file_import.prepend(menu_func_import)
     bpy.types.INFO_MT_file_export.prepend(menu_func_export)
 
-    bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
+    bpy.app.handlers.scene_update_pre.append(edit_object_change_handler)
+    # bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
 
 
 def unregister():

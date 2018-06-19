@@ -50,7 +50,8 @@ def export_file(filepath, scene):
             # Exports the mesh as a PRM object
             prm = export_mesh(me, obj, scene, filepath)
             # Writes the PRM object to a file
-            prm.write(file)
+            if prm:
+                prm.write(file)
 
 
 def export_mesh(me, obj, scene, filepath, world=None):
@@ -146,8 +147,19 @@ def export_mesh(me, obj, scene, filepath, world=None):
         prm = rvstruct.Mesh()
 
     prm.polygon_count = len(bm.faces)
+    if prm.polygon_count > 32767:
+        queue_error(
+            "exporting mesh",
+            "Too many polygons, try splitting up your mesh."
+        )
+        return None
     prm.vertex_count = len(bm.verts)
-
+    if prm.vertex_count > 32767:
+        queue_error(
+            "exporting mesh",
+            "Too many vertices, try splitting up your mesh."
+        )
+        return None
     for face in bm.faces:
         poly = rvstruct.Polygon()
         is_quad = len(face.verts) == 4
