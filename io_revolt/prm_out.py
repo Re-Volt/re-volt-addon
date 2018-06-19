@@ -199,10 +199,10 @@ def export_mesh(me, obj, scene, filepath, world=None):
                 col = rvstruct.Color(color=(int(color[0] * 255),
                                             int(color[1] * 255),
                                             int(color[2] * 255)),
-                                     alpha=int(((alpha[0] + alpha[1] + alpha[2]) * 255)  / 3))
+                                     alpha=255-int(((alpha[0] + alpha[1] + alpha[2]) * 255)  / 3))
                 poly.colors.append(col)
             else:
-                # Writes opaque white
+                # Writes white
                 col = rvstruct.Color(color=(255, 255, 255), alpha=255)
                 poly.colors.append(col)
 

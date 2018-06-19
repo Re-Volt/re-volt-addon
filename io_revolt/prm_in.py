@@ -168,7 +168,7 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
         # Assigns the UV mapping, colors and alpha
         for l in range(num_loops):
             # Converts the colors to float (req. by Blender)
-            alpha = float(colors[l].alpha) / 255
+            alpha = 1-(float(colors[l].alpha) / 255)
             color = [float(c) / 255 for c in colors[l].color]
             if envlist and (poly.type & FACE_ENV):
                 env_col = [float(c) / 255 for c in envlist[props.envidx].color]
