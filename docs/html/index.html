@@ -1,18 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Re-Volt Add-On Documentation</title>
-  <style type="text/css">code{white-space: pre;}</style>
-  <link rel="stylesheet" href="pandoc.css" type="text/css" />
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
 </head>
 <body>
-<div id="header">
+<header>
 <h1 class="title">Re-Volt Add-On Documentation</h1>
-</div>
-<div id="TOC">
+</header>
+<nav id="TOC">
 <ul>
 <li><a href="#download">Download</a></li>
 <li><a href="#known-issues">Known Issues</a></li>
@@ -46,37 +54,36 @@
 <li><a href="#properties">Properties</a><ul>
 <li><a href="#object-properties">Object Properties</a></li>
 <li><a href="#scene-properties">Scene Properties</a></li>
+<li><a href="#mesh-properties">Mesh Properties</a><ul>
+<li><a href="#vertex-colors-1">Vertex Colors</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#importexport-specifications">Import/Export Specifications</a></li>
 </ul>
-</div>
+</nav>
 <h2 id="download">Download</h2>
 <p><span style="float: left; margin: 1em 2em;"><img src="rva_small.png" /></span></p>
-<p>This is the documentation for Marv's Add-On for Re-Volt files.<br />
+<p>This is the documentation for Marv’s Add-On for Re-Volt files.<br />
 It is intended to be used with <a href="https://www.blender.org/download/"><strong>Blender 2.79b</strong></a> or newer.</p>
-<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0430"><strong>Download</strong> (rva_18.0430)</a></p>
+<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0619"><strong>Download</strong> (rva_18.0619)</a></p>
 <p><a href="http://learn.re-volt.io">Tutorial</a><br />
 <a href="http://learn.re-volt.io/tracks-blender/resources">Resources</a> (Animations, textures, etc.)</p>
 <hr />
 <h2 id="known-issues">Known Issues</h2>
 <p>Please report Bugs and suggest features on <a href="https://github.com/Yethiel/re-volt-addon/issues">GitHub</a>.</p>
-<p><strong>Only one BigCube</strong>:<br />
-Only one BigCube is written around the entire level. This shouldn't impact performance too much, a fix should come eventually. WorldCut can be used to achieve better performance in-game.</p>
 <hr />
 <h2 id="installation">Installation</h2>
 <p>To install the add-on, locate the <code>addons</code> folder within your Blender folder.</p>
 <p>In most cases, it is located at <code>C:\Program Files\Blender Foundation\Blender\2.79\scripts\addons</code>.</p>
-<p>If you're on Linux, your add-on folder might be located at <code>~/.config/blender/2.79/scripts/addons/</code>, where <code>2.79</code> is the <strong>Blender version you are using</strong>.</p>
+<p>If you’re on Linux, your add-on folder might be located at <code>~/.config/blender/2.79/scripts/addons/</code>, where <code>2.79</code> is the <strong>Blender version you are using</strong>.</p>
 <p>Extract the <code>io_revolt</code> folder into the addons folder.</p>
-<div class="figure">
-<img src="addon_path.png" alt="Installation Path" />
-<p class="caption">Installation Path</p>
-</div>
-<p>Now start up Blender and open the user preferences (File -&gt; User Preferences...). Click on the <strong>Add-ons</strong> tab and enter <em>Re-Volt</em>.</p>
-<div class="figure">
-<img src="user_preferences.png" alt="User Preferences" />
-<p class="caption">User Preferences</p>
-</div>
+<figure>
+<img src="addon_path.png" alt="Installation Path" /><figcaption>Installation Path</figcaption>
+</figure>
+<p>Now start up Blender and open the user preferences (File -&gt; User Preferences…). Click on the <strong>Add-ons</strong> tab and enter <em>Re-Volt</em>.</p>
+<figure>
+<img src="user_preferences.png" alt="User Preferences" /><figcaption>User Preferences</figcaption>
+</figure>
 <p><strong>Tip:</strong> Now, click on <strong>Save User Settings</strong> at the bottom of the User Preferences window to keep the add-on enabled when you restart Blender.</p>
 <hr />
 <h2 id="tools-panel">Tools Panel</h2>
@@ -121,7 +128,7 @@ Applies the scale of the object when exporting.</p>
 Applies the rotation of the object when exporting.</p>
 <h4 id="import-world-.w">Import World (.w)</h4>
 <p><strong>Parent .w meshes to Empty</strong>:<br />
-Creates an empty object with the imported file's name and parents all meshes contained in the .w file to it. This makes the object outliner a lot less cluttered.</p>
+Creates an empty object with the imported file’s name and parents all meshes contained in the .w file to it. This makes the object outliner a lot less cluttered.</p>
 <p><strong>Import Bound Boxes</strong>:<br />
 Imports the bound box for every single mesh of the .w file.</p>
 <p><strong>Import Cubes</strong>:<br />
@@ -138,10 +145,10 @@ To view multiple layers at once, hold down <code>Shift</code> and press numbers,
 <p><strong>Only export selected</strong>:<br />
 When this setting is enabled, only selected objects will be exported to the NCP. If only one object is selected, the location of the object will be ignored and the center of the NCP will be the center of the selected object (useful for exporting NCPs for single PRM files).</p>
 <p><strong>Export Collision Grid (.w)</strong>:<br />
-This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).<br />
+This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).<br />
 NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).</p>
 <p><strong>Grid Size</strong>:<br />
-Defines the size of the lookup grid that is written to the end of the NCP file. The size defines the size of the single &quot;cells&quot;. Choosing a higher number will result in a faster export but poorer performance in-game.</p>
+Defines the size of the lookup grid that is written to the end of the NCP file. The size defines the size of the single “cells”. Choosing a higher number will result in a faster export but poorer performance in-game.</p>
 <hr />
 <h3 id="light-and-shadow">Light and Shadow</h3>
 <h4 id="shade-object">Shade Object</h4>
@@ -158,16 +165,16 @@ Three options: Hard (sun, more contrast), Soft (hemisphere, smoother) and None.<
 The <strong>hard</strong> option emits light in a distinct direction (<a href="https://docs.blender.org/manual/de/dev/render/blender_render/lighting/lamps/sun/introduction.html">Blender docs</a>).<br />
 The <strong>soft</strong> option emits light from a hemisphere which makes the model evenly lit (<a href="https://docs.blender.org/manual/de/dev/render/blender_render/lighting/lamps/hemi.html">Blender docs</a>).</p>
 <p><strong>Intensity</strong>:<br />
-This defines the intensity of the light sources. This is the same setting as the lamp's energy.</p>
+This defines the intensity of the light sources. This is the same setting as the lamp’s energy.</p>
 <h4 id="generate-shadow-texture">Generate Shadow Texture</h4>
 <p>With this feature you can create shadows that are ready for use in-game. The shadows are negative which is a requirement by the game.<br />
 The add-on creates the shadows with ray-tracing and then baking them to an automatically sized textured plane (takes child objects into account).<br />
-To save the shadows, go into the UV/Image Editor, select the shadow (most recenty try has the highest number, e.g. Shadow.420) and then click Image -&gt; Save as Image.</p>
+To save the shadows, go into the UV/Image Editor, select the shadow (most recenty try has the highest number, e.g. Shadow.420) and then click Image -&gt; Save as Image.</p>
 <p><strong>Warning</strong>: Start with low-quality settings first as Blender might hang a while during the creation of a shadow. If it appears to freeze, wait a few minutes. Depending on the settings you chose, it might take a while.</p>
 <p><strong>Method</strong>:<br />
 There are two options:<br />
 <em>Default</em> (Adaptive QMC), which is the faster option. I recommend this for testing the shadow settings.<br />
-<em>High Quality</em> (Constant QMC), which is the slower and less-grainy option. I recommend using this when you're done tweaking your shadow settings.</p>
+<em>High Quality</em> (Constant QMC), which is the slower and less-grainy option. I recommend using this when you’re done tweaking your shadow settings.</p>
 <p><strong>Quality</strong>:<br />
 The amount of samples the shadow is rendered with (number of samples taken extra).</p>
 <p><strong>Softness</strong>:<br />
@@ -189,7 +196,7 @@ Assigns the instance property for all selected objects and makes Instance settin
 <p><strong>Remove Instance property</strong><br />
 Removes the instance property.</p>
 <p><strong>Bake all selected (Model RGB)</strong><br />
-Bakes the light from the lamps in the current scene to the Model RGB property of selected objects. This allows to make instances blend in better if you're working on a level with a specific light setup (night, sunset, etc.).</p>
+Bakes the light from the lamps in the current scene to the Model RGB property of selected objects. This allows to make instances blend in better if you’re working on a level with a specific light setup (night, sunset, etc.).</p>
 <hr />
 <h3 id="face-properties">Face Properties</h3>
 <p>The list of properties is put together as follows:</p>
@@ -202,7 +209,7 @@ Hover the property name to find out more about the property.</p>
 <p><strong>Select (sel) button</strong>:<br />
 Click to select/deselect all faces with this property.</p>
 <p><strong>Texture</strong>:<br />
-Sets the texture number for all selected faces. <code>-1</code> if numbers of selected faces don't match.</p>
+Sets the texture number for all selected faces. <code>-1</code> if numbers of selected faces don’t match.</p>
 <p><strong>Material</strong>:<br />
 <strong>Set</strong>: Displays the material of the currently selected face. Select a material from the list to apply it to all selected faces. The select (sel) button selects all faces with the same material.</p>
 <p><strong>Select</strong>: Select a material from the list to select all faces with the same material.</p>
@@ -223,7 +230,7 @@ These buttons can be used for easily shading a mesh. They range from black to wh
 <p><strong>Total Slots</strong>:<br />
 The total amount of texture animations you would like to use.<br />
 For example, set this to <code>3</code> to use slots <code>0</code>, <code>1</code> and <code>2</code>.</p>
-<p>The maximum amount is 10 since a polygon's animation is determined by the texture number.</p>
+<p>The maximum amount is 10 since a polygon’s animation is determined by the texture number.</p>
 <h4 id="animation-slots">Animation Slots</h4>
 <p><strong>Slot</strong>:<br />
 The animation slot to display in the panel. The actual animation is set by the texture number/page.</p>
@@ -233,7 +240,7 @@ The amount of frames you want to use for the animation. For example, set this to
 <p><strong>Frame</strong>:<br />
 The frame to display in the panel.</p>
 <p><strong>Preview</strong>:<br />
-Click the Preview button to preview the frame's UV on the currently selected face. The buttons next to it go back or advance one frame and then preview the UV of that frame on the currently selected face.</p>
+Click the Preview button to preview the frame’s UV on the currently selected face. The buttons next to it go back or advance one frame and then preview the UV of that frame on the currently selected face.</p>
 <p><strong>Texture</strong>:<br />
 The texture page number this animation frame uses.</p>
 <p><strong>Duration</strong>:<br />
@@ -245,7 +252,7 @@ The duration of the frame or the delay until the next frame shows up.</p>
 <p><strong>Start Frame</strong>:<br />
 The start frame the animation starts from. This frame will not be changed.</p>
 <p><strong>End Frame</strong>:<br />
-The frame the animation ends on. This frame will not be changed. To achieve a perfectly looping animation, it's sometimes necessary to leave the last frame out. To do so, decrease the amount of frames of the animation by 1.</p>
+The frame the animation ends on. This frame will not be changed. To achieve a perfectly looping animation, it’s sometimes necessary to leave the last frame out. To do so, decrease the amount of frames of the animation by 1.</p>
 <p><strong>Frame Duration</strong>:<br />
 The duration of all resulting frames.</p>
 <p><strong>Texture</strong>:<br />
@@ -270,7 +277,7 @@ The UV mapping for the currently displayed frame. For triangular faces, UV3 will
 <hr />
 <h2 id="properties">Properties</h2>
 <h3 id="object-properties">Object Properties</h3>
-<p>This panel is at the far bottom of the Object section of the object properties. You may use the right top edge to drag it further up.</p>
+<p>This panel is at the far bottom of the Object section of the object properties. You may use the right top edge to drag it further up. Some properties from Blender are used as well, such as vertex colors. Vertex color layers can be found in the object data section (symbol with three dots).</p>
 <p><strong>Big Cube Properties</strong>:<br />
 This only shows when a big cube is selected.</p>
 <p><strong>Mesh Indices</strong>:<br />
@@ -280,6 +287,12 @@ A list of mesh indices the selected big cubes belongs to. Does not affect export
 This panel is at the far bottom of the Scene section of the Properties editor. You may use the right top edge to drag it further up.</p>
 <p><strong>Texture Animations</strong>:<br />
 Texture animation dictionaries for .w files saved as a string. This property can be edited with the texture animation panel in edit mode.</p>
+<h3 id="mesh-properties">Mesh Properties</h3>
+<h4 id="vertex-colors-1">Vertex Colors</h4>
+<p>Generally, meshes can have the following vertex color layers:</p>
+<p><strong>Col</strong>: The color/shade<br />
+<strong>Alpha</strong>: The translucency of the vertex/polygon. White is completely opaque (visible), black is completely transparent (invisible). This layer will only be used if the <em>translucent</em> flag is set in the face properties.<br />
+<strong>Env</strong>: The environment color (reflection). This layer is used for meshes and polygons of .w files. The env flag needs to be set in order for faces to use it.</p>
 <hr />
 <h2 id="importexport-specifications">Import/Export Specifications</h2>
 <p><strong>Importing Files</strong>:<br />
@@ -305,11 +318,11 @@ Only the layers <em>Col</em> and <em>Alpha</em> will be exported.</p>
 <p><strong>Level of Detail (LOD)</strong>:<br />
 <strong>Import</strong>:<br />
 If a PRM file includes mulitple meshes, all of them will be imported.<br />
-A suffix will be appended to the mesh name (&quot;|q0&quot; is the highest quality, &quot;|q3 is a lower quality&quot;).<br />
-A fake user will be assigned to them so they're not lost when saving the file.</p>
+A suffix will be appended to the mesh name (“|q0” is the highest quality, “|q3 is a lower quality”).<br />
+A fake user will be assigned to them so they’re not lost when saving the file.</p>
 <p><strong>Textures</strong>:<br />
 <strong>Import</strong>:<br />
-If the imported mesh is a car mesh, the texture path will be taken from the parameters.txt. If it's a level file, the texture name will be generated from the polygon's texture number and taken from the level folder. If a texture file cannot be found, a 512x512 dummy texture will be generated. If a texture with the same name already exist, it will be used instead.</p>
+If the imported mesh is a car mesh, the texture path will be taken from the parameters.txt. If it’s a level file, the texture name will be generated from the polygon’s texture number and taken from the level folder. If a texture file cannot be found, a 512x512 dummy texture will be generated. If a texture with the same name already exist, it will be used instead.</p>
 <p>The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting.</p>
 <p><strong>Export</strong>:<br />
 To set the texture using this number layer, the <em>Use Number for Textures</em> setting has to be set in the export settings.<br />
@@ -318,36 +331,34 @@ When exporting, the texture number will be taken from the layer instead of being
 <p><strong>Face Type</strong>:</p>
 <p><strong>Import</strong>:<br />
 The face types can be accessed with the Mesh properties which each have setter and getter functions that operate on int layers via bmesh.<br />
-The face type layer is called &quot;Type&quot;. There is a Re-Volt tab in the Tool panel of the 3D view that allows users to set face properties in Edit mode.</p>
+The face type layer is called “Type”. There is a Re-Volt tab in the Tool panel of the 3D view that allows users to set face properties in Edit mode.</p>
 <p><strong>Export</strong>:<br />
 All selected face type properties will be set when exporting.</p>
 <p><strong>World (.w)</strong>:<br />
 <strong>Import</strong>:</p>
 <p><strong>Meshes</strong>:</p>
 <p>See PRM. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
-<p>The environment color is accessible on a vertex color layer called <em>Env</em>. The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<em>EnvAlpha</em>).</p>
+<p>The environment color is accessible on a vertex color layer called <em>Env</em>. The alpha value of the color is only accessible via the face property editing panel since it’s written to a per-face float layer (<em>EnvAlpha</em>).</p>
 <p>Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.</p>
 <p><strong>Texture Animation</strong>:<br />
 Animations are stored in a dictionary that can be accessed in the <em>Properties</em> editor (<em>Scene</em> section).</p>
 <p><strong>Debug</strong>:<br />
-Bounding boxes, bounding spheres and &quot;big cubes&quot; (spheres) can be imported to selected layers. They are for debug purposes only and they will not affect the export in any way.</p>
+Bounding boxes, bounding spheres and “big cubes” (spheres) can be imported to selected layers. They are for debug purposes only and they will not affect the export in any way.</p>
 <p><strong>Export</strong>:</p>
 <p>Nothing noteworthy. Exports files the way they have been imported.</p>
 <p><strong>NCP (Collision)</strong>:</p>
 <p><strong>Import</strong>:</p>
-<p>NCP flags and materials are written to the integer layers &quot;NCPFlags&quot; and &quot;Material&quot;. A preview color for the materials is written to the &quot;NCPPreview&quot; vertex color channel.</p>
+<p>NCP flags and materials are written to the integer layers “NCPFlags” and “Material”. A preview color for the materials is written to the “NCPPreview” vertex color channel.</p>
 <p><strong>Export</strong>:</p>
-<p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (Properties Editor).<br />
+<p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they’re a debug object or have the <em>ignore</em> object property set (Properties Editor).<br />
 Faces that have the material <code>NONE</code> assigned to them will not be exported.<br />
-The vertex color layer called &quot;NCPPreview&quot; will be ignored since it's only for previewing purposes.</p>
+The vertex color layer called “NCPPreview” will be ignored since it’s only for previewing purposes.</p>
 <p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
 <p><strong>parameters.txt (Car)</strong>:</p>
 <p><strong>Import</strong>:<br />
-The add-on currently imports the car's body and wheels and their positions.<br />
+The add-on currently imports the car’s body and wheels and their positions.<br />
 If a wheel file cannot be found, it will be represented with an empty object.</p>
 <hr />
-<p>Copyright © Huki, Jigebren and Marv 2018<br />
-Webpage: <a href="http://rvgl.re-volt.io">https://rvgl.re-volt.io</a><br />
-Email: rv12@revoltzone.net</p>
+<p><a href="http://re-volt.io">https://re-volt.io</a></p>
 </body>
 </html>
