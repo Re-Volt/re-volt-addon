@@ -105,33 +105,15 @@ NCP_PROPS = [
 ]
 
 MATERIALS = (
-    (   # None
-        "-1",
-        "NONE",
-        "No material. Faces with this material will not be exported.",
-        "POTATO",
-        -1
-    ),
+    ("-1", "NONE", "No material. Faces with this material will not be exported.", "POTATO", -1),
     ("0", "DEFAULT",            "Default material", "POTATO", 0),
     ("1", "MARBLE",             "Marble material", "POTATO", 1),
     ("2", "STONE",              "Stone material", "POTATO", 2),
     ("3", "WOOD",               "Wood material", "POTATO", 3),
     ("4", "SAND",               "Sand material", "POTATO", 4),
     ("5", "PLASTIC",            "Plastic material", "POTATO", 5),
-    (   # Carpet Tile
-        "6",
-        "CARPETTILE",
-        "Carpet Tile material",
-        "POTATO",
-        6
-    ),
-    (   # Carpet Shag
-        "7",
-        "CARPETSHAG",
-        "Carpet Shag material",
-        "POTATO",
-        7
-    ),
+    ("6", "CARPETTILE",         "Carpet Tile material", "POTATO", 6),
+    ("7", "CARPETSHAG",         "Carpet Shag material", "POTATO", 7),
     ("8", "BOUNDARY",           "Boundary material", "POTATO", 8),
     ("9", "GLASS",              "Glass material", "POTATO", 9),
     ("10", "ICE1",              "Most slippery ice material", "FREEZE", 10),
@@ -505,9 +487,9 @@ def queue_error(action, error_message):
 def get_errors():
     global ERRORS
     if ERRORS:
-        errors = "The following errors have been encountered:\n"
+        errors = "The following errors have been encountered:\n\n"
         for error in ERRORS:
-            errors += "Error while {}: {}\n".format(error, ERRORS[error])
+            errors += "~ ERROR while {}:\n     {}\n\n".format(error, ERRORS[error])
         errors += "Check the console for more information."
     else:
         errors = "Successfully completed."
@@ -665,6 +647,7 @@ def get_format(fstr):
     """
     Gets the format by the ending and returns an int
     """
+    fstr = fstr.lower()  # support uppercase letters
     if os.sep in fstr:
         fstr = fstr.split(os.sep)[-1]
     try:

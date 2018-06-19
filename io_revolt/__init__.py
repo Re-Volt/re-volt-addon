@@ -77,8 +77,8 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (18, 4, 30),
-"blender": (2, 79, 2),
+"version": (18, 6, 19),
+"blender": (2, 79, 0),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
 "wiki_url": "https://yethiel.github.io/re-volt-addon/",
@@ -127,7 +127,8 @@ def register():
     bpy.types.INFO_MT_file_import.prepend(menu_func_import)
     bpy.types.INFO_MT_file_export.prepend(menu_func_export)
 
-    bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
+    bpy.app.handlers.scene_update_pre.append(edit_object_change_handler)
+    # bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
 
 
 def unregister():
@@ -145,4 +146,3 @@ if __name__ == "__main__":
     register()
 
 dprint("Re-Volt add-on registered.")
-

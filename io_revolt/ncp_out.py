@@ -84,9 +84,9 @@ def export_file(filepath, scene):
             continue
 
         # Doesn't export if nocoll flag is set (non-RV)
-        # if face[type_layer] & NCP_NOCOLL:
-        #     dprint("Ignoring polygon due to nocoll flag")
-        #     continue
+        if face[type_layer] & NCP_NOCOLL:
+            dprint("Ignoring polygon due to nocoll flag")
+            continue
 
         # Sets polyhedron properties
         poly.material = face[material_layer]

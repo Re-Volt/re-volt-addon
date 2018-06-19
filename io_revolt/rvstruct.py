@@ -31,6 +31,7 @@ import os
 import struct
 from math import ceil, sqrt
 
+
 class World:
     """
     Reads a .w file and stores all sub-structures
@@ -49,14 +50,15 @@ class World:
         self.animations = []            # sequence of TexAnimation structures
 
         self.env_count = 0              # amount of faces with env enabled
-        self.env_list = []            # an EnvList structure
+        self.env_list = []              # list of environment colors
 
         # Immediately starts reading if an opened file is supplied
         if file:
             self.read(file)
 
     def read(self, file):
-        # Reads the mesh count (one rvlong)
+
+        # Reads the mesh count (num_cubes in RVGL)
         self.mesh_count = struct.unpack("<l", file.read(4))[0]
 
         # Reads the meshes. Gives the meshes a reference to itself so env_count
@@ -146,7 +148,7 @@ class World:
                "animations": self.animations,
                "env_count": self.env_count,
                "env_list": self.env_list
-               }
+        }
         return dic
 
 
@@ -332,7 +334,7 @@ class Vector:
 
     def read(self, file):
         # Reads the coordinates
-        self.data = struct.unpack("<3f", file.read(12))
+        self.data = [c for c in struct.unpack("<3f", file.read(12))]
 
     def write(self, file):
         # Writes all coordinates
@@ -497,7 +499,7 @@ class Polygon:
         self.texture = struct.unpack("<h", file.read(2))[0]
 
         # Reads indices of the polygon's vertices and their vertex colors
-        self.vertex_indices = struct.unpack("<4h", file.read(8))
+        self.vertex_indices = struct.unpack("<4H", file.read(8))
         self.colors = [
             Color(file=file, alpha=True),
             Color(file=file, alpha=True), Color(file=file, alpha=True),
@@ -669,7 +671,7 @@ class TexAnimation:
 
     def read(self, file):
         # Reads the amount of frames
-        self.frame_count = struct.unpack("<l", file.read(4))[0]
+        self.frame_count = struct.unpack("<L", file.read(4))[0]
 
         # Reads the frames themselves
         for frame in range(self.frame_count):
@@ -677,7 +679,7 @@ class TexAnimation:
 
     def write(self, file):
         # Writes the amount of frames
-        file.write(struct.pack("<l", self.frame_count))
+        file.write(struct.pack("<L", self.frame_count))
 
         # Writes the frames
         for frame in self.frames[:self.frame_count]:
@@ -719,7 +721,7 @@ class Frame:
         # Reads the texture id
         self.texture = struct.unpack("<l", file.read(4))[0]
         # Reads the delay
-        self.delay = struct.unpack("<f", file.read(4))[0]
+        self.delay = struct.unpack("<F", file.read(4))[0]
 
         # Reads the UV coordinates for this frame
         for uv in range(4):
@@ -729,7 +731,7 @@ class Frame:
         # Writes the texture id
         file.write(struct.pack("<l", self.texture))
         # Writes the delay
-        file.write(struct.pack("<f", self.delay))
+        file.write(struct.pack("<F", self.delay))
 
         # Writes the UV coordinates for this frame
         for uv in self.uv[:4]:
@@ -988,7 +990,7 @@ class NCP:
         file.seek(file_start, os.SEEK_SET)
 
         # Reads ncp information
-        self.polyhedron_count = struct.unpack("<H", file.read(2))[0]
+        self.polyhedron_count = struct.unpack("<h", file.read(2))[0]
         self.polyhedra = [Polyhedron(file) for x in range(self.polyhedron_count)]
 
         # If file has collision grid info
@@ -999,7 +1001,7 @@ class NCP:
 
     def write(self, file):
         # Writes the polyhedron count
-        file.write(struct.pack("<H", self.polyhedron_count))
+        file.write(struct.pack("<h", self.polyhedron_count))
 
         # Writes all polyhedra
         for p in range(self.polyhedron_count):
@@ -1117,14 +1119,13 @@ class Plane:
 
     def contains_vertex(self, vertex):
         # Get one point of the plane
+        p = -1 * self.normal.scale(self.distance)
+        result = self.normal.dot(vertex-p)
 
-        q = self.normal * self.distance
+        # result = (vertex[0] - p[0]) * self.normal[0] + (vertex[1] - p[1]) * self.normal[1] + (vertex[2] - p[2]) * self.normal[2]
+        #Where (x, y, z) is the point your testing, (x0, y0, z0) is the point derived from the normal and (Dx, Dy, Dz) is the normal itself
 
-        qp = vertex - q
-
-        result = self.normal.scalar(qp)
-
-        if abs(result) < 0.0001:
+        if abs(result) < 0.1:
             return True
         else:
             print(result)

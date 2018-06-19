@@ -1,5 +1,18 @@
 # Changelog 
 
+## 2018-06-19
+
+Version [`rva_18.0619`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0619)
+
+**Topics**: Bugfixes
+
+- **Fixes**
+    - Support loading files with uppercase letters
+    - Throw an error message when exceeding polygon/vertex limits for meshes
+    - Activate NCP no-collision flag (reported by Kiwi)
+- **Modifications**
+    - Inverted alpha vertex color layer: Black is translucent, white is opaque. I've done this to resemble the behavior of pure black on textures.
+
 ## 2018-04-30
 
 Version [`rva_18.0430`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0430)
