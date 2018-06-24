@@ -11,6 +11,7 @@ providing the functions behind the UI buttons.
 
 import bpy
 import time
+import subprocess
 
 from . import tools
 from .common import *
@@ -499,14 +500,33 @@ class RemoveInstanceProperty(bpy.types.Operator):
 
 
 class BatchBake(bpy.types.Operator):
-    bl_idname = "helpers.batch_bake_model_rgb"
-    bl_label = "Bake all selected (Model RGB)"
+    bl_idname = "helpers.batch_bake_model"
+    bl_label = "Bake all selected"
     bl_description = (
         "Bakes the light cast by lamps in the current scene to the Instance"
-        "model RGB color"
+        "model colors"
     )
 
     def execute(self, context):
         n = tools.batch_bake(self, context)
         msg_box("Baked {} objects".format(n))
+        return{"FINISHED"}
+
+
+class LaunchRV(bpy.types.Operator):
+    bl_idname = "helpers.launch_rv"
+    bl_label = "Launch RVGL"
+    bl_description = (
+        "Launches the game"
+    )
+
+    def execute(self, context):
+        rvgl_dir = context.scene.revolt.revolt_dir
+        if "rvgl.exe" in os.listdir(rvgl_dir):
+            executable = "rvgl.exe"
+        elif "rvgl" in os.listdir(rvgl_dir):
+            executable = "rvgl"
+        else:
+            return{"FINISHED"}
+        subprocess.Popen(["{}/{}".format(rvgl_dir, executable), "-window", "-nointro", "-sload", "-dev"])
         return{"FINISHED"}

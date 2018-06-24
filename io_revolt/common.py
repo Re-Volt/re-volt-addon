@@ -136,10 +136,10 @@ MATERIALS = (
 )
 
 
-def dprint(str):
+def dprint(*str):
     """ Debug print: only prints if debug is enabled """
     if DEBUG:
-        print(str)
+        print(*str)
 
 
 def rgb(r, g, b):

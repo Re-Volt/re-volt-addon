@@ -44,7 +44,7 @@ def export_file(filepath, scene):
             )
         )
 
-        instance.envcolor = rvstruct.Color(
+        instance.env_color = rvstruct.Color(
             color= (
                 int(props.fin_envcol[0] * 255),
                 int(props.fin_envcol[1] * 255),
@@ -52,7 +52,7 @@ def export_file(filepath, scene):
             ), 
             alpha=True
         )
-        instance.envcolor.alpha = int(props.fin_envcol[3] * 255)
+        instance.env_color.alpha = int((1-props.fin_envcol[3]) * 255)
         instance.priority = props.fin_priority
 
         instance.lod_bias = props.fin_lod_bias
@@ -62,7 +62,7 @@ def export_file(filepath, scene):
         instance.or_matrix = rvstruct.Matrix()
         instance.or_matrix.data = to_or_matrix(obj.matrix_world)
 
-        instance.flag = 0
+        instance.flag = FIN_SET_MODEL_RGB
 
         if props.fin_env:
             instance.flag |= FIN_ENV

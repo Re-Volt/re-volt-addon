@@ -260,11 +260,14 @@ def batch_bake(self, context):
         # Gets currently selected layers
         old_active_render_layer = None
         old_active = None
-        for layer in obj.data.vertex_colors:
-            if layer.active_render:
-                old_active_render_layer = layer
-            if layer.active:
-                old_active = layer
+        for vclayer in obj.data.vertex_colors:
+            if vclayer.active_render:
+                old_active_render_layer = vclayer.name
+            if vclayer.active:
+                old_active = vclayer.name
+
+        dprint("Currently active layer:", old_active)
+        dprint("Currently active layer (render):", old_active_render_layer)
         
         # Creates a temporary layer for baking a full render to
         if not "temp" in obj.data.vertex_colors:
@@ -276,9 +279,11 @@ def batch_bake(self, context):
         print("TMP is active render:", tmp_layer.active_render)
         
         # Bakes the image onto that layer
-        print("Baking...")
+        dprint("Baking...")
         bpy.ops.object.bake_image()
-        print("done.")
+        dprint("done.")
+
+        dprint("Calculating mean color...")
         
         bm = bmesh.new()
         bm.from_mesh(obj.data)
@@ -303,13 +308,13 @@ def batch_bake(self, context):
         # Removes the temporary render layer
         obj.data.vertex_colors.remove(tmp_layer)
 
+        dprint("Restoring selection...")
         # Restores active layers
-        if old_active_render_layer:
-            old_active_render_layer.active_render = True
-        if old_active:
-            old_active.active = True
-
-        print("done.")
+        if old_active_render_layer is not None:
+            obj.data.vertex_colors[old_active_render_layer].active_render = True
+        if old_active is not None:
+            obj.data.vertex_colors[old_active].active = True
+        dprint("done.")
 
 
     # Restores baking settings

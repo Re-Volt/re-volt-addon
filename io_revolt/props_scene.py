@@ -89,6 +89,17 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "automatically detected"
     )
 
+    batch_bake_model_rgb = BoolProperty(
+        name = "Bake to Model RGB",
+        default = True,
+        description = "Bake scene lighting to Instance model RGB"
+    )
+    batch_bake_model_env = BoolProperty(
+        name = "Bake to Model Env",
+        default = True,
+        description = "Bake scene lighting to Instance model environment color"
+    )
+
     # Export properties
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",

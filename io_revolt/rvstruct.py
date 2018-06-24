@@ -891,11 +891,6 @@ class Instance:
         return dic
 
 
-""" POS NODES
-    Position nodes for track length determination
-"""
-
-
 class PosNodes:
     """
     Position nodes level file (.pan)
@@ -964,11 +959,6 @@ class PosNode:
 
     def __repr__(self):
         return "PosNode"
-
-
-""" NCP:
-    Collision for levels
-"""
 
 
 class NCP:
@@ -1244,6 +1234,7 @@ class Hull:
 
 
 class ConvexHull:
+    """ ConvexHull used in .hul """
     def __init__(self, file=None):
         self.vertex_count = 0
         self.edge_count = 0
@@ -1276,6 +1267,7 @@ class ConvexHull:
 
 
 class Edge:
+    """ Edge used in .hul """
     def __init__(self, file=None):
         self.vertices = []  # Integer indices
 
@@ -1293,6 +1285,7 @@ class Edge:
 
 
 class Interior:
+    """ Interior used in .hul """
     def __init__(self, file=None):
         self.sphere_count = 0
         self.spheres = []  # Spheres
@@ -1309,6 +1302,7 @@ class Interior:
 
 
 class Sphere:
+    """ Sphere used in .hul """
     def __init__(self, file=None):
         self.center = Vector()
         self.radius = 0.0

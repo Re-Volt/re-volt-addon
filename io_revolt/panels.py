@@ -150,6 +150,12 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
             text="Textured Solid"
         )
 
+        box = layout.box()
+        box.label("RVGL:")
+        box.operator(
+            "helpers.launch_rv"
+        )
+
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
@@ -510,8 +516,11 @@ class RevoltLightPanel(bpy.types.Panel):
             row.prop(props, "shadow_table", text="Table")
 
             # Batch baking tool
-            # box = self.layout.box()
-            # box.label(text="Batch Bake Light")
+            box = self.layout.box()
+            box.label(text="Batch Bake Light")
+            box.prop(props, "batch_bake_model_rgb")
+            box.prop(props, "batch_bake_model_env")
+            box.operator("helpers.batch_bake_model")
 
 
 class RevoltInstancesPanel(bpy.types.Panel):
@@ -520,10 +529,11 @@ class RevoltInstancesPanel(bpy.types.Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_category = "Re-Volt"
+    bl_options = {"DEFAULT_CLOSED"}
 
-    @classmethod
-    def poll(self, context):
-        return context.object and len(context.selected_objects) >= 1 and context.object.type == "MESH"
+    # @classmethod
+    # def poll(self, context):
+    #     return context.object and len(context.selected_objects) >= 1 and context.object.type == "MESH"
 
     def draw_header(self, context):
         self.layout.label("", icon="OUTLINER_OB_GROUP_INSTANCE")
@@ -534,17 +544,16 @@ class RevoltInstancesPanel(bpy.types.Panel):
         props = context.scene.revolt
         layout = self.layout
 
-        layout.label("Instances: {}".format(len([obj for obj in context.scene.objects if obj.revolt.is_instance])))
+        layout.label("Instances: {}/1024".format(len([obj for obj in context.scene.objects if obj.revolt.is_instance])))
         layout.operator("helpers.select_by_data")
         col = layout.column(align=True)
         col.prop(props, "rename_all_name", text="")
         col.operator("helpers.rename_all_objects")
         col.operator("helpers.select_by_name")
 
-        layout.operator("helpers.set_instance_property")
-        layout.operator("helpers.rem_instance_property")
-
-        layout.operator("helpers.batch_bake_model_rgb")
+        col = layout.column(align=True)
+        col.operator("helpers.set_instance_property")
+        col.operator("helpers.rem_instance_property")
 
 
 class MenuAnimModes(bpy.types.Menu):
@@ -661,30 +670,30 @@ class RevoltSettingsPanel(bpy.types.Panel):
 
         # General settings
         
-        # layout.label("Re-Volt Directory:")
-        # box = self.layout.box()
-        # box.prop(props, "revolt_dir", text="")
-        # if props.revolt_dir == "":
-        #     box.label("Detected on import", icon="FILE_TICK")
-        # elif os.path.isdir(props.revolt_dir):
-        #     if "rvgl.exe" in os.listdir(props.revolt_dir):
-        #         box.label(
-        #             "Folder exists (RVGL for Windows)", 
-        #             icon="FILE_TICK"
-        #         )
-        #     elif "rvgl" in os.listdir(props.revolt_dir):
-        #         box.label(
-        #             "Folder exists (RVGL for Linux)", 
-        #             icon="FILE_TICK"
-        #         )
-        #     else:
-        #         box.label(
-        #             "Folder exists, RVGL not found", 
-        #             icon="INFO"
-        #         )
+        layout.label("Re-Volt Directory:")
+        box = self.layout.box()
+        box.prop(props, "revolt_dir", text="")
+        if props.revolt_dir == "":
+            box.label("No directory specified", icon="INFO")
+        elif os.path.isdir(props.revolt_dir):
+            if "rvgl.exe" in os.listdir(props.revolt_dir):
+                box.label(
+                    "Folder exists (RVGL for Windows)",
+                    icon="FILE_TICK"
+                )
+            elif "rvgl" in os.listdir(props.revolt_dir):
+                box.label(
+                    "Folder exists (RVGL for Linux)",
+                    icon="FILE_TICK"
+                )
+            else:
+                box.label(
+                    "Folder exists, RVGL not found",
+                    icon="INFO"
+                )
 
-        # else:
-        #     box.label("Not found", icon="ERROR")
+        else:
+            box.label("Not found", icon="ERROR")
 
 
         layout.label("General:")
