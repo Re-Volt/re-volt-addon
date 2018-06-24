@@ -36,14 +36,12 @@ def export_file(filepath, scene):
         instance = Instance()
 
         instance.name = obj.name.split(".prm")[0][:8].upper()
-        instance.color = rvstruct.Color(
-            color=(
-                int(props.fin_col[0] * 255),
-                int(props.fin_col[1] * 255),
-                int(props.fin_col[2] * 255)
-            )
+        instance.color = (
+                int(props.fin_col[0] * 255)-128,
+                int(props.fin_col[1] * 255)-128,
+                int(props.fin_col[2] * 255)-128
         )
-
+        print(instance.color)
         instance.env_color = rvstruct.Color(
             color= (
                 int(props.fin_envcol[0] * 255),

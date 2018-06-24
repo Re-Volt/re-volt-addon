@@ -74,9 +74,8 @@ def import_instance(filepath, scene, instance):
     instance_obj.location = to_blender_coord(instance.position)
 
     instance_obj.revolt.is_instance = True
-    instance_obj.revolt.fin_col = [c/255 for c in instance.color.color]
+    instance_obj.revolt.fin_col = [(128+c)/255 for c in instance.color]
     envcol = (*instance.env_color.color, 255-instance.env_color.alpha)
-    print("envcol", instance.env_color.color)
     instance_obj.revolt.fin_envcol = [c/255 for c in envcol]
     instance_obj.revolt.fin_priority = instance.priority
 

@@ -254,7 +254,7 @@ def batch_bake(self, context):
         if not hasattr(obj.data, "vertex_colors"):
             continue
 
-        print("Looking at {}...".format(obj.name))
+        dprint("Baking at {}...".format(obj.name))
         context.scene.objects.active = obj
 
         # Gets currently selected layers
@@ -275,8 +275,8 @@ def batch_bake(self, context):
         tmp_layer = obj.data.vertex_colors.get("temp")
         tmp_layer.active = True
         tmp_layer.active_render = True
-        print("TMP layer:", tmp_layer.name)
-        print("TMP is active render:", tmp_layer.active_render)
+        dprint("TMP layer:", tmp_layer.name)
+        dprint("TMP is active render:", tmp_layer.active_render)
         
         # Bakes the image onto that layer
         dprint("Baking...")
@@ -292,12 +292,15 @@ def batch_bake(self, context):
         
         avg_col = [0.0, 0.0, 0.0]
         
+        count = 0
+
         for face in bm.faces:
             for loop in face.loops:
                 for c in range(3):
                     avg_col[c] += loop[vcol_layer][c]
-                    
-        inf_col = [c / len(bm.verts) for c in avg_col]
+                    count += 1
+
+        inf_col = [c / count for c in avg_col]
         bm.free()
 
         for c in range(3):

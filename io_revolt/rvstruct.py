@@ -837,7 +837,7 @@ class Instance:
     """
     def __init__(self, file=None):
         self.name = ""                            # first 8 letters of file name
-        self.color = Color(color=[0, 0, 0])       # model % RGB color
+        self.color = (0, 0, 0)       # model % RGB color
         self.env_color = Color(color=[0, 0, 0], alpha=True) # envMap color
         self.priority = 0                         # priority for multiplayer
         self.flag = 0                             # flag with properties
@@ -858,7 +858,7 @@ class Instance:
         self.name = struct.unpack("<9s", file.read(9))[0]
         self.name = str(self.name, encoding='ascii').split('\x00', 1)[0]
         # Reads the model color and the envMap color
-        self.color = Color(file)
+        self.color = struct.unpack("<3b", file.read(3))
         self.env_color = Color(file, alpha=True)
         # Reads priority and properties flag with two padded bytes
         self.priority, self.flag = struct.unpack('<BBxx', file.read(4))
@@ -870,7 +870,7 @@ class Instance:
         # Writes the first 8 letters of the prm file name
         name = str.encode(self.name)
         file.write(struct.pack("9s", name))
-        self.color.write(file)
+        file.write(struct.pack("<3b", *self.color))
         self.env_color.write(file)
         # Writes priority and properties flag with two padded bytes
         file.write(struct.pack('<BBxx', self.priority, self.flag))

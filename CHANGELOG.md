@@ -8,7 +8,7 @@ Version [`rva_18.06`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_
 
 - **Fixes**
     - Batch bake should not crash anymore
-    - Import and export of .fin properties
+    - Import and export of .fin properties (mainly colors)
 - **Additions**
     - Batch Bake section in the Light and Shadow tool panel
     - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
