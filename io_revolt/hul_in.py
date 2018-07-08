@@ -50,8 +50,13 @@ def import_chull(chull, scene, filename):
     me = bpy.data.meshes.new(filename)
     bm = bmesh.new()
 
+    dprint("verts:", len(chull.vertices))
+    dprint("edges:", len(chull.edges))
+    dprint("faces:", len(chull.faces))
+
     for vert in chull.vertices:
         position = to_blender_coord(vert)
+        dprint("vertex position:", position)
 
         # Creates vertices
         bm.verts.new(Vector((position[0], position[1], position[2])))
@@ -59,10 +64,11 @@ def import_chull(chull, scene, filename):
         bm.verts.ensure_lookup_table()
 
     for edge in chull.edges:
-        bm.edges.new([bm.verts[edge[0]], bm.verts[edge[1]]])
-
+        e = bm.edges.new([bm.verts[edge[0]], bm.verts[edge[1]]])
+        if e is None:
+            dprint("could not create edge")
     for face in chull.faces:
-        print("FACE-----------------")
+        dprint("FACE-----------------")
         verts = []
         for vert in chull.vertices:
             if face.contains_vertex(vert):
@@ -71,7 +77,10 @@ def import_chull(chull, scene, filename):
                 v = bm.verts.new(Vector((position[0], position[1], position[2])))
                 verts.append(v)
         if len(verts) > 2:
-            bm.faces.new(verts)
+            # bm.faces.append(bmesh.ops.contextual_create(bm, verts, 0, False)['faces'])
+            bmesh.ops.contextual_create(bm, geom=verts, use_smooth=True)
+            # bm.faces.new(verts)
+
 
 
 
