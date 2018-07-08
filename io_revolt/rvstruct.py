@@ -1109,13 +1109,13 @@ class Plane:
 
     def contains_vertex(self, vertex):
         # Get one point of the plane
-        p = -1 * self.normal.scale(self.distance)
+        p = (-1 * self.normal.scale(self.distance)).normalize()
         result = self.normal.dot(vertex-p)
 
         # result = (vertex[0] - p[0]) * self.normal[0] + (vertex[1] - p[1]) * self.normal[1] + (vertex[2] - p[2]) * self.normal[2]
         #Where (x, y, z) is the point your testing, (x0, y0, z0) is the point derived from the normal and (Dx, Dy, Dz) is the normal itself
 
-        if abs(result) < 0.1:
+        if abs(result) < 0.5:
             return True
         else:
             print(result)
