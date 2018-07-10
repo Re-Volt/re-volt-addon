@@ -71,6 +71,7 @@ def export_file(filepath, scene):
 
     # Adds all meshes to the ncp
     for obj in objs:
+        dprint("Adding {} to ncp...".format(obj.name))
         bm = bmesh.new()
         bm.from_mesh(obj.data)
 
@@ -84,13 +85,12 @@ def export_file(filepath, scene):
 
         add_bm_to_ncp(bm, ncp)
 
-
-
     # Sets length of polyhedron list
     ncp.polyhedron_count = len(ncp.polyhedra)
 
     # Creates a collision grid
     if props.ncp_export_collgrid:
+        dprint("Exporting collision grid...")
         ncp.generate_lookup_grid(grid_size=props.ncp_collgrid_size)
 
     # Writes the NCP to file
