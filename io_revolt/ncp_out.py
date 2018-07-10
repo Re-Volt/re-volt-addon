@@ -59,15 +59,49 @@ def export_file(filepath, scene):
     if objs == []:
         common.queue_error("exporting NCP", "No suitable objects in scene.")
         return
+    else:
+        dprint("Suitable objects: {}".format(", ".join([o.name for o in objs])))
 
     # Creates a mesh for all objects
     transform = not (props.ncp_export_selected and len(objs) == 1)
-    bm = objects_to_bmesh(objs, transform)
+    # bm = objects_to_bmesh(objs, transform) this breaks custom props
 
-    if props.triangulate_ngons:
-        num_ngons = triangulate_ngons(bm)
-        if scene.revolt.triangulate_ngons > 0:
-            print("Triangulated {} n-gons".format(num_ngons))
+
+    ncp = NCP()
+
+    # Adds all meshes to the ncp
+    for obj in objs:
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+
+        if props.triangulate_ngons:
+            num_ngons = triangulate_ngons(bm)
+            if scene.revolt.triangulate_ngons > 0:
+                print("Triangulated {} n-gons".format(num_ngons))
+
+        # Applies translation, rotation and scale
+        apply_trs(obj, bm, transform)
+
+        add_bm_to_ncp(bm, ncp)
+
+
+
+    # Sets length of polyhedron list
+    ncp.polyhedron_count = len(ncp.polyhedra)
+
+    # Creates a collision grid
+    if props.ncp_export_collgrid:
+        ncp.generate_lookup_grid(grid_size=props.ncp_collgrid_size)
+
+    # Writes the NCP to file
+    with open(filepath, "wb") as f:
+        ncp.write(f)
+
+    # Frees the bmesh
+    bm.free()
+
+
+def add_bm_to_ncp(bm, ncp):
 
     # Material and type layers. The preview layer will be ignored.
     material_layer = (bm.faces.layers.int.get("Material") or
@@ -75,7 +109,6 @@ def export_file(filepath, scene):
     type_layer = (bm.faces.layers.int.get("NCPType") or
                   bm.faces.layers.int.new("NCPType"))
 
-    ncp = NCP()
 
     for face in bm.faces:
         poly = Polyhedron()
@@ -91,7 +124,11 @@ def export_file(filepath, scene):
 
         # Sets polyhedron properties
         poly.material = face[material_layer]
-        print(face[material_layer])
+        if poly.material > 26:
+            print(face[material_layer])
+            queue_error("exporting to .ncp", "Invalid material")
+            if DEBUG:
+                return
         poly.type = face[type_layer]
 
         verts = face.verts
@@ -129,17 +166,3 @@ def export_file(filepath, scene):
         # Creates a bbox and adds the poly to the ncp
         poly.bbox = BoundingBox(data=rvbbox_from_verts(verts))
         ncp.polyhedra.append(poly)
-
-    # Sets length of polyhedron list
-    ncp.polyhedron_count = len(ncp.polyhedra)
-
-    # Creates a collision grid
-    if props.ncp_export_collgrid:
-        ncp.generate_lookup_grid(grid_size=props.ncp_collgrid_size)
-
-    # Writes the NCP to file
-    with open(filepath, "wb") as f:
-        ncp.write(f)
-
-    # Frees the bmesh
-    bm.free()

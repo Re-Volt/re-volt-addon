@@ -385,8 +385,47 @@ def get_edit_bmesh(obj):
         return bm
 
 
+def apply_trs(obj, bm, transform=False):
+        # Removes the parent for exporting and applies transformation
+        parent = obj.parent
+        if parent:
+            mat = obj.matrix_world.copy()
+            old_mat = obj.matrix_basis.copy()
+            obj.parent = None
+            obj.matrix_world = mat
+
+        spc = obj.matrix_basis
+        bmesh.ops.scale(
+            bm,
+            vec=obj.scale,
+            space=spc,
+            verts=bm.verts
+        )
+        if transform:
+            bmesh.ops.transform(
+                bm,
+                matrix=Matrix.Translation(obj.location),
+                space=spc,
+                verts=bm.verts
+            )
+        bmesh.ops.rotate(
+            bm,
+            cent=obj.location,
+            matrix=obj.rotation_euler.to_matrix(),
+            space=spc,
+            verts=bm.verts
+        )
+
+        # Restores the parent relationship
+        if parent and not obj.parent:
+            obj.parent = parent
+            obj.matrix_basis = old_mat
+
+
 def objects_to_bmesh(objs, transform=True):
     """ Merges multiple objects into one bmesh for export """
+
+    # CAUTION: Removes/destroys custom layer props
 
     # Creates the mesh used to merge the entire scene
     bm_all = bmesh.new()
@@ -397,6 +436,23 @@ def objects_to_bmesh(objs, transform=True):
         # Creates a bmesh from the supplied object
         bm = bmesh.new()
         bm.from_mesh(obj.data)
+
+        # Makes sure all layers exist so values don't get lost while exporting
+        uv_layer = bm.loops.layers.uv.get("UVMap")
+        tex_layer = bm.faces.layers.tex.get("UVMap")
+        vc_layer = (bm.loops.layers.color.get("Col") or
+                    bm.loops.layers.color.new("Col"))
+        env_layer = (bm.loops.layers.color.get("Env") or
+                     bm.loops.layers.color.new("Env"))
+        env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha") or
+                           bm.faces.layers.float.new("EnvAlpha"))
+        va_layer = (bm.loops.layers.color.get("Alpha") or
+                    bm.loops.layers.color.new("Alpha"))
+        texnum_layer = bm.faces.layers.int.get("Texture Number")
+        type_layer = (bm.faces.layers.int.get("Type") or
+                      bm.faces.layers.int.new("Type"))
+        material_layer = (bm.faces.layers.int.get("Material") or
+                          bm.faces.layers.int.new("Material"))
 
         # Removes the parent for exporting and applies transformation
         parent = obj.parent
