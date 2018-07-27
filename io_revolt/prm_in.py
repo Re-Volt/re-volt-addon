@@ -103,9 +103,6 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
     env_layer = bm.loops.layers.color.new("Env")
     env_alpha_layer = bm.faces.layers.float.new("EnvAlpha")
     va_layer = bm.loops.layers.color.new("Alpha")
-
-    # This currently breaks UV unwrap reset, it is a Blender bug.
-    # https://developer.blender.org/T52723
     texnum_layer = bm.faces.layers.int.new("Texture Number")
     type_layer = bm.faces.layers.int.new("Type")
 

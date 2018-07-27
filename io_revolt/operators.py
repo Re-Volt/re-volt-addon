@@ -94,9 +94,9 @@ class ImportRV(bpy.types.Operator):
             from . import w_in
             w_in.import_file(self.filepath, scene)
 
-            # Enables texture mode after import
-            if props.enable_tex_mode:
-                enable_any_tex_mode(context)
+        elif frmt == FORMAT_RIM:
+            from . import rim_in
+            rim_in.import_file(self.filepath, scene)
 
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))

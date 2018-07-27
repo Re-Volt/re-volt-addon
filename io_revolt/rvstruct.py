@@ -1324,12 +1324,38 @@ class RIM:
         self.num_mirror_planes = 0
         self.mirror_planes = []
 
+        if file:
+            self.read(file)
+
     def read(self, file):
         self.num_mirror_planes = struct.unpack("<h", file.read(2))[0]
         self.mirror_planes = [MirrorPlane(file) for x in range(self.num_mirror_planes)]
 
+    def write(self, file):
+        file.write(struct.pack("<h", self.num_mirror_planes))
+        for x in range(self.num_mirror_planes):
+            self.mirror_planes[x].write(file)
 
 class MirrorPlane:
     """ Mirror plane """
     def __init__(self, file=None):
-        pass
+        self.flag = 0  # unused
+        self.plane = Plane()
+        self.bounding_box = BoundingBox()
+        self.vertices = []
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.flag = struct.unpack("<L", file.read(4))[0]
+        self.plane = Plane(file)
+        self.bounding_box = BoundingBox(file)
+        self.vertices = [Vector(file) for x in range(4)]
+
+    def write(self, file):
+        file.write(struct.pack("<L", self.flag))
+        self.plane.write(file)
+        self.bounding_box.write(file)
+        for v in self.vertices:
+            v.write(file)

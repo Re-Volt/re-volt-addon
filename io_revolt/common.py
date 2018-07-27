@@ -725,6 +725,8 @@ def get_format(fstr):
         return FORMAT_NCP
     elif ext in ["prm", "m"]:
         return FORMAT_PRM
+    elif ext == "rim":
+        return FORMAT_RIM
     elif ext == "w":
         return FORMAT_W
     else:
