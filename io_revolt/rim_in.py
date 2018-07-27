@@ -44,7 +44,7 @@ def import_file(filepath, scene):
             bm.verts.ensure_lookup_table()
 
         # Creates a face from the reversed list of vertices
-        bm.faces.new(verts[::-1])
+        bm.faces.new(verts)
 
         bm.to_mesh(me)
         bm.free()

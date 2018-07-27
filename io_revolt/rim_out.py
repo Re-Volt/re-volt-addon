@@ -51,7 +51,7 @@ def export_file(filepath, scene):
 
             mirror_plane.bounding_box = rvstruct.BoundingBox(data=rvbbox_from_verts(face.verts))
             for vert in face.verts:
-                mirror_plane.vertices.append(rvstruct.Vector(data=to_revolt_coord(vert.co)))
+                mirror_plane.vertices.insert(0, rvstruct.Vector(data=to_revolt_coord(vert.co)))
 
             rim.mirror_planes.append(mirror_plane)
             rim.num_mirror_planes += 1
