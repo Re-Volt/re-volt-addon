@@ -259,6 +259,11 @@ def exec_export(filepath, context):
             print("Exporting to .w...")
             w_out.export_file(filepath, scene)
 
+        elif frmt == FORMAT_RIM:
+            from . import rim_out
+            print("Exporting to .rim...")
+            rim_out.export_file(filepath, scene)
+
         elif frmt == FORMAT_TA_CSV:
             from . import ta_csv_out
             print("Exporting texture animation sheet...")

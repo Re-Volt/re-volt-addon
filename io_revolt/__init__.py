@@ -65,6 +65,8 @@ if "w_out" in locals():
     imp.reload(w_out)
 if "rim_in" in locals():
     imp.reload(rim_in)
+if "rim_out" in locals():
+    imp.reload(rim_out)
 
 
 # Makes common variables and classes directly accessible

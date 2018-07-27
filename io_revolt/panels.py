@@ -60,6 +60,11 @@ class RevoltObjectPanel(bpy.types.Panel):
             box.prop(context.object.revolt, "fin_priority")
             box.prop(context.object.revolt, "fin_lod_bias")
 
+        # Mirror properties
+        box = layout.box()
+        box.label("Mirror Properties:")
+        box.prop(objprops, "is_mirror_plane")
+
 
 class RevoltScenePanel(bpy.types.Panel):
     """ Panel for .w properties """

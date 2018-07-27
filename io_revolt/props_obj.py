@@ -115,3 +115,11 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = 1024,
         description = "Unused"
     )
+
+    # Mirrors
+
+    is_mirror_plane = BoolProperty(
+        name = "Is Mirror Plane",
+        default = False,
+        description = "Object is a mirror plane (.rim)"
+    )

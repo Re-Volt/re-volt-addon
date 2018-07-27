@@ -51,7 +51,8 @@ def export_file(filepath, scene):
                 not obj.revolt.is_bcube and
                 not obj.revolt.is_bbox and
                 #not obj.revolt.is_instance and
-                not obj.revolt.ignore_ncp
+                not obj.revolt.ignore_ncp and
+                not obj.revolt.is_mirror_plane
             )
             if conditions:
                 objs.append(obj)

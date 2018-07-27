@@ -32,18 +32,18 @@ def import_file(filepath, scene):
         bm = bmesh.new()
 
         verts = []
-        for v in mirror_plane.vertices:
+        for v in mirror_plane.vertices[::-1]:
             verts.append(bm.verts.new(to_blender_coord(v)))
             bm.verts.ensure_lookup_table()
 
         # Creates a face from the reversed list of vertices
         bm.faces.new(verts[::-1])
-    
-        #bm.normal_update()
+
         bm.to_mesh(me)
         bm.free()
 
         ob = bpy.data.objects.new(filename, me)
+        ob.revolt.is_mirror_plane = True
         scene.objects.link(ob)
 
     # flag, plane and BBox information will be ignored
