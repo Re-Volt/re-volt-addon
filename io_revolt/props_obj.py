@@ -79,7 +79,8 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     )
     fin_priority = IntProperty(
         name="Priority",
-        default=1
+        default=1,
+        description="Priority for instance. Instance will always be shown if set to 1."
     )
     fin_env = BoolProperty(
         name="Use Environment Map",
@@ -111,5 +112,6 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     )
     fin_lod_bias = IntProperty(
         name="LoD Bias",
-        default = 1024
+        default = 1024,
+        description = "Unused"
     )

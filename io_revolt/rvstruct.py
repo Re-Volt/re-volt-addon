@@ -721,7 +721,7 @@ class Frame:
         # Reads the texture id
         self.texture = struct.unpack("<l", file.read(4))[0]
         # Reads the delay
-        self.delay = struct.unpack("<F", file.read(4))[0]
+        self.delay = struct.unpack("<f", file.read(4))[0]
 
         # Reads the UV coordinates for this frame
         for uv in range(4):
@@ -731,7 +731,7 @@ class Frame:
         # Writes the texture id
         file.write(struct.pack("<l", self.texture))
         # Writes the delay
-        file.write(struct.pack("<F", self.delay))
+        file.write(struct.pack("<f", self.delay))
 
         # Writes the UV coordinates for this frame
         for uv in self.uv[:4]:
@@ -1315,4 +1315,21 @@ class Sphere:
         self.radius = struct.unpack("<f", file.read(4))[0]
 
     def write(self, file):
+        pass
+
+
+class RIM:
+    """ Mirror planes """
+    def __init__(self, file=None):
+        self.num_mirror_planes = 0
+        self.mirror_planes = []
+
+    def read(self, file):
+        self.num_mirror_planes = struct.unpack("<h", file.read(2))[0]
+        self.mirror_planes = [MirrorPlane(file) for x in range(self.num_mirror_planes)]
+
+
+class MirrorPlane:
+    """ Mirror plane """
+    def __init__(self, file=None):
         pass

@@ -41,7 +41,7 @@ def export_file(filepath, scene):
     # Collects objects for export
     objs = []
     if props.ncp_export_selected:
-        objs = [ob for ob in scene.objects if ob.select]
+        objs = [ob for ob in scene.objects if ob.select and not ob.revolt.ignore_ncp]
     else:
         for obj in scene.objects:
             conditions = (
@@ -63,9 +63,8 @@ def export_file(filepath, scene):
         dprint("Suitable objects: {}".format(", ".join([o.name for o in objs])))
 
     # Creates a mesh for all objects
-    transform = not (props.ncp_export_selected and len(objs) == 1)
+    transform = len(objs) != 1 or props.apply_translation
     # bm = objects_to_bmesh(objs, transform) this breaks custom props
-
 
     ncp = NCP()
 
@@ -108,7 +107,6 @@ def add_bm_to_ncp(bm, ncp):
                       bm.faces.layers.int.new("Material"))
     type_layer = (bm.faces.layers.int.get("NCPType") or
                   bm.faces.layers.int.new("NCPType"))
-
 
     for face in bm.faces:
         poly = Polyhedron()

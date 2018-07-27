@@ -96,6 +96,7 @@ class EditModeHeader(bpy.types.Panel):
         # PRM/NCP toggle
         row.prop(props, "face_edit_mode", expand=True)
 
+
 class RevoltIOToolPanel(bpy.types.Panel):
     """
     Tool panel in the left sidebar of the viewport for performing
@@ -116,8 +117,6 @@ class RevoltIOToolPanel(bpy.types.Panel):
         row.operator("import_scene.revolt", text="Import", icon="IMPORT")
         row.operator("export_scene.revolt", text="Export", icon="EXPORT")
         row.operator("export_scene.revolt_redo", text="", icon="FILE_REFRESH")
-
-
 
 
 class RevoltHelpersPanelObj(bpy.types.Panel):
@@ -156,6 +155,7 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
             "helpers.launch_rv"
         )
 
+
 class RevoltHelpersPanelMesh(bpy.types.Panel):
     bl_label = "Helpers"
     bl_space_type = "VIEW_3D"
@@ -184,7 +184,6 @@ class RevoltHelpersPanelMesh(bpy.types.Panel):
             icon="TEXTURE_SHADED",
             text="Textured Solid"
         )
-
 
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
@@ -709,13 +708,14 @@ class RevoltSettingsPanel(bpy.types.Panel):
         layout.label("Export:")
         layout.prop(props, "triangulate_ngons")
         layout.prop(props, "use_tex_num")
+        layout.prop(props, "apply_scale")
+        layout.prop(props, "apply_rotation")
+        layout.prop(props, "apply_translation")
         layout.separator()
 
         # PRM Export settings
-        layout.label("Export PRM (.prm/.m):")
-        layout.prop(props, "apply_scale")
-        layout.prop(props, "apply_rotation")
-        layout.separator()
+        # layout.label("Export PRM (.prm/.m):")
+        # layout.separator()
 
         # World Import settings
         layout.label("Import World (.w):")

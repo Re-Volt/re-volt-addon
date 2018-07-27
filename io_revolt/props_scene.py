@@ -126,6 +126,11 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         default = True,
         description = "Applies the object rotation on export"
     )
+    apply_translation = BoolProperty(
+        name = "Apply Translation",
+        default = False,
+        description = "Applies the object location on export. Should be disabled disabled for single/instance ncp files"
+    )
 
     # World import properties
     w_parent_meshes = BoolProperty(
