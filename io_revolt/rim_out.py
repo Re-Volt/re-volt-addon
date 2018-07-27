@@ -30,6 +30,9 @@ def export_file(filepath, scene):
         bm = bmesh.new()
         bm.from_mesh(obj.data)
 
+        # Applies translation, rotation and scale
+        apply_trs(obj, bm, transform=True)
+
         for face in bm.faces:
 
             mirror_plane = rvstruct.MirrorPlane()

@@ -27,6 +27,13 @@ def import_file(filepath, scene):
 
     filename = filepath.rsplit(os.sep, 1)[1]
 
+    if rim.num_mirror_planes == 0 or rim.mirror_planes == []:
+        queue_error(
+            "importing mirror file", 
+            "File contains 0 mirror planes"
+        )
+        return
+
     for mirror_plane in rim.mirror_planes:
         me = bpy.data.meshes.new(filename)
         bm = bmesh.new()
