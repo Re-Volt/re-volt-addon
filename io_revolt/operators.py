@@ -352,7 +352,7 @@ VERTEX COLROS -----------------------------------------------------------------
 class ButtonColorFromActive(bpy.types.Operator):
     bl_idname = "vertexcolor.copycolor"
     bl_label = "Get Color"
-    bl_description = "Gets the color from the active face."
+    bl_description = "Gets the color from the active face"
 
     def execute(self, context):
         color_from_face(context)
@@ -382,7 +382,7 @@ class ButtonVertexColorCreateLayer(bpy.types.Operator):
 
 
 class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
-    bl_idname = "alphacolor.create_layer"
+    bl_idname = "vertexcolor.create_layer_alpha"
     bl_label = "Create Alpha Color Layer"
 
     def execute(self, context):

@@ -16,25 +16,51 @@ from bpy.app.handlers import persistent  # For the scene update handler
 from . import (
     common,
     layers,
-    panels,
+    operators,
+    texanim,
+    tools,
+)
+
+from .props import (
     props_mesh,
     props_obj,
     props_scene,
-    operators,
+)
+
+from .ui import (
+    headers,
+    faceprops,
+    instances,
+    light,
+    object,
+    scene,
+    vertex,
     texanim,
-    tools
+    helpers,
+    settings,
 )
 
 # Reloads potentially changed modules on reload (F8 in Blender)
 imp.reload(common)
 imp.reload(layers)
-imp.reload(panels)
 imp.reload(props_mesh)
 imp.reload(props_obj)
 imp.reload(props_scene)
 imp.reload(operators)
 imp.reload(texanim)
 imp.reload(tools)
+
+# Reloads ui
+imp.reload(headers)
+imp.reload(faceprops)
+imp.reload(instances)
+imp.reload(light)
+imp.reload(object)
+imp.reload(scene)
+imp.reload(vertex)
+imp.reload(texanim)
+imp.reload(helpers)
+imp.reload(settings)
 
 # Reloaded here because it's used in a class which is instanced here
 if "fin_in" in locals():
@@ -71,9 +97,9 @@ if "rim_out" in locals():
 
 # Makes common variables and classes directly accessible
 from .common import *
-from .props_mesh import *
-from .props_obj import *
-from .props_scene import *
+from .props.props_mesh import *
+from .props.props_obj import *
+from .props.props_scene import *
 from .texanim import *
 
 dprint("---\n\n\n\n")
@@ -81,7 +107,7 @@ dprint("---\n\n\n\n")
 bl_info = {
 "name": "Re-Volt",
 "author": "Marvin Thiel",
-"version": (18, 6, 19),
+"version": (18, 8, 1),
 "blender": (2, 79, 0),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",

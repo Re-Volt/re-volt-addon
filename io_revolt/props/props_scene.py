@@ -23,9 +23,9 @@ from bpy.props import (
     PointerProperty
 )
 
-from .common import *
-from .layers import *
-from .texanim import *
+from ..common import *
+from ..layers import *
+from ..texanim import *
 
 
 class RVSceneProperties(bpy.types.PropertyGroup):

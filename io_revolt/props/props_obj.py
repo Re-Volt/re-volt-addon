@@ -22,7 +22,7 @@ from bpy.props import (
     FloatVectorProperty,
     PointerProperty
 )
-from .common import *
+from ..common import *
 
 
 class RVObjectProperties(bpy.types.PropertyGroup):
