@@ -1,17 +1,18 @@
 # Changelog 
 
-## 2018-06-
+## 2018-08-01
 
-Version [`rva_18.06`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.06)
+Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801)
 
-**Topics**: Bugfixes, Tools
+**Topics**: Mirror Planes, Bugfixes, Tools
 
 - **Fixes**
     - Crash when importing levels with texture animation
     - Batch bake should not crash anymore
     - Import and export of .fin properties (mainly colors)
+    - Set default model rgb to (0.5, 0.5, 0.5)
 - **Additions**
-    - .rim support (Mirror Planes)
+    - `.rim` support (Mirror Planes)
     - Vertex color layer list in the tools panel
     - Batch Bake section in the Light and Shadow tool panel
     - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
