@@ -298,14 +298,17 @@ def batch_bake(self, context):
             for loop in face.loops:
                 for c in range(3):
                     avg_col[c] += loop[vcol_layer][c]
-                    count += 1
+                count += 1
 
+        #TODO: Figure out if brightness is right
         inf_col = [c / count for c in avg_col]
         bm.free()
 
         for c in range(3):
-            obj.revolt.fin_col[c] = inf_col[c]
-            
+            if props.batch_bake_model_rgb:
+                obj.revolt.fin_col[c] = inf_col[c]
+            if props.batch_bake_model_env:
+                obj.revolt.fin_envcol[c] = inf_col[c]
         obj.revolt.fin_model_rgb = True
 
         # Removes the temporary render layer
