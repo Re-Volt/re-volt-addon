@@ -3,12 +3,13 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Introduction - RV Add-On</title>
+        <title>Add-On Settings - RV Add-On</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Documentation for the Blender add-on.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
+        <base href="../">
 
         <link rel="stylesheet" href="book.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
@@ -84,7 +85,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html" class="active">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.4.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.5.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.6.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.7.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.8.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html" class="active"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.4.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.5.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.6.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.7.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.8.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -146,58 +147,77 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="introduction.html#rv-add-on-documentation" id="rv-add-on-documentation"><h1>RV Add-On Documentation</h1></a>
-<a class="header" href="introduction.html#download" id="download"><h2>Download</h2></a>
-<p><span style="float: right; margin: 1em 2em;"><img src="img/rva_small.png" alt="" /></span></p>
-<p>This is the documentation for Marv's Add-On for Re-Volt files.<br />
-It is intended to be used with <a href="https://www.blender.org/download/"><strong>Blender 2.79b</strong></a> or newer.</p>
-<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0619"><strong>Download</strong> (rva_18.0619)</a></p>
-<p><a href="http://learn.re-volt.io">Tutorial</a><br />
-<a href="http://learn.re-volt.io/tracks-blender/resources">Resources</a> (Animations, textures, etc.)</p>
-<a class="header" href="introduction.html#known-issues" id="known-issues"><h2>Known Issues</h2></a>
-<p>Please report Bugs and suggest features on <a href="https://github.com/Yethiel/re-volt-addon/issues">GitHub</a>.</p>
-<a class="header" href="introduction.html#features" id="features"><h2>Features</h2></a>
-<p><strong>Import, Export</strong></p>
-<ul>
-<li>World (.w)</li>
-<li>Mesh (.prm)</li>
-<li>Collision (.ncp)</li>
-<li>Instances (.fin)</li>
-<li>Mirror Planes (.rim)</li>
-<li>Texture animations (.ta.csv)</li>
-</ul>
-<p><strong>Missing Formats (help appreciated!)</strong></p>
-<ul>
-<li><strong>Hull</strong> (.hul; only partial import)</li>
-<li><strong>Objects</strong> (.fob)</li>
-<li><strong>Car Parameters</strong> (parameters.txt; parser is complete, only partial import: car body, wheels)</li>
-<li>AI Nodes (.fan)</li>
-<li>Position Nodes (.pos)</li>
-<li>Track Zones (.taz)</li>
-<li>Visiboxes (.viz)</li>
-<li>Level Information (.inf)</li>
-<li>Level properties (properties.txt)</li>
-</ul>
-<p><strong>Tools</strong></p>
-<ul>
-<li>Re-Volt tool panel
-<ul>
-<li>Bake light to vertex color</li>
-<li>Simple vertex painting tool</li>
-<li>Car shadow generator</li>
-<li>Texture animation helper</li>
-</ul>
-</li>
-</ul>
+                        <a class="header" href="tools-panel/settings.html#add-on-settings" id="add-on-settings"><h1>Add-On Settings</h1></a>
+<p><img src="./tools-panel/img/settings.png" alt="Settings Panel" /></p>
+<p>Some of these settings can also be found when importing/exporting files in the bottom left.</p>
+<a class="header" href="tools-panel/settings.html#general-settings" id="general-settings"><h2>General Settings</h2></a>
+<p><strong>Prefer Textured Solid Mode</strong>:<br />
+There are two encouraged ways to view textured meshes: Texture mode and Solid mode with <em>Textured Solid</em> shading enabled.</p>
+<p>If this setting is enabled, the add-on will switch to Textured Solid mode instead of Texture mode.<br />
+In Textured Solid mode, objects have additional shading which makes white and untextured models a lot easier to work with.</p>
+<a class="header" href="tools-panel/settings.html#import-settings" id="import-settings"><h2>Import Settings</h2></a>
+<p><strong>Texture Mode after Import</strong>:<br />
+Switches to texture display mode when a mesh has been imported (applies to .prm
+and .w).</p>
+<a class="header" href="tools-panel/settings.html#export-settings" id="export-settings"><h2>Export Settings</h2></a>
+<p><strong>Triangulate n-gons</strong>:<br />
+Triangulates faces with more than 4 vertices (also called n-gons).<br />
+This will only affect the exported object, the mesh itself will not be
+triangulated.<br />
+Deselecting this might result in broken exports.</p>
+<p><strong>Use Number for Textures</strong>:<br />
+Instead of using the texture file to determine the texture number, the number
+set in the face properties panel will be used for exporting.</p>
+<p><strong>Apply Scale</strong>:<br />
+Applies the scale of the object when exporting.</p>
+<p><strong>Apply Rotation</strong>:<br />
+Applies the rotation of the object when exporting.</p>
+<p><strong>Apply Translation</strong>:<br />
+Applies the <em>position</em> of the object when exporting.</p>
+<a class="header" href="tools-panel/settings.html#import-world-w" id="import-world-w"><h2>Import World (.w)</h2></a>
+<p><strong>Parent .w meshes to Empty</strong>:<br />
+Creates an empty object with the imported file's name and parents all meshes
+contained in the .w file to it. This makes the object outliner a lot less
+cluttered.</p>
+<p><strong>Import Bound Boxes</strong>:<br />
+Imports the bound box for every single mesh of the .w file.</p>
+<p><strong>Import Cubes</strong>:<br />
+Imports the cubes for every single mesh of the .w file.</p>
+<p><strong>Import Big Cubes</strong>:<br />
+Imports the big cubes surrounding multiple meshes of the .w file.</p>
+<p><strong>* Import Layers</strong>:<br />
+This option will be given as soon as one of the above debug settings have been
+enabled (boundary boxes, spheres and big cubes):<br />
+Selector for the layer(s) the debug objects will be placed on. Multiple layers
+can be selected by <code>Shift</code>-clicking or dragging.<br />
+By default, all objects will be imported to the first layer.</p>
+<p>When imported, the actual meshes are going to be on the first layer while the
+debug objects potentially are on other layers.<br />
+To view multiple layers at once, hold down <code>Shift</code> and press numbers, e.g.
+<code>1</code> and then <code>2</code>. While doing that, make sure the mouse cursor hovers over the 3D view.</p>
+<a class="header" href="tools-panel/settings.html#export-collision-ncp" id="export-collision-ncp"><h2>Export Collision (.ncp)</h2></a>
+<p><strong>Only export selected</strong>:<br />
+When this setting is enabled, only selected objects will be exported to the NCP.
+If only one object is selected, the location of the object will be ignored and the center
+of the NCP will be the center of the selected object (useful for exporting NCPs for single PRM files).</p>
+<p><strong>Export Collision Grid (.w)</strong>:<br />
+This setting is required when exporting a collision file that matches a .w file (e.g. nhood1.ncp for nhood1.w).<br />
+NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).</p>
+<p><strong>Grid Size</strong>:<br />
+Defines the size of the lookup grid that is written to the end of the NCP file. The size defines the size of the single &quot;cells&quot;. Choosing a higher number will result in a faster export but poorer performance in-game.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="tools-panel/io.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
                         
-                            <a rel="next" href="installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="tools-panel/instances.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -209,9 +229,13 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
+                    <a href="tools-panel/io.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
 
                 
-                    <a href="installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="tools-panel/instances.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

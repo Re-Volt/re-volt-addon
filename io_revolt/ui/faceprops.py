@@ -1,5 +1,6 @@
 import bpy
 from ..common import *
+from .widgets import *
 
 class RevoltFacePropertiesPanel(bpy.types.Panel):
     bl_label = "Face Properties"

@@ -3,12 +3,13 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Introduction - RV Add-On</title>
+        <title>Light and Shadow - RV Add-On</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Documentation for the Blender add-on.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
+        <base href="../">
 
         <link rel="stylesheet" href="book.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
@@ -84,7 +85,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html" class="active">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.4.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.5.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.6.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.7.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.8.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/light-and-shadow.html" class="active"><strong aria-hidden="true">2.4.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.5.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.6.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.7.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.8.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -146,58 +147,71 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="introduction.html#rv-add-on-documentation" id="rv-add-on-documentation"><h1>RV Add-On Documentation</h1></a>
-<a class="header" href="introduction.html#download" id="download"><h2>Download</h2></a>
-<p><span style="float: right; margin: 1em 2em;"><img src="img/rva_small.png" alt="" /></span></p>
-<p>This is the documentation for Marv's Add-On for Re-Volt files.<br />
-It is intended to be used with <a href="https://www.blender.org/download/"><strong>Blender 2.79b</strong></a> or newer.</p>
-<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0619"><strong>Download</strong> (rva_18.0619)</a></p>
-<p><a href="http://learn.re-volt.io">Tutorial</a><br />
-<a href="http://learn.re-volt.io/tracks-blender/resources">Resources</a> (Animations, textures, etc.)</p>
-<a class="header" href="introduction.html#known-issues" id="known-issues"><h2>Known Issues</h2></a>
-<p>Please report Bugs and suggest features on <a href="https://github.com/Yethiel/re-volt-addon/issues">GitHub</a>.</p>
-<a class="header" href="introduction.html#features" id="features"><h2>Features</h2></a>
-<p><strong>Import, Export</strong></p>
+                        <a class="header" href="tools-panel/light-and-shadow.html#light-and-shadow" id="light-and-shadow"><h1>Light and Shadow</h1></a>
+<p><img src="./tools-panel/img/light-shadow.png" alt="Light and Shadow Panel" /></p>
+<a class="header" href="tools-panel/light-and-shadow.html#shade-object" id="shade-object"><h2>Shade Object</h2></a>
+<p>Shades a mesh by baking light to the vertex color layer.</p>
+<p><strong>Orientation</strong>:<br />
+Sets the orientation of the lights. The following options are available:</p>
 <ul>
-<li>World (.w)</li>
-<li>Mesh (.prm)</li>
-<li>Collision (.ncp)</li>
-<li>Instances (.fin)</li>
-<li>Mirror Planes (.rim)</li>
-<li>Texture animations (.ta.csv)</li>
+<li><strong>Z (Vertical)</strong>: Places lights above and beneath the selected object.</li>
+<li><strong>Y (Horizontal)</strong>: Places lights in the front and the back of the selected
+object</li>
+<li><strong>X (Horizontal)</strong>: Places lights on the left and right of the selected object.</li>
 </ul>
-<p><strong>Missing Formats (help appreciated!)</strong></p>
+<p><strong>Direction</strong>:<br />
+Shows where the lights will be placed, depending on the chosen orientation.</p>
+<p><strong>Light</strong>:<br />
+Three options: Hard (sun, more contrast), Soft (hemisphere, smoother) and None.</p>
 <ul>
-<li><strong>Hull</strong> (.hul; only partial import)</li>
-<li><strong>Objects</strong> (.fob)</li>
-<li><strong>Car Parameters</strong> (parameters.txt; parser is complete, only partial import: car body, wheels)</li>
-<li>AI Nodes (.fan)</li>
-<li>Position Nodes (.pos)</li>
-<li>Track Zones (.taz)</li>
-<li>Visiboxes (.viz)</li>
-<li>Level Information (.inf)</li>
-<li>Level properties (properties.txt)</li>
+<li>The <strong>hard</strong> option emits light in a distinct direction
+(<a href="https://docs.blender.org/manual/de/dev/render/blender_render/lighting/lamps/sun/introduction.html">Blender docs</a>).</li>
+<li>The <strong>soft</strong> option emits light from a hemisphere which makes the model evenly lit
+(<a href="https://docs.blender.org/manual/de/dev/render/blender_render/lighting/lamps/hemi.html">Blender docs</a>).</li>
 </ul>
-<p><strong>Tools</strong></p>
+<p><strong>Intensity</strong>:<br />
+This defines the intensity of the light sources. This is the same setting as the lamp's energy.</p>
+<hr />
+<a class="header" href="tools-panel/light-and-shadow.html#generate-shadow-texture" id="generate-shadow-texture"><h2>Generate Shadow Texture</h2></a>
+<p>With this feature you can create shadows that are ready for use in-game. The shadows are negative which is a requirement by the game.</p>
+<p>The add-on creates the shadows with ray-tracing and then baking them to an automatically sized textured plane (takes child objects into account).</p>
+<p>To <strong>save the shadows</strong>, go into the <em>UV/Image Editor</em>, select the shadow (most recenty try has the highest number, e.g. Shadow.420) and then click <em>Image -&gt; Save as Image</em>.</p>
+<p><strong>Warning</strong>: Start with low-quality settings first as Blender might hang a while during the creation of a shadow. If it appears to freeze, wait a few minutes. Depending on the settings you chose, it might take a while.</p>
+<p><strong>Method</strong>:<br />
+There are two options:</p>
 <ul>
-<li>Re-Volt tool panel
-<ul>
-<li>Bake light to vertex color</li>
-<li>Simple vertex painting tool</li>
-<li>Car shadow generator</li>
-<li>Texture animation helper</li>
+<li><strong>Default</strong> (Adaptive QMC), which is the faster option. I recommend this for testing the shadow settings.</li>
+<li><strong>High Quality</strong> (Constant QMC), which is the slower and less-grainy option. I recommend using this when you're done tweaking your shadow settings.</li>
 </ul>
-</li>
-</ul>
+<p><strong>Quality</strong>:<br />
+The amount of samples the shadow is rendered with (number of samples taken extra).</p>
+<p><strong>Softness</strong>:<br />
+Light size for ray shadow sampling.</p>
+<p><strong>Resolution</strong>:<br />
+The resolution of the resulting texture (height and width).</p>
+<p><strong>Table</strong>:<br />
+Shadow coordinates for use in parameters.txt of cars. Click to select all, then CTRL C to copy.</p>
+<a class="header" href="tools-panel/light-and-shadow.html#batch-bake-lights" id="batch-bake-lights"><h2>Batch Bake Lights</h2></a>
+<p>This feature allows you to bake lights in the current scene to instance objects.</p>
+<p><strong>Bake to Model RGB</strong>:<br />
+Whether to bake the color to the Model RGB value. This can be used to darken or tint the instance.</p>
+<p><strong>Bake to Model Env</strong>:<br />
+Whether to bake the color to the Model Env value. This can be used to alter the reflection color of the instance.</p>
+<p><strong>Bake all selected</strong><br />
+Bakes a full render to all selected objects. This usually takes a long time, Blender freezes until the action is done. A popup will show up when the baking process is complete.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="tools-panel/instances.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
                         
-                            <a rel="next" href="installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="tools-panel/helpers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -209,9 +223,13 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
+                    <a href="tools-panel/instances.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
 
                 
-                    <a href="installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="tools-panel/helpers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
