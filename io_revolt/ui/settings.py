@@ -54,6 +54,7 @@ class RevoltSettingsPanel(bpy.types.Panel):
         # General import settings
         layout.label("Import:")
         layout.prop(props, "enable_tex_mode")
+        layout.prop(props, "prm_check_parameters")
         layout.separator()
 
         # General export settings

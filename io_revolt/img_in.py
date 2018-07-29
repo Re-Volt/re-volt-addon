@@ -23,8 +23,12 @@ def load_image(filepath):
         # Sets a fake user because it doesn't get automatically set
         image.use_fake_user = True
     else:
-        print("Texture not found: ", filepath)
+        # Finds existing dummy texture
+        for img in bpy.data.images:
+            if img.name == texture_name:
+                return img
         # Creates a dummy texture
+        print("Texture not found: ", filepath)
         bpy.ops.image.new(name=texture_name, width=512, height=512,
                           generated_type="UV_GRID")
         image = bpy.data.images.get(texture_name)

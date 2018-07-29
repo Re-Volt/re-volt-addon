@@ -280,7 +280,7 @@ def process_words(fd):
 
 def skip_line(fd):
     ch = fd.read(1)
-    while ch != "\n":
+    while ch != "\n" and ch != '':
         ch = fd.read(1)
     ch = fd.read(1)
     return ch

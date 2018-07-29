@@ -18,6 +18,9 @@ In Textured Solid mode, objects have additional shading which makes white and un
 Switches to texture display mode when a mesh has been imported (applies to .prm
 and .w).
 
+**Check Parameters for texture**:  
+Whether to read the parameters.txt from the car folder when importing a `.prm` to find out the texture path.
+
 ## Export Settings
 
 **Triangulate n-gons**:  

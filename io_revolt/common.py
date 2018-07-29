@@ -661,11 +661,12 @@ Non-Blender helper functions
 """
 
 
-def get_texture_path(filepath, tex_num):
+def get_texture_path(filepath, tex_num, scene):
     """ Gets the full texture path when given a file and its
         polygon texture number. """
 
     path, fname = filepath.rsplit(os.sep, 1)
+    props = scene.revolt
 
     # Checks if the loaded model is located in the custom folder
     folder = path.rsplit(os.sep, 1)[1]
@@ -677,7 +678,7 @@ def get_texture_path(filepath, tex_num):
         return None
 
     # The file is part of a car
-    if "parameters.txt" in os.listdir(path):
+    if props.prm_check_parameters and "parameters.txt" in os.listdir(path):
         filepath = os.path.join(path, "parameters.txt")
         if not filepath in PARAMETERS:
             PARAMETERS[filepath] = read_parameters(filepath)
@@ -697,6 +698,7 @@ def is_track_folder(path):
     for f in os.listdir(path):
         if ".inf" in f:
             return True
+    return False
 
 
 def get_format(fstr):

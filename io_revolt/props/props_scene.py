@@ -132,6 +132,12 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         description = "Applies the object location on export. Should be disabled disabled for single/instance ncp files"
     )
 
+    prm_check_parameters = BoolProperty(
+        name = "Check Parameters for texture",
+        default = True,
+        description = "Checks car parameters.txt for the texture"
+    )
+
     # World import properties
     w_parent_meshes = BoolProperty(
         name = "Parent .w meshes to Empty",

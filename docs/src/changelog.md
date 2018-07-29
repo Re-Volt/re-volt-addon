@@ -10,6 +10,7 @@ Version [`rva_18.06`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_
     - Crash when importing levels with texture animation
     - Batch bake should not crash anymore
     - Import and export of .fin properties (mainly colors)
+    - Too many dummy textures when importing prm
 - **Additions**
     - .rim support (Mirror Planes)
     - Vertex color layer list in the tools panel
