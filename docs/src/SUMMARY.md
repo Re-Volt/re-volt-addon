@@ -18,5 +18,6 @@
         - [Instance Properties](./properties/object/instance.md)
         - [Mirror Properties](./properties/object/mirror.md)
     - [Scene](./properties/scene.md)
+- [File Specifications](./files.md)
 
 [Changelog](./changelog.md)

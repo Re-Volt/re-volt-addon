@@ -36,11 +36,12 @@ def get_plane(x, y, z):
 
 def export_hull(filepath, scene):
 
-    objs = [obj for obj in sce.objects if obj.revolt.is_hull_convex]
+    objs = [obj for obj in scene.objects if obj.revolt.is_hull_convex]
 
     hull = rvstruct.Hull()
-
     hull.chull_count = len(objs)
+
+    # Creates convex hulls
 
     for obj in objs:
 
@@ -56,8 +57,6 @@ def export_hull(filepath, scene):
 
             plane = rvstruct.Plane()
 
-            bm.faces.ensure_lookup_table()
-
             normal = rvstruct.Vector(data=to_revolt_axis(face.normal))
             normal.normalize()
             normal = normal * -1
@@ -70,12 +69,46 @@ def export_hull(filepath, scene):
 
             chull.faces.append(plane)
             chull.face_count += 1
-            rim.num_mirror_planes += 1
 
-        chull.bbox = rvstruct.BoundingBox(data=rvbbox_from_verts(bm.verts))
+        # Define bounding box
+
+        bbox = rvstruct.BoundingBox(data=rvbbox_from_verts(bm.verts))
+
+        chull.bbox_offset = rvstruct.Vector(data=(
+                (bbox.xlo + bbox.xhi) / 2,
+                (bbox.ylo + bbox.yhi) / 2,
+                (bbox.zlo + bbox.zhi) / 2
+            )
+        ) 
+
+        bbox.xlo -= chull.bbox_offset[0]
+        bbox.xhi -= chull.bbox_offset[0]
+        bbox.ylo -= chull.bbox_offset[1]
+        bbox.yhi -= chull.bbox_offset[1]
+        bbox.zlo -= chull.bbox_offset[2]
+        bbox.zhi -= chull.bbox_offset[2]
+
+        chull.bbox = bbox
 
         bm.free()
+        
+        hull.chulls.append(chull)
 
+    # Creates interior
+
+    objs = [obj for obj in scene.objects if obj.revolt.is_hull_sphere]
+    hull.interior.sphere_count = len(objs)
+
+    for obj in objs:
+        sphere = rvstruct.Sphere()
+
+        sphere.center = rvstruct.Vector(data=to_revolt_coord(obj.location))
+        sphere.radius = to_revolt_scale(sum(list(obj.scale))/3)
+
+        hull.interior.spheres.append(sphere)
+
+    with open(filepath, "wb") as f:
+        hull.write(f)
 
 
 

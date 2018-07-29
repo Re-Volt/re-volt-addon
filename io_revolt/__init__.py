@@ -69,6 +69,8 @@ if "fin_out" in locals():
     imp.reload(fin_out)
 if "hul_in" in locals():
     imp.reload(hul_in)
+if "hul_out" in locals():
+    imp.reload(hul_out)
 if "img_in" in locals():
     imp.reload(img_in)
 if "prm_in" in locals():

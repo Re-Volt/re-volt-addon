@@ -4,21 +4,21 @@
 
 Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801)
 
-**Topics**: Bugfixes, Tools
+**Topics**: Mirror Planes, Hull, Bugfixes, Tools
 
+- **Additions**
+    - **Mirror Planes**: `.rim` support
+    - Vertex color layer list in the tools panel
+    - Batch Bake section in the Light and Shadow tool panel
+    - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
 - **Fixes**
-    - Crash when importing levels with texture animation
+    - Crash when importing levels with texture animation (reported by Gotolei)
     - Batch bake should not crash anymore
     - Import and export of .fin properties (mainly colors)
     - Set default model rgb to (0.5, 0.5, 0.5)
     - Too many dummy textures when importing prm
-    - Catch error when parameters.txt files don't end with a '}'
+    - Catch error when parameters.txt files don't end with a '}' (reported by Shara)
     - NCPs consisting of multiple objects are now exported with correct materials
-- **Additions**
-    - `.rim` support (Mirror Planes)
-    - Vertex color layer list in the tools panel
-    - Batch Bake section in the Light and Shadow tool panel
-    - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
 - **Modifications**
     - New documentation, yet again
     - Code restructuring

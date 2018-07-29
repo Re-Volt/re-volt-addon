@@ -175,7 +175,7 @@ def create_sphere(scene, center, radius, filename):
     ob.location = center
     ob.scale = (radius, radius, radius)
     ob.draw_type = "SOLID"
-    ob.is_hull_sphere = True
+    ob.revolt.is_hull_sphere = True
     return ob
 
 def import_file(filepath, scene):

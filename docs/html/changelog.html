@@ -85,7 +85,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.4.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.5.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.6.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.7.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.8.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html" class="active">Changelog</a></li></ol>
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.4.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.5.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.6.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.7.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.8.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="files.html"><strong aria-hidden="true">4.</strong> File Specifications</a></li><li class="affix"><a href="changelog.html" class="active">Changelog</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -150,25 +150,25 @@
                         <a class="header" href="changelog.html#changelog" id="changelog"><h1>Changelog</h1></a>
 <a class="header" href="changelog.html#a2018-08-01" id="a2018-08-01"><h2>2018-08-01</h2></a>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801"><code>rva_18.0801</code></a></p>
-<p><strong>Topics</strong>: Bugfixes, Tools</p>
+<p><strong>Topics</strong>: Mirror Planes, Hull, Bugfixes, Tools</p>
 <ul>
+<li><strong>Additions</strong>
+<ul>
+<li><strong>Mirror Planes</strong>: <code>.rim</code> support</li>
+<li>Vertex color layer list in the tools panel</li>
+<li>Batch Bake section in the Light and Shadow tool panel</li>
+<li>RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.</li>
+</ul>
+</li>
 <li><strong>Fixes</strong>
 <ul>
-<li>Crash when importing levels with texture animation</li>
+<li>Crash when importing levels with texture animation (reported by Gotolei)</li>
 <li>Batch bake should not crash anymore</li>
 <li>Import and export of .fin properties (mainly colors)</li>
 <li>Set default model rgb to (0.5, 0.5, 0.5)</li>
 <li>Too many dummy textures when importing prm</li>
-<li>Catch error when parameters.txt files don't end with a '}'</li>
+<li>Catch error when parameters.txt files don't end with a '}' (reported by Shara)</li>
 <li>NCPs consisting of multiple objects are now exported with correct materials</li>
-</ul>
-</li>
-<li><strong>Additions</strong>
-<ul>
-<li><code>.rim</code> support (Mirror Planes)</li>
-<li>Vertex color layer list in the tools panel</li>
-<li>Batch Bake section in the Light and Shadow tool panel</li>
-<li>RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.</li>
 </ul>
 </li>
 <li><strong>Modifications</strong>
@@ -417,7 +417,7 @@
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="properties/scene.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="files.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
@@ -431,7 +431,7 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="properties/scene.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="files.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 

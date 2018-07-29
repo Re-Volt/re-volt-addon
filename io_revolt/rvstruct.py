@@ -1225,12 +1225,13 @@ class Hull:
     def read(self, file):
         self.chull_count = struct.unpack("<h", file.read(2))[0]
         self.chulls = [ConvexHull(file) for x in range(self.chull_count)]
-
         self.interior = Interior(file)
 
-
     def write(self, file):
-        pass
+        file.write(struct.pack("<h", self.chull_count))
+        for x in range(self.chull_count):
+            self.chulls[x].write(file)
+        self.interior.write(file)
 
 
 class ConvexHull:
@@ -1263,7 +1264,19 @@ class ConvexHull:
         self.faces = [Plane(file) for x in range(self.face_count)]
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<h", self.vertex_count))
+        file.write(struct.pack("<h", self.edge_count))
+        file.write(struct.pack("<h", self.face_count))
+
+        self.bbox.write(file)
+        self.bbox_offset.write(file)
+
+        for x in range(self.vertex_count):
+            self.vertices[x].write(file)
+        for x in range(self.edge_count):
+            self.edges[x].write(file)
+        for x in range(self.face_count):
+            self.faces[x].write(file)
 
 
 class Edge:
@@ -1278,7 +1291,7 @@ class Edge:
         self.vertices = [struct.unpack("<h", file.read(2))[0] for x in range(2)]
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<hh", *self.vertices))
 
     def __getitem__(self, i):
         return self.vertices[i]
@@ -1298,7 +1311,9 @@ class Interior:
         self.spheres = [Sphere(file) for x in range(self.sphere_count)]
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<h", self.sphere_count))
+        for x in range(self.sphere_count):
+            self.spheres[x].write(file)
 
 
 class Sphere:
@@ -1315,7 +1330,8 @@ class Sphere:
         self.radius = struct.unpack("<f", file.read(4))[0]
 
     def write(self, file):
-        pass
+        self.center.write(file)
+        file.write(struct.pack("<f", self.radius))
 
 
 class RIM:

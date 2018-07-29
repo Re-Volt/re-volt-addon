@@ -38,7 +38,8 @@ Please report Bugs and suggest features on [GitHub](https://github.com/Yethiel/r
 - AI Nodes (.fan)
 - Position Nodes (.pos)
 - Track Zones (.taz)
-- Visiboxes (.viz)
+- Visiboxes (.vis)
+- Lights (.lit)
 - Level Information (.inf)
 - Level properties (properties.txt)
 

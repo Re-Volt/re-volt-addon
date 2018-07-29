@@ -260,6 +260,11 @@ def exec_export(filepath, context):
             print("Exporting to .ncp...")
             ncp_out.export_file(filepath, scene)
 
+        elif frmt == FORMAT_HUL:   
+            from . import hul_out
+            print("Exporting to .hul...")
+            hul_out.export_file(filepath, scene)
+
         elif frmt == FORMAT_W:
             from . import w_out
             print("Exporting to .w...")
