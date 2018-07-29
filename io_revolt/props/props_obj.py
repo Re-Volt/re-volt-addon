@@ -54,6 +54,19 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         description = "Indices of child meshes"
     )
 
+    # Hull
+
+    is_hull_sphere = BoolProperty(
+        name = "Is Interior Sphere",
+        default = False,
+        description = ""
+    )
+    is_hull_convex = BoolProperty(
+        name = "Is Convex Hull",
+        default = False,
+        description = ""
+    )
+
     # Instances
 
     is_instance = BoolProperty(

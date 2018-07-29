@@ -12,6 +12,9 @@ if "bpy" in locals():
     imp.reload(common)
     imp.reload(rvstruct)
 
+import os
+import subprocess
+import re
 import bpy
 import bmesh
 import mathutils
@@ -39,9 +42,61 @@ def import_hull(filepath, scene):
     with open(filepath, "rb") as fd:
         hull = Hull(fd)
 
-    # Imports the convex hulls
+    filename = os.path.basename(filepath)
+
     for chull in hull.chulls:
-        import_chull(chull, scene, filepath.rsplit(os.sep, 1)[1])
+
+        bm = bmesh.new()
+        me = bpy.data.meshes.new(filename)
+        with open("qhull_in.txt", "w") as file:
+            #TODO: Document this. I'm relying on what jig did here
+            file.write("3 1\n")
+            file.write("{} {} {}\n".format(*chull.bbox_offset))
+            file.write("4\n")
+            file.write("{}".format(len(chull.faces)))
+            for face in chull.faces:
+                file.write("{} {} {} {}\n".format(*face.normal, face.distance))
+
+        # Windows (test, anyone?)
+        if os.name == "nt":
+            subprocess.Popen(["hull\\qhull.exe", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
+        else:
+            dprint("yaylinux")
+            subprocess.Popen(["qhull", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
+
+        with open("qhull_out.txt", "r") as file:
+            file.readline() # ignores first line
+            num_verts = int(file.readline())
+
+            for i in range(num_verts):
+                bm.verts.new(to_blender_coord([float(s) for s in re.match("\\s*(\\S+)?\\s*(\\S+)?\\s*(\\S+)?", file.readline()).groups("0")]))
+
+            bm.verts.ensure_lookup_table()
+            bm.faces.ensure_lookup_table()
+            num_faces = int(file.readline())
+            for i in range(num_faces):
+                face = [int(s) for s in re.findall("\\S+", file.readline())][:0:-1]
+                if len(face) > 2:
+                    bm.faces.new([bm.verts[i] for i in face])
+                    continue
+
+        os.remove("qhull_in.txt")
+        os.remove("qhull_out.txt")
+
+        me.materials.append(create_material("RVHull", COL_HULL, 0.3))
+
+        bm.normal_update()
+        bm.to_mesh(me)
+        ob = bpy.data.objects.new(filename, me)
+        ob.show_transparent = True
+        ob.show_wire = True
+        ob.revolt.is_hull_convex = True
+        scene.objects.link(ob)
+        scene.objects.active = ob
+
+    for sphere in hull.interior.spheres:
+        create_sphere(scene, sphere.center, sphere.radius, filename)
+
 
 
 def import_chull(chull, scene, filename):
@@ -77,7 +132,7 @@ def import_chull(chull, scene, filename):
                 v = bm.verts.new(Vector((position[0], position[1], position[2])))
                 verts.append(v)
         if len(verts) > 2:
-            # bm.faces.append(bmesh.ops.contextual_create(bm, verts, 0, False)['faces'])
+            # bm.faces.append(bmesh.ops.contextual_create(bm, verts, 0, False)["faces"])
             bmesh.ops.contextual_create(bm, geom=verts, use_smooth=True)
             # bm.faces.new(verts)
 
@@ -93,6 +148,35 @@ def import_chull(chull, scene, filename):
     scene.objects.link(ob)
     scene.objects.active = ob
 
+
+def create_sphere(scene, center, radius, filename):
+    col = COL_SPHERE
+    center = to_blender_coord(center)
+    radius = to_blender_scale(radius)
+    mname = "RVSphere"
+    if mname not in bpy.data.meshes:
+        me = bpy.data.meshes.new(mname)
+        bm = bmesh.new()
+        # Creates a box
+        bmesh.ops.create_uvsphere(bm, diameter=1, u_segments= 32, v_segments=16, calc_uvs=True)
+        bm.to_mesh(me)
+        bm.free()
+        # Creates a transparent material for the object
+        me.materials.append(create_material(mname, col, 0))
+        # Makes polygons smooth
+        for poly in me.polygons:
+            poly.use_smooth = True
+    else:
+        me = bpy.data.meshes[mname]
+
+    # Links the object and sets position and scale
+    ob = bpy.data.objects.new("{}_{}".format(mname, filename), me)
+    scene.objects.link(ob)
+    ob.location = center
+    ob.scale = (radius, radius, radius)
+    ob.draw_type = "SOLID"
+    ob.is_hull_sphere = True
+    return ob
 
 def import_file(filepath, scene):
     return import_hull(filepath, scene)

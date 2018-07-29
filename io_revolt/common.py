@@ -182,6 +182,8 @@ COLORS = (
 COL_CUBE = Color(rgb(180, 20, 0))
 COL_BBOX = Color(rgb(0, 0, 40))
 COL_BCUBE = Color(rgb(0, 180, 20))
+COL_SPHERE = Color(rgb(0, 180, 20))
+COL_HULL = Color(rgb(180, 20, 0))
 
 """
 Supported File Formats
@@ -605,6 +607,16 @@ def enable_textured_solid_mode():
                 if space.type == "VIEW_3D":
                     space.viewport_shade = "SOLID"
                     space.show_textured_solid = True
+    return
+
+def enable_solid_mode():
+    """ Enables solid mode """
+    for area in bpy.context.screen.areas:
+        if area.type == "VIEW_3D":
+            for space in area.spaces:
+                if space.type == "VIEW_3D":
+                    space.viewport_shade = "SOLID"
+                    space.show_textured_solid = False
     return
 
 

@@ -152,7 +152,7 @@
 <p><span style="float: right; margin: 1em 2em;"><img src="img/rva_small.png" alt="" /></span></p>
 <p>This is the documentation for Marv's Add-On for Re-Volt files.<br />
 It is intended to be used with <a href="https://www.blender.org/download/"><strong>Blender 2.79b</strong></a> or newer.</p>
-<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0619"><strong>Download</strong> (rva_18.0619)</a></p>
+<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801"><strong>Download</strong> (rva_18.0801)</a></p>
 <p><a href="http://learn.re-volt.io">Tutorial</a><br />
 <a href="http://learn.re-volt.io/tracks-blender/resources">Resources</a> (Animations, textures, etc.)</p>
 <a class="header" href="print.html#known-issues" id="known-issues"><h2>Known Issues</h2></a>
@@ -468,8 +468,8 @@ Vertex color layers can be found in the object data section (symbol with three d
 <a class="header" href="print.html#scene" id="scene"><h1>Scene</h1></a>
 <p>Only some debug stuff, <em>not much to be scene</em>.</p>
 <a class="header" href="print.html#changelog" id="changelog"><h1>Changelog</h1></a>
-<a class="header" href="print.html#a2018-06-" id="a2018-06-"><h2>2018-06-</h2></a>
-<p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.06"><code>rva_18.06</code></a></p>
+<a class="header" href="print.html#a2018-08-01" id="a2018-08-01"><h2>2018-08-01</h2></a>
+<p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801"><code>rva_18.0801</code></a></p>
 <p><strong>Topics</strong>: Bugfixes, Tools</p>
 <ul>
 <li><strong>Fixes</strong>
@@ -477,12 +477,15 @@ Vertex color layers can be found in the object data section (symbol with three d
 <li>Crash when importing levels with texture animation</li>
 <li>Batch bake should not crash anymore</li>
 <li>Import and export of .fin properties (mainly colors)</li>
+<li>Set default model rgb to (0.5, 0.5, 0.5)</li>
 <li>Too many dummy textures when importing prm</li>
+<li>Catch error when parameters.txt files don't end with a '}'</li>
+<li>NCPs consisting of multiple objects are now exported with correct materials</li>
 </ul>
 </li>
 <li><strong>Additions</strong>
 <ul>
-<li>.rim support (Mirror Planes)</li>
+<li><code>.rim</code> support (Mirror Planes)</li>
 <li>Vertex color layer list in the tools panel</li>
 <li>Batch Bake section in the Light and Shadow tool panel</li>
 <li>RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.</li>
@@ -490,6 +493,7 @@ Vertex color layers can be found in the object data section (symbol with three d
 </li>
 <li><strong>Modifications</strong>
 <ul>
+<li>New documentation, yet again</li>
 <li>Code restructuring</li>
 <li>UI restructuring</li>
 </ul>

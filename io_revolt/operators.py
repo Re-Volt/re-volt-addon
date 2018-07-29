@@ -56,8 +56,10 @@ class ImportRV(bpy.types.Operator):
 
         elif frmt == FORMAT_CAR:
             from . import parameters_in
+            old_check = props.prm_check_parameters
+            props.prm_check_parameters = True
             parameters_in.import_file(self.filepath, scene)
-
+            props.prm_check_parameters = old_check
             # Enables texture mode after import
             if props.enable_tex_mode:
                 enable_any_tex_mode(context)
@@ -82,9 +84,8 @@ class ImportRV(bpy.types.Operator):
             from . import hul_in
             hul_in.import_file(self.filepath, scene)
 
-            # Enables texture mode after import
-            if props.enable_tex_mode:
-                enable_any_tex_mode(context)
+            # Enables solid mode after import
+            enable_solid_mode()
 
         elif frmt == FORMAT_TA_CSV:
             from . import ta_csv_in
@@ -93,6 +94,11 @@ class ImportRV(bpy.types.Operator):
         elif frmt == FORMAT_W:
             from . import w_in
             w_in.import_file(self.filepath, scene)
+
+            # Enables texture mode after import
+            if props.enable_tex_mode:
+                enable_any_tex_mode(context)
+
 
         elif frmt == FORMAT_RIM:
             from . import rim_in
