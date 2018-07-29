@@ -65,9 +65,11 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     fin_col = FloatVectorProperty(
        name="Model Color",
        subtype='COLOR',
-       default=(1.0, 1.0, 1.0),
+       default=(0.5, 0.5, 0.5),
        min=0.0, max=1.0,
-       description=""
+       description="Model RGB color to be added/subtracted:\n1.0: Bright, overrides vertex colors\n"
+           "0.5: Default, leaves vertex colors intact\n"
+           "0.0: Dark"
     )
     fin_envcol = FloatVectorProperty(
        name="Env Color",

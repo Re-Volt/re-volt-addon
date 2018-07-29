@@ -16,6 +16,7 @@ Version [`rva_18.06`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_
     - Batch Bake section in the Light and Shadow tool panel
     - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
 - **Modifications**
+    - New documentation, yet again
     - Code restructuring
     - UI restructuring
 
