@@ -356,5 +356,11 @@ def generate_chull(context):
     bm.to_mesh(me)
     bm.free()
     ob = bpy.data.objects.new(filename, me)
+    #TODO: Check for existing material
+    me.materials.append(create_material("RVHull", COL_HULL, 0.3))
+    ob.show_transparent = True
+    ob.show_wire = True
+    ob.revolt.is_hull_convex = True
+    ob.select = True
     scene.objects.link(ob)
     scene.objects.active = ob

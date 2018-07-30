@@ -28,6 +28,7 @@ from .props import (
 )
 
 from .ui import (
+    menu_add,
     headers,
     faceprops,
     instances,
@@ -52,6 +53,7 @@ imp.reload(texanim)
 imp.reload(tools)
 
 # Reloads ui
+imp.reload(menu_add)
 imp.reload(headers)
 imp.reload(faceprops)
 imp.reload(instances)
@@ -160,6 +162,7 @@ def register():
 
     bpy.types.INFO_MT_file_import.prepend(menu_func_import)
     bpy.types.INFO_MT_file_export.prepend(menu_func_export)
+    bpy.types.INFO_MT_add.append(menu_add.menu_func_add)
 
     bpy.app.handlers.scene_update_pre.append(edit_object_change_handler)
     # bpy.app.handlers.scene_update_post.append(edit_object_change_handler)
@@ -174,7 +177,7 @@ def unregister():
 
     bpy.types.INFO_MT_file_import.remove(menu_func_import)
     bpy.types.INFO_MT_file_export.remove(menu_func_export)
-
+    bpy.types.INFO_MT_add.remove(menu_add.menu_func_add)
 
 if __name__ == "__main__":
     register()
