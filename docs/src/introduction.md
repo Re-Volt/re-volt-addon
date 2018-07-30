@@ -26,13 +26,13 @@ Please report Bugs and suggest features on [GitHub](https://github.com/Yethiel/r
 - World (.w)
 - Mesh (.prm)
 - Collision (.ncp)
+- Hull (.hul)
 - Instances (.fin)
 - Mirror Planes (.rim)
 - Texture animations (.ta.csv)
 
 **Missing Formats (help appreciated!)**
 
-- **Hull** (.hul; only partial import)
 - **Objects** (.fob)
 - **Car Parameters** (parameters.txt; parser is complete, only partial import: car body, wheels)
 - AI Nodes (.fan)
@@ -40,6 +40,7 @@ Please report Bugs and suggest features on [GitHub](https://github.com/Yethiel/r
 - Track Zones (.taz)
 - Visiboxes (.vis)
 - Lights (.lit)
+- Force Fields (.fld)
 - Level Information (.inf)
 - Level properties (properties.txt)
 

@@ -362,5 +362,6 @@ def generate_chull(context):
     ob.show_wire = True
     ob.revolt.is_hull_convex = True
     ob.select = True
+    ob.matrix_world = obj.matrix_world.copy()
     scene.objects.link(ob)
     scene.objects.active = ob

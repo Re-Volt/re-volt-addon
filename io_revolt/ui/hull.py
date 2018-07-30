@@ -23,16 +23,32 @@ class RevoltHullPanel(bpy.types.Panel):
         props = context.scene.revolt
         layout = self.layout
 
-        layout.operator("hull.generate")
+        layout.operator("hull.generate", icon="BBOX")
+        layout.operator("object.add_hull_sphere", icon="MATSPHERE", text="Create Hull Sphere")
 
     
 class ButtonHullGenerate(bpy.types.Operator):
     bl_idname = "hull.generate"
     bl_label = "Generate Convex Hull"
     bl_description = (
-        "yes"
+        "Generates a convex hull from the selected object"
     )
 
     def execute(self, context):
         tools.generate_chull(context)
         return{"FINISHED"}
+
+
+class OBJECT_OT_add_revolt_hull_sphere(bpy.types.Operator):
+    bl_idname = "object.add_hull_sphere"
+    bl_label = "Hull Sphere"
+    bl_options = {'UNDO'}
+    
+    def execute(self, context):
+        from ..hul_in import create_sphere
+        obj = create_sphere(context.scene, (0, 0, 0), to_revolt_scale(0.1), "Hull Sphere")
+        obj.location = bpy.context.scene.cursor_location
+        obj.select = True
+        bpy.context.scene.objects.active = obj
+
+        return {'FINISHED'}

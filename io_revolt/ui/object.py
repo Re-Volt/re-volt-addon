@@ -53,3 +53,9 @@ class RevoltObjectPanel(bpy.types.Panel):
         box = layout.box()
         box.label("Mirror Properties:")
         box.prop(objprops, "is_mirror_plane")
+
+        # InstanceHull properties
+        box = layout.box()
+        box.label("Hull Properties:")
+        box.prop(objprops, "is_hull_convex")
+        box.prop(objprops, "is_hull_sphere")
