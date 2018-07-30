@@ -32,6 +32,7 @@ from .ui import (
     faceprops,
     instances,
     light,
+    hull,
     object,
     scene,
     vertex,
@@ -55,6 +56,7 @@ imp.reload(headers)
 imp.reload(faceprops)
 imp.reload(instances)
 imp.reload(light)
+imp.reload(hull)
 imp.reload(object)
 imp.reload(scene)
 imp.reload(vertex)

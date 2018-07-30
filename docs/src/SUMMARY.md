@@ -7,6 +7,7 @@
     - [Import / Export](./tools-panel/io.md)
     - [Add-On Settings](./tools-panel/settings.md)
     - [Instances](./tools-panel/instances.md)
+    - [Hulls](./tools-panel/hulls.md)
     - [Light and Shadow](./tools-panel/light-and-shadow.md)
     - [Helpers](./tools-panel/helpers.md)
     - [Face Properties](./tools-panel/face-properties.md)

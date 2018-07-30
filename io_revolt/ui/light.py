@@ -1,6 +1,7 @@
 import bpy
 from ..common import *
 from .widgets import *
+from .. import tools
 
 class RevoltLightPanel(bpy.types.Panel):
     bl_label = "Light and Shadow"
@@ -83,3 +84,23 @@ class RevoltLightPanel(bpy.types.Panel):
             box.prop(props, "batch_bake_model_rgb")
             box.prop(props, "batch_bake_model_env")
             box.operator("helpers.batch_bake_model")
+
+
+class ButtonBakeShadow(bpy.types.Operator):
+    bl_idname = "lighttools.bakeshadow"
+    bl_label = "Bake Shadow"
+    bl_description = "Creates a shadow plane beneath the selected object"
+
+    def execute(self, context):
+        tools.bake_shadow(self, context)
+        return{"FINISHED"}
+
+
+class ButtonBakeLightToVertex(bpy.types.Operator):
+    bl_idname = "lighttools.bakevertex"
+    bl_label = "Bake light"
+    bl_description = "Bakes the light to the active vertex color layer"
+
+    def execute(self, context):
+        tools.bake_vertex(self, context)
+        return{"FINISHED"}

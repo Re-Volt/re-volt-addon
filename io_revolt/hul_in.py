@@ -85,7 +85,8 @@ def import_hull(filepath, scene):
 
         me.materials.append(create_material("RVHull", COL_HULL, 0.3))
 
-        bm.normal_update()
+        # bm.normal_update()
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.to_mesh(me)
         ob = bpy.data.objects.new(filename, me)
         ob.show_transparent = True

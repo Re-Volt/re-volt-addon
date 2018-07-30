@@ -182,8 +182,8 @@ COLORS = (
 COL_CUBE = Color(rgb(180, 20, 0))
 COL_BBOX = Color(rgb(0, 0, 40))
 COL_BCUBE = Color(rgb(0, 180, 20))
-COL_SPHERE = Color(rgb(0, 180, 20))
-COL_HULL = Color(rgb(180, 20, 0))
+COL_SPHERE = Color(rgb(60, 60, 80))
+COL_HULL = Color(rgb(0, 20, 180))
 
 """
 Supported File Formats

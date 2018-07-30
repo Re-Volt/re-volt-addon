@@ -8,6 +8,9 @@ Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
 
 - **Additions**
     - **Mirror Planes**: `.rim` support
+    - **Hulls**: `.hul` support
+        - Import and Export
+        - _Hulls_ tool panel with convex hull generation
     - Vertex color layer list in the tools panel
     - Batch Bake section in the Light and Shadow tool panel
     - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.

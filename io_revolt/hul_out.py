@@ -59,7 +59,6 @@ def export_hull(filepath, scene):
 
             normal = rvstruct.Vector(data=to_revolt_axis(face.normal))
             normal.normalize()
-            normal = normal * -1
 
             vec = rvstruct.Vector(data=to_revolt_coord(face.verts[0].co))
             distance = -normal.dot(vec)
@@ -70,8 +69,34 @@ def export_hull(filepath, scene):
             chull.faces.append(plane)
             chull.face_count += 1
 
-        # Define bounding box
+        # Many custom hulls don't have data for vertices and edges but we'll do it anyway!
+        ind = 0
+        for edge in bm.edges:
+            rvedge = rvstruct.Edge()
+            for vert in edge.verts:
+                rvvert = rvstruct.Vector(data=to_revolt_coord(vert.co))
+                
+                # Checks if a vertex with the same coordinate already exists
+                existing_vertex = None
+                for rvv in chull.vertices:
+                    if rvv.data == rvvert.data:
+                        existing_vertex = rvv
 
+                # Appends the index of the existing vertex
+                if existing_vertex:
+                    rvedge.vertices.append(chull.vertices.index(existing_vertex))
+                
+                # Appends the new vertex, indices
+                else:
+                    chull.vertices.append(rvvert)
+                    rvedge.vertices.append(ind)
+                    ind += 1
+            chull.edges.append(rvedge)
+
+        chull.vertex_count = len(chull.vertices)
+        chull.edge_count = len(chull.edges)
+
+        # Defines bounding box
         bbox = rvstruct.BoundingBox(data=rvbbox_from_verts(bm.verts))
 
         chull.bbox_offset = rvstruct.Vector(data=(

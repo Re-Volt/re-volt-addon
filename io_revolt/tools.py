@@ -327,3 +327,34 @@ def batch_bake(self, context):
     rd.use_bake_to_vertex_color = old_bake_vcol
     rd.bake_type = old_bake_type
     return len(context.selected_objects)
+
+def generate_chull(context):
+    props = context.scene.revolt
+    filename = "{}_hull".format(context.object.name)
+
+    scene = context.scene
+    obj = context.object
+
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+
+    chull_out = bmesh.ops.convex_hull(bm, input=bm.verts)
+
+    for face in bm.faces:
+        if face not in chull_out["geom"]:
+            bm.faces.remove(face)
+
+    for edge in bm.edges:
+        if edge not in chull_out["geom"]:
+            bm.edges.remove(edge)
+
+    for vert in bm.verts:
+        if vert not in chull_out["geom"]:
+            bm.verts.remove(vert)
+
+    me = bpy.data.meshes.new(filename)
+    bm.to_mesh(me)
+    bm.free()
+    ob = bpy.data.objects.new(filename, me)
+    scene.objects.link(ob)
+    scene.objects.active = ob

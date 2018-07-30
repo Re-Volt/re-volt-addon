@@ -1208,7 +1208,7 @@ class LookupList:
     def as_dict(self):
         dic = {"length": self.length,
                "polyhedron_idcs": self.polyhedron_idcs
-               }
+        }
         return dic
 
 
@@ -1233,6 +1233,13 @@ class Hull:
             self.chulls[x].write(file)
         self.interior.write(file)
 
+    def as_dict(self):
+        dic = {"chull_count": self.chull_count,
+               "chulls": [c.as_dict() for c in self.chulls],
+               "interior": self.interior.as_dict()
+        }
+        return dic
+
 
 class ConvexHull:
     """ ConvexHull used in .hul """
@@ -1250,6 +1257,18 @@ class ConvexHull:
 
         if file:
             self.read(file)
+
+    def as_dict(self):
+        dic = {"vertex_count": self.vertex_count,
+               "edge_count": self.edge_count,
+               "face_count": self.face_count,
+               "bbox": self.bbox.as_dict(),
+               "bbox_offset": self.bbox_offset.as_dict(),
+               "vertices": [v.as_dict() for v in self.vertices],
+               "edges": [e.as_dict() for e in self.edges],
+               "faces": [f.as_dict() for f in self.faces],
+        }
+        return dic
 
     def read(self, file):
         self.vertex_count = struct.unpack("<h", file.read(2))[0]
@@ -1296,6 +1315,10 @@ class Edge:
     def __getitem__(self, i):
         return self.vertices[i]
 
+    def as_dict(self):
+        dic = {"vertices": self.vertices}
+        return dic
+
 
 class Interior:
     """ Interior used in .hul """
@@ -1315,6 +1338,12 @@ class Interior:
         for x in range(self.sphere_count):
             self.spheres[x].write(file)
 
+    def as_dict(self):
+        dic = {"sphere_count": self.sphere_count,
+               "spheres": [s.as_dict() for s in self.spheres],
+        }
+        return dic
+
 
 class Sphere:
     """ Sphere used in .hul """
@@ -1332,6 +1361,12 @@ class Sphere:
     def write(self, file):
         self.center.write(file)
         file.write(struct.pack("<f", self.radius))
+
+    def as_dict(self):
+        dic = {"center": self.center.as_dict(),
+               "radius": self.radius,
+        }
+        return dic
 
 
 class RIM:
