@@ -85,7 +85,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">2.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="files.html" class="active"><strong aria-hidden="true">4.</strong> File Specifications</a></li><li class="affix"><a href="changelog.html">Changelog</a></li></ol>
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html" class="active"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -148,19 +148,78 @@
                 <div id="content" class="content">
                     <main>
                         <a class="header" href="files.html#file-specifications" id="file-specifications"><h1>File Specifications</h1></a>
+<p>The following files are supported by the add-on:</p>
+<ul>
+<li><a href="files.html#world">World (<code>.w</code>)</a></li>
+<li><a href="files.html#mesh">Mesh (<code>.prm</code>)</a></li>
+<li><a href="files.html#collision">Collision (<code>.ncp</code>)</a></li>
+<li>Instances (<code>.fin</code>)</li>
+<li>Mirror Planes (<code>.rim</code>)</li>
+<li><a href="files.html#hull">Hulls (<code>.hul</code>)</a></li>
+<li>Texture Animation Spreadsheets (<code>.ta.csv</code>)</li>
+<li><a href="files.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+</ul>
+<a class="header" href="files.html#world" id="world"><h2>World</h2></a>
+<p>See <a href="files.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
+<p>The <strong>environment color</strong> is accessible on a <strong>vertex color layer</strong> called <code>Env</code>.
+The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<code>EnvAlpha</code>).</p>
+<p>Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.</p>
+<p><strong>Debug</strong>:<br />
+There are <a href="./tools-panel/settings.html#import-world-w">debug options</a> in the add-on settings (bounding boxes). They are for debug purposes only and they will not affect the export in any way.</p>
+<hr />
+<a class="header" href="files.html#mesh" id="mesh"><h2>Mesh</h2></a>
+<p><strong>Vertex Color Layers</strong>:</p>
+<ul>
+<li><code>Col</code>: Color layer</li>
+<li><code>Alpha</code>: Alpha layer (black: translucent, white: opaque)</li>
+</ul>
+<p><strong>UV</strong>:<br />
+Only the uv map called <code>UVMap</code> will be exported.</p>
+<p><strong>Textures</strong>:<br />
+The texture file name is used to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>).</p>
+<p>If the imported mesh is a <strong>car mesh</strong>, the texture path will be taken from <code>parameters.txt</code>.<br />
+If it's a <strong>level file</strong>, the texture name will be generated from the polygon's texture number and taken from the level folder.<br />
+If a texture file cannot be found, a 512x512 dummy texture will be generated.<br />
+If a texture with the same path already exists, it will be used instead.</p>
+<p>The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting (see add-on settings).</p>
+<p><strong>Level of Detail</strong>:<br />
+If a PRM file includes mulitple meshes all of them will be imported.<br />
+A suffix will be appended to the mesh name (<code>|q0</code> is the highest quality, <code>|q3</code> is a lower quality).<br />
+A fake user will be assigned to them so they're not lost when saving the file.</p>
+<p><strong>Note</strong>: Only car wheels support LoD.</p>
+<hr />
+<a class="header" href="files.html#collision" id="collision"><h2>Collision</h2></a>
+<p>NCP flags and materials are written to the integer layers <code>NCPFlags</code> and <code>Material</code>. A preview color for the materials is written to the <code>NCPPreview</code> vertex color layer.</p>
+<p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (<a href="./properties/object/ncp.html">Properties Editor</a>).<br />
+Faces that have the material <code>NONE</code> assigned to them will not be exported.<br />
+The vertex color layer called <code>NCPPreview</code> will be ignored since it's only for previewing purposes.</p>
+<p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
+<hr />
+<a class="header" href="files.html#hull" id="hull"><h2>Hull</h2></a>
+<p>File extension: <code>.hul</code>.</p>
+<p><strong>Note</strong>: For importing hull files <code>qhull</code> needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with <code>sudo pacman -S qhull</code>, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.</p>
+<p>Hull files are mainly used for car collision and some other moving objects (some of which can be found in the <code>models</code> folder).</p>
+<p>Importing a hull file results several Blender objects:<br />
+One (sometimes more) <strong>convex hull</strong> which resembles the car body.<br />
+The <strong>interior</strong> (one per convex hull) consisting of spheres.</p>
+<p><strong>Note</strong>: Vertex and edge data is ignored when importing but written to exported files. Many custom <code>.hul</code>s don't include vertex and edge data, apparently the game works without them.</p>
+<hr />
+<a class="header" href="files.html#car-parameters" id="car-parameters"><h2>Car Parameters</h2></a>
+<p>The add-on currently imports the car's body and wheels and their positions.<br />
+If a wheel file cannot be found, it will be represented with an empty object.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="properties/scene.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="installation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="changelog.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="tools-panel.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -172,13 +231,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="properties/scene.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="installation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="changelog.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="tools-panel.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

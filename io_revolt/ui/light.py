@@ -9,6 +9,7 @@ class RevoltLightPanel(bpy.types.Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_category = "Re-Volt"
+    bl_options = {"DEFAULT_CLOSED"}
 
     @classmethod
     def poll(self, context):

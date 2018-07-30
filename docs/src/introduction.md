@@ -51,3 +51,4 @@ Please report Bugs and suggest features on [GitHub](https://github.com/Yethiel/r
     - Simple vertex painting tool
     - Car shadow generator
     - Texture animation helper
+    - Convex hull generator

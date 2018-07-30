@@ -3,6 +3,7 @@
 [Introduction](./introduction.md)
 
 - [Installation](./installation.md)
+- [File Specifications](./files.md)
 - [Tools Panel](./tools-panel.md)
     - [Import / Export](./tools-panel/io.md)
     - [Add-On Settings](./tools-panel/settings.md)
@@ -18,7 +19,7 @@
         - [NCP Properties](./properties/object/ncp.md)
         - [Instance Properties](./properties/object/instance.md)
         - [Mirror Properties](./properties/object/mirror.md)
+        - [Hull Properties](./properties/object/hull.md)
     - [Scene](./properties/scene.md)
-- [File Specifications](./files.md)
 
 [Changelog](./changelog.md)

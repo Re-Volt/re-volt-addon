@@ -85,7 +85,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">2.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">2.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">2.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">2.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">2.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">2.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">2.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">2.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">2.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">2.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">3.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">3.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">3.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">3.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">3.1.3.</strong> Mirror Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">3.2.</strong> Scene</a></li></ol></li><li><a href="files.html"><strong aria-hidden="true">4.</strong> File Specifications</a></li><li class="affix"><a href="changelog.html">Changelog</a></li></ol>
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -163,13 +163,13 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 <li>World (.w)</li>
 <li>Mesh (.prm)</li>
 <li>Collision (.ncp)</li>
+<li>Hull (.hul)</li>
 <li>Instances (.fin)</li>
 <li>Mirror Planes (.rim)</li>
 <li>Texture animations (.ta.csv)</li>
 </ul>
 <p><strong>Missing Formats (help appreciated!)</strong></p>
 <ul>
-<li><strong>Hull</strong> (.hul; only partial import)</li>
 <li><strong>Objects</strong> (.fob)</li>
 <li><strong>Car Parameters</strong> (parameters.txt; parser is complete, only partial import: car body, wheels)</li>
 <li>AI Nodes (.fan)</li>
@@ -177,6 +177,7 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 <li>Track Zones (.taz)</li>
 <li>Visiboxes (.vis)</li>
 <li>Lights (.lit)</li>
+<li>Force Fields (.fld)</li>
 <li>Level Information (.inf)</li>
 <li>Level properties (properties.txt)</li>
 </ul>
@@ -188,6 +189,7 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 <li>Simple vertex painting tool</li>
 <li>Car shadow generator</li>
 <li>Texture animation helper</li>
+<li>Convex hull generator</li>
 </ul>
 </li>
 </ul>
@@ -200,6 +202,66 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 <p>Now start up Blender and open the user preferences (File -&gt; User Preferences...). Click on the <strong>Add-ons</strong> tab and enter <em>Re-Volt</em>.</p>
 <p><img src="img/user_preferences.png" alt="User Preferences" /></p>
 <p><strong>Tip:</strong> Now, click on <strong>Save User Settings</strong> at the bottom of the User Preferences window to keep the add-on enabled when you restart Blender.</p>
+<a class="header" href="print.html#file-specifications" id="file-specifications"><h1>File Specifications</h1></a>
+<p>The following files are supported by the add-on:</p>
+<ul>
+<li><a href="print.html#world">World (<code>.w</code>)</a></li>
+<li><a href="print.html#mesh">Mesh (<code>.prm</code>)</a></li>
+<li><a href="print.html#collision">Collision (<code>.ncp</code>)</a></li>
+<li>Instances (<code>.fin</code>)</li>
+<li>Mirror Planes (<code>.rim</code>)</li>
+<li><a href="print.html#hull">Hulls (<code>.hul</code>)</a></li>
+<li>Texture Animation Spreadsheets (<code>.ta.csv</code>)</li>
+<li><a href="print.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+</ul>
+<a class="header" href="print.html#world" id="world"><h2>World</h2></a>
+<p>See <a href="print.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
+<p>The <strong>environment color</strong> is accessible on a <strong>vertex color layer</strong> called <code>Env</code>.
+The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<code>EnvAlpha</code>).</p>
+<p>Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.</p>
+<p><strong>Debug</strong>:<br />
+There are <a href="./tools-panel/settings.html#import-world-w">debug options</a> in the add-on settings (bounding boxes). They are for debug purposes only and they will not affect the export in any way.</p>
+<hr />
+<a class="header" href="print.html#mesh" id="mesh"><h2>Mesh</h2></a>
+<p><strong>Vertex Color Layers</strong>:</p>
+<ul>
+<li><code>Col</code>: Color layer</li>
+<li><code>Alpha</code>: Alpha layer (black: translucent, white: opaque)</li>
+</ul>
+<p><strong>UV</strong>:<br />
+Only the uv map called <code>UVMap</code> will be exported.</p>
+<p><strong>Textures</strong>:<br />
+The texture file name is used to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>).</p>
+<p>If the imported mesh is a <strong>car mesh</strong>, the texture path will be taken from <code>parameters.txt</code>.<br />
+If it's a <strong>level file</strong>, the texture name will be generated from the polygon's texture number and taken from the level folder.<br />
+If a texture file cannot be found, a 512x512 dummy texture will be generated.<br />
+If a texture with the same path already exists, it will be used instead.</p>
+<p>The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting (see add-on settings).</p>
+<p><strong>Level of Detail</strong>:<br />
+If a PRM file includes mulitple meshes all of them will be imported.<br />
+A suffix will be appended to the mesh name (<code>|q0</code> is the highest quality, <code>|q3</code> is a lower quality).<br />
+A fake user will be assigned to them so they're not lost when saving the file.</p>
+<p><strong>Note</strong>: Only car wheels support LoD.</p>
+<hr />
+<a class="header" href="print.html#collision" id="collision"><h2>Collision</h2></a>
+<p>NCP flags and materials are written to the integer layers <code>NCPFlags</code> and <code>Material</code>. A preview color for the materials is written to the <code>NCPPreview</code> vertex color layer.</p>
+<p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (<a href="./properties/object/ncp.html">Properties Editor</a>).<br />
+Faces that have the material <code>NONE</code> assigned to them will not be exported.<br />
+The vertex color layer called <code>NCPPreview</code> will be ignored since it's only for previewing purposes.</p>
+<p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
+<hr />
+<a class="header" href="print.html#hull" id="hull"><h2>Hull</h2></a>
+<p>File extension: <code>.hul</code>.</p>
+<p><strong>Note</strong>: For importing hull files <code>qhull</code> needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with <code>sudo pacman -S qhull</code>, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.</p>
+<p>Hull files are mainly used for car collision and some other moving objects (some of which can be found in the <code>models</code> folder).</p>
+<p>Importing a hull file results several Blender objects:<br />
+One (sometimes more) <strong>convex hull</strong> which resembles the car body.<br />
+The <strong>interior</strong> (one per convex hull) consisting of spheres.</p>
+<p><strong>Note</strong>: Vertex and edge data is ignored when importing but written to exported files. Many custom <code>.hul</code>s don't include vertex and edge data, apparently the game works without them.</p>
+<hr />
+<a class="header" href="print.html#car-parameters" id="car-parameters"><h2>Car Parameters</h2></a>
+<p>The add-on currently imports the car's body and wheels and their positions.<br />
+If a wheel file cannot be found, it will be represented with an empty object.</p>
 <a class="header" href="print.html#tools-panel" id="tools-panel"><h1>Tools Panel</h1></a>
 <p><img src="./tools-panel/img/tools-panel-collapsed.png" alt="Tools Panel" /></p>
 <p>The panel located on the left hand side of the 3D view.<br />
@@ -291,6 +353,10 @@ Defines the size of the lookup grid that is written to the end of the NCP file. 
 <p><strong>Mark as Instance</strong>: Sets the <em>is instance</em> property for all selected objects. These objects will then be exported when exporting to <code>.fin</code>.</p>
 <p><strong>Remove Instance property</strong>: Removes the <em>is instance</em> property for all selected objects so they won't be exported when exporting to <code>.fin</code>.</p>
 <a class="header" href="print.html#hulls" id="hulls"><h1>Hulls</h1></a>
+<p><strong>Generate Convex Hull</strong>:<br />
+Generates a convex hull from the selected object.</p>
+<p><strong>Create Hull Sphere</strong>:<br />
+Adds a hull interior sphere at the 3D cursor position to be placed inside the convex hull.</p>
 <a class="header" href="print.html#light-and-shadow" id="light-and-shadow"><h1>Light and Shadow</h1></a>
 <p><img src="./tools-panel/img/light-shadow.png" alt="Light and Shadow Panel" /></p>
 <a class="header" href="print.html#shade-object" id="shade-object"><h2>Shade Object</h2></a>
@@ -467,9 +533,14 @@ Vertex color layers can be found in the object data section (symbol with three d
 <p><strong>LoD Bias</strong>: Unused</p>
 <a class="header" href="print.html#mirror-properties" id="mirror-properties"><h1>Mirror Properties</h1></a>
 <p><strong>Is Mirror Plane</strong>: If enabled, the object will be exported to</p>
+<a class="header" href="print.html#hull-properties" id="hull-properties"><h1>Hull Properties</h1></a>
+<p>These properties can be changed manually, however, it is encouraged to create hulls and spheres using the operators in the tools panel or via the <em>Add</em> menu.</p>
+<p><strong>Is Convex Hull</strong>:<br />
+If enabled, the object will be exported as a convex hull.</p>
+<p><strong>Is Interior Sphere</strong>:
+If enabled, the object will be exported as an interior sphere.</p>
 <a class="header" href="print.html#scene" id="scene"><h1>Scene</h1></a>
 <p>Only some debug stuff, <em>not much to be scene</em>.</p>
-<a class="header" href="print.html#file-specifications" id="file-specifications"><h1>File Specifications</h1></a>
 <a class="header" href="print.html#changelog" id="changelog"><h1>Changelog</h1></a>
 <a class="header" href="print.html#a2018-08-01" id="a2018-08-01"><h2>2018-08-01</h2></a>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801"><code>rva_18.0801</code></a></p>
