@@ -4,9 +4,9 @@ Purpose: Reading and writing RV files
 
 Description:
 This is a module for reading and writing Re-Volt binary files.
-Todo:
+TODO:
 - Rework representations and string representations
-- Rework default values based on the game's defaults
+- Rework default values and variable names based on the game's defaults
 - Check for lengths on export
 
 Supported Formats:
@@ -15,16 +15,16 @@ Supported Formats:
 - .fin (Instances)
 - .pan (PosNodes)
 - .ncp (Collision)
+- .hul (Hull collision)
+- .rim (Mirrors) TODO: to_dict()
 
 Missing Formats:
-- .hul (Hull collision)
 - .fan (AiNodes)
 - .taz (TrackZones)
 - .fob (Objects)
 - .fld (ForceFields)
 - .lit (Lights)
 - .tri (Triggers)
-- .rim (Mirrors)
 """
 
 import os
