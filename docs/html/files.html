@@ -153,13 +153,14 @@
 <li><a href="files.html#world">World (<code>.w</code>)</a></li>
 <li><a href="files.html#mesh">Mesh (<code>.prm</code>)</a></li>
 <li><a href="files.html#collision">Collision (<code>.ncp</code>)</a></li>
-<li>Instances (<code>.fin</code>)</li>
-<li>Mirror Planes (<code>.rim</code>)</li>
+<li><a href="files.html#instances">Instances (<code>.fin</code>)</a></li>
+<li><a href="files.html#mirror-planes">Mirror Planes (<code>.rim</code>)</a></li>
 <li><a href="files.html#hull">Hulls (<code>.hul</code>)</a></li>
-<li>Texture Animation Spreadsheets (<code>.ta.csv</code>)</li>
+<li><a href="files.html#texture-animation-spreadsheets">Texture Animation Spreadsheets (<code>.ta.csv</code>)</a></li>
 <li><a href="files.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
 </ul>
 <a class="header" href="files.html#world" id="world"><h2>World</h2></a>
+<p>File extension: <code>.w</code></p>
 <p>See <a href="files.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
 <p>The <strong>environment color</strong> is accessible on a <strong>vertex color layer</strong> called <code>Env</code>.
 The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<code>EnvAlpha</code>).</p>
@@ -168,6 +169,7 @@ The alpha value of the color is only accessible via the face property editing pa
 There are <a href="./tools-panel/settings.html#import-world-w">debug options</a> in the add-on settings (bounding boxes). They are for debug purposes only and they will not affect the export in any way.</p>
 <hr />
 <a class="header" href="files.html#mesh" id="mesh"><h2>Mesh</h2></a>
+<p>File extension: <code>.prm</code></p>
 <p><strong>Vertex Color Layers</strong>:</p>
 <ul>
 <li><code>Col</code>: Color layer</li>
@@ -189,20 +191,32 @@ A fake user will be assigned to them so they're not lost when saving the file.</
 <p><strong>Note</strong>: Only car wheels support LoD.</p>
 <hr />
 <a class="header" href="files.html#collision" id="collision"><h2>Collision</h2></a>
+<p>File extension: <code>.ncp</code></p>
 <p>NCP flags and materials are written to the integer layers <code>NCPFlags</code> and <code>Material</code>. A preview color for the materials is written to the <code>NCPPreview</code> vertex color layer.</p>
 <p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (<a href="./properties/object/ncp.html">Properties Editor</a>).<br />
 Faces that have the material <code>NONE</code> assigned to them will not be exported.<br />
 The vertex color layer called <code>NCPPreview</code> will be ignored since it's only for previewing purposes.</p>
 <p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
 <hr />
+<a class="header" href="files.html#instances" id="instances"><h2>Instances</h2></a>
+<p>File extension: <code>.fin</code></p>
+<p>Instances are <a href="files.html#mesh">PRM meshes</a> placed around a level. An instance file contains metadata about multiple instances.</p>
+<p><strong>ModelRGB</strong>: Each RGB value ranges from -128 to 127. The color picker in Blender likes values from 0.0 to 1.0 most, that's why the default ModelRGB is (0.5, 0.5, 0.5).</p>
+<hr />
+<a class="header" href="files.html#mirror-planes" id="mirror-planes"><h2>Mirror Planes</h2></a>
+<p>TODO</p>
+<hr />
 <a class="header" href="files.html#hull" id="hull"><h2>Hull</h2></a>
-<p>File extension: <code>.hul</code>.</p>
+<p>File extension: <code>.hul</code></p>
 <p><strong>Note</strong>: For importing hull files <code>qhull</code> needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with <code>sudo pacman -S qhull</code>, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.</p>
 <p>Hull files are mainly used for car collision and some other moving objects (some of which can be found in the <code>models</code> folder).</p>
 <p>Importing a hull file results several Blender objects:<br />
 One (sometimes more) <strong>convex hull</strong> which resembles the car body.<br />
 The <strong>interior</strong> (one per convex hull) consisting of spheres.</p>
 <p><strong>Note</strong>: Vertex and edge data is ignored when importing but written to exported files. Many custom <code>.hul</code>s don't include vertex and edge data, apparently the game works without them.</p>
+<hr />
+<a class="header" href="files.html#texture-animation-spreadsheets" id="texture-animation-spreadsheets"><h2>Texture Animation Spreadsheets</h2></a>
+<p>TODO</p>
 <hr />
 <a class="header" href="files.html#car-parameters" id="car-parameters"><h2>Car Parameters</h2></a>
 <p>The add-on currently imports the car's body and wheels and their positions.<br />

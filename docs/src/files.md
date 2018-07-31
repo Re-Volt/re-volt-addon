@@ -5,13 +5,15 @@ The following files are supported by the add-on:
 - [World (`.w`)](#world)
 - [Mesh (`.prm`)](#mesh)
 - [Collision (`.ncp`)](#collision)
-- Instances (`.fin`)
-- Mirror Planes (`.rim`)
+- [Instances (`.fin`)](#instances)
+- [Mirror Planes (`.rim`)](#mirror-planes)
 - [Hulls (`.hul`)](#hull)
-- Texture Animation Spreadsheets (`.ta.csv`)
+- [Texture Animation Spreadsheets (`.ta.csv`)](#texture-animation-spreadsheets)
 - [Car Parameters (`parameters.txt`)](#car-parameters)
 
 ## World
+
+File extension: `.w`
 
 See [Mesh](#mesh). The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.  
 
@@ -26,6 +28,8 @@ There are [debug options](./tools-panel/settings.html#import-world-w) in the add
 ---
 
 ## Mesh
+
+File extension: `.prm`
 
 **Vertex Color Layers**:  
 - `Col`: Color layer
@@ -56,6 +60,7 @@ A fake user will be assigned to them so they're not lost when saving the file.
 
 ## Collision
 
+File extension: `.ncp`
 
 NCP flags and materials are written to the integer layers `NCPFlags` and `Material`. A preview color for the materials is written to the `NCPPreview` vertex color layer.
 
@@ -67,9 +72,25 @@ A lookup grid will be automatically exported. This can be turned off in the expo
 
 ---
 
+## Instances
+
+File extension: `.fin`
+
+Instances are [PRM meshes](#mesh) placed around a level. An instance file contains metadata about multiple instances.
+
+**ModelRGB**: Each RGB value ranges from -128 to 127. The color picker in Blender likes values from 0.0 to 1.0 most, that's why the default ModelRGB is (0.5, 0.5, 0.5).
+
+---
+
+## Mirror Planes
+
+TODO
+
+---
+
 ## Hull
 
-File extension: `.hul`.
+File extension: `.hul`
 
 **Note**: For importing hull files `qhull` needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with `sudo pacman -S qhull`, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.
 
@@ -80,6 +101,12 @@ One (sometimes more) **convex hull** which resembles the car body.
 The **interior** (one per convex hull) consisting of spheres.
 
 **Note**: Vertex and edge data is ignored when importing but written to exported files. Many custom `.hul`s don't include vertex and edge data, apparently the game works without them.
+
+---
+
+## Texture Animation Spreadsheets
+
+TODO
 
 ---
 

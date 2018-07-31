@@ -59,9 +59,9 @@ def import_hull(filepath, scene):
 
         # Windows (test, anyone?)
         if os.name == "nt":
-            subprocess.Popen(["hull\\qhull.exe", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
+            # subprocess.Popen("dir", shell=True)
+            subprocess.Popen(["2.79\\scripts\\addons\\io_revolt\\qhull.exe", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
         else:
-            dprint("yaylinux")
             subprocess.Popen(["qhull", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
 
         with open("qhull_out.txt", "r") as file:
