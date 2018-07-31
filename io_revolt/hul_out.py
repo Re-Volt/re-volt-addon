@@ -1,6 +1,6 @@
 """
-Name:    hul_in
-Purpose: Imports hull collision files.
+Name:    hul_out
+Purpose: Exports hull collision files.
 
 Description:
 

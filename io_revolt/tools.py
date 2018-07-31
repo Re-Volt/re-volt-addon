@@ -338,8 +338,10 @@ def generate_chull(context):
     bm = bmesh.new()
     bm.from_mesh(obj.data)
 
+    # Adds a convex hull to the bmesh
     chull_out = bmesh.ops.convex_hull(bm, input=bm.verts)
 
+    # Gets rid of interior geometry
     for face in bm.faces:
         if face not in chull_out["geom"]:
             bm.faces.remove(face)
@@ -356,7 +358,7 @@ def generate_chull(context):
     bm.to_mesh(me)
     bm.free()
     ob = bpy.data.objects.new(filename, me)
-    #TODO: Check for existing material
+    #TODO: Check for existing material or return existing one in create_material
     me.materials.append(create_material("RVHull", COL_HULL, 0.3))
     ob.show_transparent = True
     ob.show_wire = True

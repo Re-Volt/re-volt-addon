@@ -14,6 +14,7 @@ Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     - Vertex color layer list in the tools panel
     - Batch Bake section in the Light and Shadow tool panel
     - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
+    - Setting: _Check Parameters for texture_
 - **Fixes**
     - Crash when importing levels with texture animation (reported by Gotolei)
     - Batch bake should not crash anymore

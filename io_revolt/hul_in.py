@@ -57,10 +57,8 @@ def import_hull(filepath, scene):
             for face in chull.faces:
                 file.write("{} {} {} {}\n".format(*face.normal, face.distance))
 
-        # Windows (test, anyone?)
         if os.name == "nt":
-            # subprocess.Popen("dir", shell=True)
-            subprocess.Popen(["2.79\\scripts\\addons\\io_revolt\\qhull.exe", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
+            subprocess.Popen(["2.79\\scripts\\addons\\io_revolt\\hull\\qhull.exe", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
         else:
             subprocess.Popen(["qhull", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
 
@@ -101,6 +99,7 @@ def import_hull(filepath, scene):
 
 
 def import_chull(chull, scene, filename):
+    # Note: unused
     dprint("Importing convex hull...")
 
     me = bpy.data.meshes.new(filename)
@@ -159,7 +158,7 @@ def create_sphere(scene, center, radius, filename):
         me = bpy.data.meshes.new(mname)
         bm = bmesh.new()
         # Creates a box
-        bmesh.ops.create_uvsphere(bm, diameter=1, u_segments= 32, v_segments=16, calc_uvs=True)
+        bmesh.ops.create_uvsphere(bm, diameter=1, u_segments= 16, v_segments=8, calc_uvs=True)
         bm.to_mesh(me)
         bm.free()
         # Creates a transparent material for the object
