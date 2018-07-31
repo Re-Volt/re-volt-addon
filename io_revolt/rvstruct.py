@@ -4,9 +4,9 @@ Purpose: Reading and writing RV files
 
 Description:
 This is a module for reading and writing Re-Volt binary files.
-Todo:
+TODO:
 - Rework representations and string representations
-- Rework default values based on the game's defaults
+- Rework default values and variable names based on the game's defaults
 - Check for lengths on export
 
 Supported Formats:
@@ -15,16 +15,16 @@ Supported Formats:
 - .fin (Instances)
 - .pan (PosNodes)
 - .ncp (Collision)
+- .hul (Hull collision)
+- .rim (Mirrors) TODO: to_dict()
 
 Missing Formats:
-- .hul (Hull collision)
 - .fan (AiNodes)
 - .taz (TrackZones)
 - .fob (Objects)
 - .fld (ForceFields)
 - .lit (Lights)
 - .tri (Triggers)
-- .rim (Mirrors)
 """
 
 import os
@@ -721,7 +721,7 @@ class Frame:
         # Reads the texture id
         self.texture = struct.unpack("<l", file.read(4))[0]
         # Reads the delay
-        self.delay = struct.unpack("<F", file.read(4))[0]
+        self.delay = struct.unpack("<f", file.read(4))[0]
 
         # Reads the UV coordinates for this frame
         for uv in range(4):
@@ -731,7 +731,7 @@ class Frame:
         # Writes the texture id
         file.write(struct.pack("<l", self.texture))
         # Writes the delay
-        file.write(struct.pack("<F", self.delay))
+        file.write(struct.pack("<f", self.delay))
 
         # Writes the UV coordinates for this frame
         for uv in self.uv[:4]:
@@ -837,7 +837,7 @@ class Instance:
     """
     def __init__(self, file=None):
         self.name = ""                            # first 8 letters of file name
-        self.color = Color(color=[0, 0, 0])       # model % RGB color
+        self.color = (0, 0, 0)       # model % RGB color
         self.env_color = Color(color=[0, 0, 0], alpha=True) # envMap color
         self.priority = 0                         # priority for multiplayer
         self.flag = 0                             # flag with properties
@@ -858,7 +858,7 @@ class Instance:
         self.name = struct.unpack("<9s", file.read(9))[0]
         self.name = str(self.name, encoding='ascii').split('\x00', 1)[0]
         # Reads the model color and the envMap color
-        self.color = Color(file)
+        self.color = struct.unpack("<3b", file.read(3))
         self.env_color = Color(file, alpha=True)
         # Reads priority and properties flag with two padded bytes
         self.priority, self.flag = struct.unpack('<BBxx', file.read(4))
@@ -870,7 +870,7 @@ class Instance:
         # Writes the first 8 letters of the prm file name
         name = str.encode(self.name)
         file.write(struct.pack("9s", name))
-        self.color.write(file)
+        file.write(struct.pack("<3b", *self.color))
         self.env_color.write(file)
         # Writes priority and properties flag with two padded bytes
         file.write(struct.pack('<BBxx', self.priority, self.flag))
@@ -889,11 +889,6 @@ class Instance:
                 "or_matrix": self.or_matrix
         }
         return dic
-
-
-""" POS NODES
-    Position nodes for track length determination
-"""
 
 
 class PosNodes:
@@ -964,11 +959,6 @@ class PosNode:
 
     def __repr__(self):
         return "PosNode"
-
-
-""" NCP:
-    Collision for levels
-"""
 
 
 class NCP:
@@ -1119,13 +1109,13 @@ class Plane:
 
     def contains_vertex(self, vertex):
         # Get one point of the plane
-        p = -1 * self.normal.scale(self.distance)
+        p = (-1 * self.normal.scale(self.distance)).normalize()
         result = self.normal.dot(vertex-p)
 
         # result = (vertex[0] - p[0]) * self.normal[0] + (vertex[1] - p[1]) * self.normal[1] + (vertex[2] - p[2]) * self.normal[2]
         #Where (x, y, z) is the point your testing, (x0, y0, z0) is the point derived from the normal and (Dx, Dy, Dz) is the normal itself
 
-        if abs(result) < 0.1:
+        if abs(result) < 0.5:
             return True
         else:
             print(result)
@@ -1218,7 +1208,7 @@ class LookupList:
     def as_dict(self):
         dic = {"length": self.length,
                "polyhedron_idcs": self.polyhedron_idcs
-               }
+        }
         return dic
 
 
@@ -1235,15 +1225,24 @@ class Hull:
     def read(self, file):
         self.chull_count = struct.unpack("<h", file.read(2))[0]
         self.chulls = [ConvexHull(file) for x in range(self.chull_count)]
-
         self.interior = Interior(file)
 
-
     def write(self, file):
-        pass
+        file.write(struct.pack("<h", self.chull_count))
+        for x in range(self.chull_count):
+            self.chulls[x].write(file)
+        self.interior.write(file)
+
+    def as_dict(self):
+        dic = {"chull_count": self.chull_count,
+               "chulls": [c.as_dict() for c in self.chulls],
+               "interior": self.interior.as_dict()
+        }
+        return dic
 
 
 class ConvexHull:
+    """ ConvexHull used in .hul """
     def __init__(self, file=None):
         self.vertex_count = 0
         self.edge_count = 0
@@ -1259,6 +1258,18 @@ class ConvexHull:
         if file:
             self.read(file)
 
+    def as_dict(self):
+        dic = {"vertex_count": self.vertex_count,
+               "edge_count": self.edge_count,
+               "face_count": self.face_count,
+               "bbox": self.bbox.as_dict(),
+               "bbox_offset": self.bbox_offset.as_dict(),
+               "vertices": [v.as_dict() for v in self.vertices],
+               "edges": [e.as_dict() for e in self.edges],
+               "faces": [f.as_dict() for f in self.faces],
+        }
+        return dic
+
     def read(self, file):
         self.vertex_count = struct.unpack("<h", file.read(2))[0]
         self.edge_count = struct.unpack("<h", file.read(2))[0]
@@ -1272,10 +1283,23 @@ class ConvexHull:
         self.faces = [Plane(file) for x in range(self.face_count)]
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<h", self.vertex_count))
+        file.write(struct.pack("<h", self.edge_count))
+        file.write(struct.pack("<h", self.face_count))
+
+        self.bbox.write(file)
+        self.bbox_offset.write(file)
+
+        for x in range(self.vertex_count):
+            self.vertices[x].write(file)
+        for x in range(self.edge_count):
+            self.edges[x].write(file)
+        for x in range(self.face_count):
+            self.faces[x].write(file)
 
 
 class Edge:
+    """ Edge used in .hul """
     def __init__(self, file=None):
         self.vertices = []  # Integer indices
 
@@ -1286,13 +1310,18 @@ class Edge:
         self.vertices = [struct.unpack("<h", file.read(2))[0] for x in range(2)]
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<hh", *self.vertices))
 
     def __getitem__(self, i):
         return self.vertices[i]
 
+    def as_dict(self):
+        dic = {"vertices": self.vertices}
+        return dic
+
 
 class Interior:
+    """ Interior used in .hul """
     def __init__(self, file=None):
         self.sphere_count = 0
         self.spheres = []  # Spheres
@@ -1305,10 +1334,19 @@ class Interior:
         self.spheres = [Sphere(file) for x in range(self.sphere_count)]
 
     def write(self, file):
-        pass
+        file.write(struct.pack("<h", self.sphere_count))
+        for x in range(self.sphere_count):
+            self.spheres[x].write(file)
+
+    def as_dict(self):
+        dic = {"sphere_count": self.sphere_count,
+               "spheres": [s.as_dict() for s in self.spheres],
+        }
+        return dic
 
 
 class Sphere:
+    """ Sphere used in .hul """
     def __init__(self, file=None):
         self.center = Vector()
         self.radius = 0.0
@@ -1321,4 +1359,54 @@ class Sphere:
         self.radius = struct.unpack("<f", file.read(4))[0]
 
     def write(self, file):
-        pass
+        self.center.write(file)
+        file.write(struct.pack("<f", self.radius))
+
+    def as_dict(self):
+        dic = {"center": self.center.as_dict(),
+               "radius": self.radius,
+        }
+        return dic
+
+
+class RIM:
+    """ Mirror planes """
+    def __init__(self, file=None):
+        self.num_mirror_planes = 0
+        self.mirror_planes = []
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.num_mirror_planes = struct.unpack("<h", file.read(2))[0]
+        self.mirror_planes = [MirrorPlane(file) for x in range(self.num_mirror_planes)]
+
+    def write(self, file):
+        file.write(struct.pack("<h", self.num_mirror_planes))
+        for x in range(self.num_mirror_planes):
+            self.mirror_planes[x].write(file)
+
+class MirrorPlane:
+    """ Mirror plane """
+    def __init__(self, file=None):
+        self.flag = 0  # unused
+        self.plane = Plane()
+        self.bounding_box = BoundingBox()
+        self.vertices = []
+
+        if file:
+            self.read(file)
+
+    def read(self, file):
+        self.flag = struct.unpack("<L", file.read(4))[0]
+        self.plane = Plane(file)
+        self.bounding_box = BoundingBox(file)
+        self.vertices = [Vector(file) for x in range(4)]
+
+    def write(self, file):
+        file.write(struct.pack("<L", self.flag))
+        self.plane.write(file)
+        self.bounding_box.write(file)
+        for v in self.vertices:
+            v.write(file)

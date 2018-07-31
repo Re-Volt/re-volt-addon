@@ -254,17 +254,20 @@ def batch_bake(self, context):
         if not hasattr(obj.data, "vertex_colors"):
             continue
 
-        print("Looking at {}...".format(obj.name))
+        dprint("Baking at {}...".format(obj.name))
         context.scene.objects.active = obj
 
         # Gets currently selected layers
         old_active_render_layer = None
         old_active = None
-        for layer in obj.data.vertex_colors:
-            if layer.active_render:
-                old_active_render_layer = layer
-            if layer.active:
-                old_active = layer
+        for vclayer in obj.data.vertex_colors:
+            if vclayer.active_render:
+                old_active_render_layer = vclayer.name
+            if vclayer.active:
+                old_active = vclayer.name
+
+        dprint("Currently active layer:", old_active)
+        dprint("Currently active layer (render):", old_active_render_layer)
         
         # Creates a temporary layer for baking a full render to
         if not "temp" in obj.data.vertex_colors:
@@ -272,13 +275,15 @@ def batch_bake(self, context):
         tmp_layer = obj.data.vertex_colors.get("temp")
         tmp_layer.active = True
         tmp_layer.active_render = True
-        print("TMP layer:", tmp_layer.name)
-        print("TMP is active render:", tmp_layer.active_render)
+        dprint("TMP layer:", tmp_layer.name)
+        dprint("TMP is active render:", tmp_layer.active_render)
         
         # Bakes the image onto that layer
-        print("Baking...")
+        dprint("Baking...")
         bpy.ops.object.bake_image()
-        print("done.")
+        dprint("done.")
+
+        dprint("Calculating mean color...")
         
         bm = bmesh.new()
         bm.from_mesh(obj.data)
@@ -287,32 +292,78 @@ def batch_bake(self, context):
         
         avg_col = [0.0, 0.0, 0.0]
         
+        count = 0
+
         for face in bm.faces:
             for loop in face.loops:
                 for c in range(3):
                     avg_col[c] += loop[vcol_layer][c]
-                    
-        inf_col = [c / len(bm.verts) for c in avg_col]
+                count += 1
+
+        #TODO: Figure out if brightness is right
+        inf_col = [c / count for c in avg_col]
         bm.free()
 
         for c in range(3):
-            obj.revolt.fin_col[c] = inf_col[c]
-            
+            if props.batch_bake_model_rgb:
+                obj.revolt.fin_col[c] = inf_col[c]
+            if props.batch_bake_model_env:
+                obj.revolt.fin_envcol[c] = inf_col[c]
         obj.revolt.fin_model_rgb = True
 
         # Removes the temporary render layer
         obj.data.vertex_colors.remove(tmp_layer)
 
+        dprint("Restoring selection...")
         # Restores active layers
-        if old_active_render_layer:
-            old_active_render_layer.active_render = True
-        if old_active:
-            old_active.active = True
-
-        print("done.")
+        if old_active_render_layer is not None:
+            obj.data.vertex_colors[old_active_render_layer].active_render = True
+        if old_active is not None:
+            obj.data.vertex_colors[old_active].active = True
+        dprint("done.")
 
 
     # Restores baking settings
     rd.use_bake_to_vertex_color = old_bake_vcol
     rd.bake_type = old_bake_type
     return len(context.selected_objects)
+
+def generate_chull(context):
+    props = context.scene.revolt
+    filename = "{}_hull".format(context.object.name)
+
+    scene = context.scene
+    obj = context.object
+
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+
+    # Adds a convex hull to the bmesh
+    chull_out = bmesh.ops.convex_hull(bm, input=bm.verts)
+
+    # Gets rid of interior geometry
+    for face in bm.faces:
+        if face not in chull_out["geom"]:
+            bm.faces.remove(face)
+
+    for edge in bm.edges:
+        if edge not in chull_out["geom"]:
+            bm.edges.remove(edge)
+
+    for vert in bm.verts:
+        if vert not in chull_out["geom"]:
+            bm.verts.remove(vert)
+
+    me = bpy.data.meshes.new(filename)
+    bm.to_mesh(me)
+    bm.free()
+    ob = bpy.data.objects.new(filename, me)
+    #TODO: Check for existing material or return existing one in create_material
+    me.materials.append(create_material("RVHull", COL_HULL, 0.3))
+    ob.show_transparent = True
+    ob.show_wire = True
+    ob.revolt.is_hull_convex = True
+    ob.select = True
+    ob.matrix_world = obj.matrix_world.copy()
+    scene.objects.link(ob)
+    scene.objects.active = ob

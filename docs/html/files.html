@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>File Specifications - RV Add-On</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Blender add-on.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
+
+        <noscript>
+            <style type="text/css">
+                .javascript-only {
+                    display: none;
+                }
+            </style>
+        </noscript>
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme;
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html" class="active"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons javascript-only">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">RV Add-On</h1> 
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </div>
+                <div id="searchresults-outer" class="searchresults-outer">
+                    <div class="searchresults-header" id="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="files.html#file-specifications" id="file-specifications"><h1>File Specifications</h1></a>
+<p>The following files are supported by the add-on:</p>
+<ul>
+<li><a href="files.html#world">World (<code>.w</code>)</a></li>
+<li><a href="files.html#mesh">Mesh (<code>.prm</code>)</a></li>
+<li><a href="files.html#collision">Collision (<code>.ncp</code>)</a></li>
+<li><a href="files.html#instances">Instances (<code>.fin</code>)</a></li>
+<li><a href="files.html#mirror-planes">Mirror Planes (<code>.rim</code>)</a></li>
+<li><a href="files.html#hull">Hulls (<code>.hul</code>)</a></li>
+<li><a href="files.html#texture-animation-spreadsheets">Texture Animation Spreadsheets (<code>.ta.csv</code>)</a></li>
+<li><a href="files.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+</ul>
+<a class="header" href="files.html#world" id="world"><h2>World</h2></a>
+<p>File extension: <code>.w</code></p>
+<p>See <a href="files.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
+<p>The <strong>environment color</strong> is accessible on a <strong>vertex color layer</strong> called <code>Env</code>.
+The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<code>EnvAlpha</code>).</p>
+<p>Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.</p>
+<p><strong>Debug</strong>:<br />
+There are <a href="./tools-panel/settings.html#import-world-w">debug options</a> in the add-on settings (bounding boxes). They are for debug purposes only and they will not affect the export in any way.</p>
+<hr />
+<a class="header" href="files.html#mesh" id="mesh"><h2>Mesh</h2></a>
+<p>File extension: <code>.prm</code></p>
+<p><strong>Vertex Color Layers</strong>:</p>
+<ul>
+<li><code>Col</code>: Color layer</li>
+<li><code>Alpha</code>: Alpha layer (black: translucent, white: opaque)</li>
+</ul>
+<p><strong>UV</strong>:<br />
+Only the uv map called <code>UVMap</code> will be exported.</p>
+<p><strong>Textures</strong>:<br />
+The texture file name is used to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>).</p>
+<p>If the imported mesh is a <strong>car mesh</strong>, the texture path will be taken from <code>parameters.txt</code>.<br />
+If it's a <strong>level file</strong>, the texture name will be generated from the polygon's texture number and taken from the level folder.<br />
+If a texture file cannot be found, a 512x512 dummy texture will be generated.<br />
+If a texture with the same path already exists, it will be used instead.</p>
+<p>The texture number is also written onto a bmesh integer layer. This layer can be used instead of the texture on the tex layer for exporting (see add-on settings).</p>
+<p><strong>Level of Detail</strong>:<br />
+If a PRM file includes mulitple meshes all of them will be imported.<br />
+A suffix will be appended to the mesh name (<code>|q0</code> is the highest quality, <code>|q3</code> is a lower quality).<br />
+A fake user will be assigned to them so they're not lost when saving the file.</p>
+<p><strong>Note</strong>: Only car wheels support LoD.</p>
+<hr />
+<a class="header" href="files.html#collision" id="collision"><h2>Collision</h2></a>
+<p>File extension: <code>.ncp</code></p>
+<p>NCP flags and materials are written to the integer layers <code>NCPFlags</code> and <code>Material</code>. A preview color for the materials is written to the <code>NCPPreview</code> vertex color layer.</p>
+<p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (<a href="./properties/object/ncp.html">Properties Editor</a>).<br />
+Faces that have the material <code>NONE</code> assigned to them will not be exported.<br />
+The vertex color layer called <code>NCPPreview</code> will be ignored since it's only for previewing purposes.</p>
+<p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
+<hr />
+<a class="header" href="files.html#instances" id="instances"><h2>Instances</h2></a>
+<p>File extension: <code>.fin</code></p>
+<p>Instances are <a href="files.html#mesh">PRM meshes</a> placed around a level. An instance file contains metadata about multiple instances.</p>
+<p><strong>ModelRGB</strong>: Each RGB value ranges from -128 to 127. The color picker in Blender likes values from 0.0 to 1.0 most, that's why the default ModelRGB is (0.5, 0.5, 0.5).</p>
+<hr />
+<a class="header" href="files.html#mirror-planes" id="mirror-planes"><h2>Mirror Planes</h2></a>
+<p>TODO</p>
+<hr />
+<a class="header" href="files.html#hull" id="hull"><h2>Hull</h2></a>
+<p>File extension: <code>.hul</code></p>
+<p><strong>Note</strong>: For importing hull files <code>qhull</code> needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with <code>sudo pacman -S qhull</code>, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.</p>
+<p>Hull files are mainly used for car collision and some other moving objects (some of which can be found in the <code>models</code> folder).</p>
+<p>Importing a hull file results several Blender objects:<br />
+One (sometimes more) <strong>convex hull</strong> which resembles the car body.<br />
+The <strong>interior</strong> (one per convex hull) consisting of spheres.</p>
+<p><strong>Note</strong>: Vertex and edge data is ignored when importing but written to exported files. Many custom <code>.hul</code>s don't include vertex and edge data, apparently the game works without them.</p>
+<hr />
+<a class="header" href="files.html#texture-animation-spreadsheets" id="texture-animation-spreadsheets"><h2>Texture Animation Spreadsheets</h2></a>
+<p>TODO</p>
+<hr />
+<a class="header" href="files.html#car-parameters" id="car-parameters"><h2>Car Parameters</h2></a>
+<p>The add-on currently imports the car's body and wheels and their positions.<br />
+If a wheel file cannot be found, it will be represented with an empty object.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="installation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="tools-panel.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="installation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="tools-panel.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '_FontAwesome/css/font-awesome.css';
+                document.head.insertBefore(link, document.head.firstChild)
+            }
+        </script>
+
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3001");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload(true); // force reload from server (not from cache)
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        
+
+        
+
+        
+
+        
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
+    </body>
+</html>

@@ -1,0 +1,9 @@
+[book]
+title = "RV Add-On"
+authors = ["Marvin Thiel"]
+description = "Documentation for the Blender add-on."
+multilingual = false
+src = "src"
+
+[build]
+build-dir = "html"

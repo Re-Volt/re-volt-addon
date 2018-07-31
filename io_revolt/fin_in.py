@@ -74,12 +74,13 @@ def import_instance(filepath, scene, instance):
     instance_obj.location = to_blender_coord(instance.position)
 
     instance_obj.revolt.is_instance = True
-    instance_obj.revolt.fin_col = instance.color.color
-    envcol = (*instance.env_color.color, instance.env_color.alpha)
-    instance_obj.revolt.fin_envcol = envcol
+    instance_obj.revolt.fin_col = [(128+c)/255 for c in instance.color]
+    envcol = (*instance.env_color.color, 255-instance.env_color.alpha)
+    instance_obj.revolt.fin_envcol = [c/255 for c in envcol]
     instance_obj.revolt.fin_priority = instance.priority
 
     flag = instance.flag
+    instance_obj.revolt.fin_model_rgb = bool(flag & FIN_SET_MODEL_RGB)
     instance_obj.revolt.fin_env = bool(flag & FIN_ENV)
     instance_obj.revolt.fin_hide = bool(flag & FIN_HIDE)
     instance_obj.revolt.fin_no_mirror = bool(flag & FIN_NO_MIRROR)

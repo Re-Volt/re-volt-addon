@@ -11,6 +11,7 @@ providing the functions behind the UI buttons.
 
 import bpy
 import time
+import subprocess
 
 from . import tools
 from .common import *
@@ -55,8 +56,10 @@ class ImportRV(bpy.types.Operator):
 
         elif frmt == FORMAT_CAR:
             from . import parameters_in
+            old_check = props.prm_check_parameters
+            props.prm_check_parameters = True
             parameters_in.import_file(self.filepath, scene)
-
+            props.prm_check_parameters = old_check
             # Enables texture mode after import
             if props.enable_tex_mode:
                 enable_any_tex_mode(context)
@@ -81,9 +84,8 @@ class ImportRV(bpy.types.Operator):
             from . import hul_in
             hul_in.import_file(self.filepath, scene)
 
-            # Enables texture mode after import
-            if props.enable_tex_mode:
-                enable_any_tex_mode(context)
+            # Enables solid mode after import
+            enable_solid_mode()
 
         elif frmt == FORMAT_TA_CSV:
             from . import ta_csv_in
@@ -96,6 +98,11 @@ class ImportRV(bpy.types.Operator):
             # Enables texture mode after import
             if props.enable_tex_mode:
                 enable_any_tex_mode(context)
+
+
+        elif frmt == FORMAT_RIM:
+            from . import rim_in
+            rim_in.import_file(self.filepath, scene)
 
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
@@ -253,10 +260,20 @@ def exec_export(filepath, context):
             print("Exporting to .ncp...")
             ncp_out.export_file(filepath, scene)
 
+        elif frmt == FORMAT_HUL:   
+            from . import hul_out
+            print("Exporting to .hul...")
+            hul_out.export_file(filepath, scene)
+
         elif frmt == FORMAT_W:
             from . import w_out
             print("Exporting to .w...")
             w_out.export_file(filepath, scene)
+
+        elif frmt == FORMAT_RIM:
+            from . import rim_out
+            print("Exporting to .rim...")
+            rim_out.export_file(filepath, scene)
 
         elif frmt == FORMAT_TA_CSV:
             from . import ta_csv_out
@@ -346,7 +363,7 @@ VERTEX COLROS -----------------------------------------------------------------
 class ButtonColorFromActive(bpy.types.Operator):
     bl_idname = "vertexcolor.copycolor"
     bl_label = "Get Color"
-    bl_description = "Gets the color from the active face."
+    bl_description = "Gets the color from the active face"
 
     def execute(self, context):
         color_from_face(context)
@@ -376,7 +393,7 @@ class ButtonVertexColorCreateLayer(bpy.types.Operator):
 
 
 class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
-    bl_idname = "alphacolor.create_layer"
+    bl_idname = "vertexcolor.create_layer_alpha"
     bl_label = "Create Alpha Color Layer"
 
     def execute(self, context):
@@ -384,28 +401,6 @@ class ButtonVertexAlphaCreateLayer(bpy.types.Operator):
         return{"FINISHED"}
 
 
-"""
-LIGHT TOOLS -------------------------------------------------------------------
-"""
-
-class ButtonBakeShadow(bpy.types.Operator):
-    bl_idname = "lighttools.bakeshadow"
-    bl_label = "Bake Shadow"
-    bl_description = "Creates a shadow plane beneath the selected object"
-
-    def execute(self, context):
-        tools.bake_shadow(self, context)
-        return{"FINISHED"}
-
-
-class ButtonBakeLightToVertex(bpy.types.Operator):
-    bl_idname = "lighttools.bakevertex"
-    bl_label = "Bake light"
-    bl_description = "Bakes the light to the active vertex color layer"
-
-    def execute(self, context):
-        tools.bake_vertex(self, context)
-        return{"FINISHED"}
 
 """
 HELPERS -----------------------------------------------------------------------
@@ -499,14 +494,33 @@ class RemoveInstanceProperty(bpy.types.Operator):
 
 
 class BatchBake(bpy.types.Operator):
-    bl_idname = "helpers.batch_bake_model_rgb"
-    bl_label = "Bake all selected (Model RGB)"
+    bl_idname = "helpers.batch_bake_model"
+    bl_label = "Bake all selected"
     bl_description = (
         "Bakes the light cast by lamps in the current scene to the Instance"
-        "model RGB color"
+        "model colors"
     )
 
     def execute(self, context):
         n = tools.batch_bake(self, context)
         msg_box("Baked {} objects".format(n))
+        return{"FINISHED"}
+
+
+class LaunchRV(bpy.types.Operator):
+    bl_idname = "helpers.launch_rv"
+    bl_label = "Launch RVGL"
+    bl_description = (
+        "Launches the game"
+    )
+
+    def execute(self, context):
+        rvgl_dir = context.scene.revolt.revolt_dir
+        if "rvgl.exe" in os.listdir(rvgl_dir):
+            executable = "rvgl.exe"
+        elif "rvgl" in os.listdir(rvgl_dir):
+            executable = "rvgl"
+        else:
+            return{"FINISHED"}
+        subprocess.Popen(["{}/{}".format(rvgl_dir, executable), "-window", "-nointro", "-sload", "-dev"])
         return{"FINISHED"}

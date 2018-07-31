@@ -22,7 +22,7 @@ from bpy.props import (
     FloatVectorProperty,
     PointerProperty
 )
-from .common import *
+from ..common import *
 
 
 class RVObjectProperties(bpy.types.PropertyGroup):
@@ -54,6 +54,19 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         description = "Indices of child meshes"
     )
 
+    # Hull
+
+    is_hull_sphere = BoolProperty(
+        name = "Is Interior Sphere",
+        default = False,
+        description = ""
+    )
+    is_hull_convex = BoolProperty(
+        name = "Is Convex Hull",
+        default = False,
+        description = ""
+    )
+
     # Instances
 
     is_instance = BoolProperty(
@@ -65,9 +78,11 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     fin_col = FloatVectorProperty(
        name="Model Color",
        subtype='COLOR',
-       default=(1.0, 1.0, 1.0),
+       default=(0.5, 0.5, 0.5),
        min=0.0, max=1.0,
-       description=""
+       description="Model RGB color to be added/subtracted:\n1.0: Bright, overrides vertex colors\n"
+           "0.5: Default, leaves vertex colors intact\n"
+           "0.0: Dark"
     )
     fin_envcol = FloatVectorProperty(
        name="Env Color",
@@ -79,7 +94,8 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     )
     fin_priority = IntProperty(
         name="Priority",
-        default=1
+        default=1,
+        description="Priority for instance. Instance will always be shown if set to 1."
     )
     fin_env = BoolProperty(
         name="Use Environment Map",
@@ -111,5 +127,14 @@ class RVObjectProperties(bpy.types.PropertyGroup):
     )
     fin_lod_bias = IntProperty(
         name="LoD Bias",
-        default = 1024
+        default = 1024,
+        description = "Unused"
+    )
+
+    # Mirrors
+
+    is_mirror_plane = BoolProperty(
+        name = "Is Mirror Plane",
+        default = False,
+        description = "Object is a mirror plane (.rim)"
     )

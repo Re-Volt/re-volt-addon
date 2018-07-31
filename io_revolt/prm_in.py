@@ -82,7 +82,7 @@ def import_mesh(prm, scene, filepath, envlist=None):
     bm = bmesh.new()
 
     # Adds the prm data to the bmesh
-    add_rvmesh_to_bmesh(prm, bm, filepath, envlist)
+    add_rvmesh_to_bmesh(prm, bm, filepath, scene, envlist)
 
     # Converts the bmesh back to a mesh and frees resources
     bm.normal_update()
@@ -92,7 +92,7 @@ def import_mesh(prm, scene, filepath, envlist=None):
     return me
 
 
-def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
+def add_rvmesh_to_bmesh(prm, bm, filepath, scene, envlist=None):
     """
     Adds PRM data to an existing bmesh. Returns the resulting bmesh.
     """
@@ -103,9 +103,6 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
     env_layer = bm.loops.layers.color.new("Env")
     env_alpha_layer = bm.faces.layers.float.new("EnvAlpha")
     va_layer = bm.loops.layers.color.new("Alpha")
-
-    # This currently breaks UV unwrap reset, it is a Blender bug.
-    # https://developer.blender.org/T52723
     texnum_layer = bm.faces.layers.int.new("Texture Number")
     type_layer = bm.faces.layers.int.new("Type")
 
@@ -148,7 +145,7 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, envlist=None):
         # Assigns the texture to the face
         if poly.texture >= 0:
             texture = None
-            texture_path = get_texture_path(filepath, poly.texture)
+            texture_path = get_texture_path(filepath, poly.texture, scene)
             for image in bpy.data.images:
                 if image.filepath == texture_path:
                     texture = image

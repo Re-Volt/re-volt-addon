@@ -136,10 +136,10 @@ MATERIALS = (
 )
 
 
-def dprint(str):
+def dprint(*str):
     """ Debug print: only prints if debug is enabled """
     if DEBUG:
-        print(str)
+        print(*str)
 
 
 def rgb(r, g, b):
@@ -182,6 +182,8 @@ COLORS = (
 COL_CUBE = Color(rgb(180, 20, 0))
 COL_BBOX = Color(rgb(0, 0, 40))
 COL_BCUBE = Color(rgb(0, 180, 20))
+COL_SPHERE = Color(rgb(60, 60, 80))
+COL_HULL = Color(rgb(0, 20, 180))
 
 """
 Supported File Formats
@@ -385,8 +387,47 @@ def get_edit_bmesh(obj):
         return bm
 
 
+def apply_trs(obj, bm, transform=False):
+        # Removes the parent for exporting and applies transformation
+        parent = obj.parent
+        if parent:
+            mat = obj.matrix_world.copy()
+            old_mat = obj.matrix_basis.copy()
+            obj.parent = None
+            obj.matrix_world = mat
+
+        spc = obj.matrix_basis
+        bmesh.ops.scale(
+            bm,
+            vec=obj.scale,
+            space=spc,
+            verts=bm.verts
+        )
+        if transform:
+            bmesh.ops.transform(
+                bm,
+                matrix=Matrix.Translation(obj.location),
+                space=spc,
+                verts=bm.verts
+            )
+        bmesh.ops.rotate(
+            bm,
+            cent=obj.location,
+            matrix=obj.rotation_euler.to_matrix(),
+            space=spc,
+            verts=bm.verts
+        )
+
+        # Restores the parent relationship
+        if parent and not obj.parent:
+            obj.parent = parent
+            obj.matrix_basis = old_mat
+
+
 def objects_to_bmesh(objs, transform=True):
     """ Merges multiple objects into one bmesh for export """
+
+    # CAUTION: Removes/destroys custom layer props
 
     # Creates the mesh used to merge the entire scene
     bm_all = bmesh.new()
@@ -397,6 +438,23 @@ def objects_to_bmesh(objs, transform=True):
         # Creates a bmesh from the supplied object
         bm = bmesh.new()
         bm.from_mesh(obj.data)
+
+        # Makes sure all layers exist so values don't get lost while exporting
+        uv_layer = bm.loops.layers.uv.get("UVMap")
+        tex_layer = bm.faces.layers.tex.get("UVMap")
+        vc_layer = (bm.loops.layers.color.get("Col") or
+                    bm.loops.layers.color.new("Col"))
+        env_layer = (bm.loops.layers.color.get("Env") or
+                     bm.loops.layers.color.new("Env"))
+        env_alpha_layer = (bm.faces.layers.float.get("EnvAlpha") or
+                           bm.faces.layers.float.new("EnvAlpha"))
+        va_layer = (bm.loops.layers.color.get("Alpha") or
+                    bm.loops.layers.color.new("Alpha"))
+        texnum_layer = bm.faces.layers.int.get("Texture Number")
+        type_layer = (bm.faces.layers.int.get("Type") or
+                      bm.faces.layers.int.new("Type"))
+        material_layer = (bm.faces.layers.int.get("Material") or
+                          bm.faces.layers.int.new("Material"))
 
         # Removes the parent for exporting and applies transformation
         parent = obj.parent
@@ -551,6 +609,16 @@ def enable_textured_solid_mode():
                     space.show_textured_solid = True
     return
 
+def enable_solid_mode():
+    """ Enables solid mode """
+    for area in bpy.context.screen.areas:
+        if area.type == "VIEW_3D":
+            for space in area.spaces:
+                if space.type == "VIEW_3D":
+                    space.viewport_shade = "SOLID"
+                    space.show_textured_solid = False
+    return
+
 
 def texture_mode_enabled():
     """ Returns true if texture mode or textured solid mode is enabled """
@@ -605,11 +673,12 @@ Non-Blender helper functions
 """
 
 
-def get_texture_path(filepath, tex_num):
+def get_texture_path(filepath, tex_num, scene):
     """ Gets the full texture path when given a file and its
         polygon texture number. """
 
     path, fname = filepath.rsplit(os.sep, 1)
+    props = scene.revolt
 
     # Checks if the loaded model is located in the custom folder
     folder = path.rsplit(os.sep, 1)[1]
@@ -621,7 +690,7 @@ def get_texture_path(filepath, tex_num):
         return None
 
     # The file is part of a car
-    if "parameters.txt" in os.listdir(path):
+    if props.prm_check_parameters and "parameters.txt" in os.listdir(path):
         filepath = os.path.join(path, "parameters.txt")
         if not filepath in PARAMETERS:
             PARAMETERS[filepath] = read_parameters(filepath)
@@ -641,6 +710,7 @@ def is_track_folder(path):
     for f in os.listdir(path):
         if ".inf" in f:
             return True
+    return False
 
 
 def get_format(fstr):
@@ -669,6 +739,8 @@ def get_format(fstr):
         return FORMAT_NCP
     elif ext in ["prm", "m"]:
         return FORMAT_PRM
+    elif ext == "rim":
+        return FORMAT_RIM
     elif ext == "w":
         return FORMAT_W
     else:

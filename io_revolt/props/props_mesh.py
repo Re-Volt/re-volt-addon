@@ -23,8 +23,8 @@ from bpy.props import (
     FloatVectorProperty,
     PointerProperty
 )
-from .common import *
-from .layers import *
+from ..common import *
+from ..layers import *
 
 
 class RVMeshProperties(bpy.types.PropertyGroup):

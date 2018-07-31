@@ -23,9 +23,9 @@ from bpy.props import (
     PointerProperty
 )
 
-from .common import *
-from .layers import *
-from .texanim import *
+from ..common import *
+from ..layers import *
+from ..texanim import *
 
 
 class RVSceneProperties(bpy.types.PropertyGroup):
@@ -89,6 +89,17 @@ class RVSceneProperties(bpy.types.PropertyGroup):
                       "automatically detected"
     )
 
+    batch_bake_model_rgb = BoolProperty(
+        name = "Bake to Model RGB",
+        default = True,
+        description = "Bake scene lighting to Instance model RGB"
+    )
+    batch_bake_model_env = BoolProperty(
+        name = "Bake to Model Env",
+        default = True,
+        description = "Bake scene lighting to Instance model environment color"
+    )
+
     # Export properties
     triangulate_ngons = BoolProperty(
         name = "Triangulate n-gons",
@@ -114,6 +125,17 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Apply Rotation",
         default = True,
         description = "Applies the object rotation on export"
+    )
+    apply_translation = BoolProperty(
+        name = "Apply Translation",
+        default = False,
+        description = "Applies the object location on export. Should be disabled disabled for single/instance ncp files"
+    )
+
+    prm_check_parameters = BoolProperty(
+        name = "Check Parameters for texture",
+        default = True,
+        description = "Checks car parameters.txt for the texture"
     )
 
     # World import properties
