@@ -2,6 +2,4 @@
 
 ## Documentation, Changelog
 
-The documentation can be found [here](https://yethiel.github.io/re-volt-addon/).
-
-Development version, might not work properly at all times.
+The documentation can be found [here](https://yethiel.github.io/re-volt-addon/)
