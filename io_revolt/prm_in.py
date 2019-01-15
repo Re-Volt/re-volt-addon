@@ -150,7 +150,7 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, scene, envlist=None):
                 if image.filepath == texture_path:
                     texture = image
             if not texture:
-                texture = img_in.import_file(texture_path)
+                texture = img_in.import_file(texture_path, poly.texture)
             face[tex_layer].image = texture
 
         # Assigns the face properties (bit field, one int per face)

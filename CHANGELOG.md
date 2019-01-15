@@ -1,5 +1,10 @@
 # Changelog 
 
+## 2018-01-15
+
+- **Modifications**
+    - Changed convention for texture images names in blender, support for 64 (possible up to 702) track textures with backward compatibility.
+
 ## 2018-08-01
 
 Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801)

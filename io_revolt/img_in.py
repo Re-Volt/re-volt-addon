@@ -10,9 +10,9 @@ Description:
 import bpy
 import os
 
-def load_image(filepath):
+def load_image(filepath, img_num):
     # Guesses texture name and path
-    texture_name = os.path.basename(filepath)
+    texture_name = str(img_num) + ".bmp"
 
     # Gets image if it already exists
     # image = bpy.data.images.get(texture_name)
@@ -22,6 +22,7 @@ def load_image(filepath):
         image = bpy.data.images.load(filepath)
         # Sets a fake user because it doesn't get automatically set
         image.use_fake_user = True
+        image.name = texture_name
     else:
         # Finds existing dummy texture
         for img in bpy.data.images:
@@ -35,5 +36,5 @@ def load_image(filepath):
 
     return image
 
-def import_file(filepath):
-    return load_image(filepath)
+def import_file(filepath, img_num = 0):
+    return load_image(filepath, img_num)
