@@ -12,6 +12,7 @@ providing the functions behind the UI buttons.
 import bpy
 import time
 import subprocess
+import shutil
 
 from . import tools
 from .common import *
@@ -523,4 +524,53 @@ class LaunchRV(bpy.types.Operator):
         else:
             return{"FINISHED"}
         subprocess.Popen(["{}/{}".format(rvgl_dir, executable), "-window", "-nointro", "-sload", "-dev"])
+        return{"FINISHED"}
+
+
+class TexturesSave(bpy.types.Operator):
+    bl_idname = "helpers.textures_save"
+    bl_label = "Copy project textures"
+    bl_description = (
+        "Saves all used track texture files to desired project directory and takes a care of correct files names"
+    )
+    bl_options = {'REGISTER'}
+    
+    directory = bpy.props.StringProperty(
+        name="Outdir Path",
+        description="Where to save all the textures",
+        subtype='DIR_PATH' 
+    )
+
+    def execute(self, context):
+        dirname = os.path.basename(os.path.dirname(self.directory))
+        # try to copy each image to selected project directory
+        for image in bpy.data.images:
+            if ".bmp" in image.name:
+                base, ext = image.name.split(".", 1)
+            try:
+                if image.source == 'FILE':
+                    dst = os.path.join(self.directory, int_to_texture(int(base), dirname))
+                    shutil.copyfile(image.filepath, dst)                 
+            except:
+                print("Failed to copy image %s" % image.name)
+                
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+class TexturesReaname(bpy.types.Operator):
+    bl_idname = "helpers.textures_rename"
+    bl_label = "Rename track textures"
+    bl_description = (
+        "Assigns a proper name to each texture image used and makes their id numbers consistent"
+    )
+
+    def execute(self, context):
+        number = 0
+        for key, image in bpy.data.images.items():
+            if image.source == 'FILE':
+                image.name = ("%d.bmp" % number)
+                number += 1
         return{"FINISHED"}

@@ -359,6 +359,14 @@ def texture_to_int(string):
     else:
         return -1
 
+
+def int_to_texture(tex_num, name=""):
+    suffix = chr(tex_num % 26 + 97)
+    suffix2 = (tex_num // 26 )
+    if suffix2 > 0:
+        suffix += chr(suffix2 + 96) 
+    return name + suffix + ".bmp"
+
 def create_material(name, diffuse, alpha):
     """ Creates a material, mostly used for debugging objects """
     mat = bpy.data.materials.new(name)
@@ -706,15 +714,11 @@ def get_texture_path(filepath, tex_num, scene):
         return os.path.join(path, tpage)
 
     # The file is part of a track
-    elif is_track_folder(path):
-        suffix = chr(tex_num % 26 + 97)
-        suffix2 = (tex_num // 26 )
-        if suffix2 > 0:
-            suffix += chr(suffix2+96) 
-        tpage = folder.lower() + suffix + ".bmp"
+    elif is_track_folder(path): 
+        tpage = int_to_texture(tex_num, folder.lower())
         return os.path.join(path, tpage)
     else:
-        return os.path.join(path, "dummy{}.bmp".format(chr(97 + tex_num)))
+        return os.path.join(path, int_to_texture(tex_num, "dummy"))
 
 
 def is_track_folder(path):

@@ -54,7 +54,7 @@ The texture file name is used by the game engine to determine the texture number
 - `52      trackab`
 - `53      trackbb`
 
-*Important note*: for convenience add-on changes the imported image names (not file names) in blender's image editor to `<number>.bmp`, please use same convention when adding a new images.
+**Note**: For convenience add-on changes the imported image names (not file names) in blender's image editor to `<number>.bmp`, please use same convention when adding a new images. There are built-in tools to take care of all the names, see helpers section.
 
 If the imported mesh is a **car mesh**, the texture path will be taken from `parameters.txt`.  
 If it's a **level file**, the texture name will be generated from the polygon's texture number and taken from the level folder.  

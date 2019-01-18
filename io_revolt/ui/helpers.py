@@ -36,6 +36,15 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
         box.operator(
             "helpers.launch_rv"
         )
+        
+        box = layout.box()
+        box.label("Texture tools:")
+        box.operator(
+            "helpers.textures_save"
+        )
+        box.operator(
+            "helpers.textures_rename"
+        )
 
 
 class RevoltHelpersPanelMesh(bpy.types.Panel):
