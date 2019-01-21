@@ -758,5 +758,7 @@ def get_format(fstr):
         return FORMAT_RIM
     elif ext == "w":
         return FORMAT_W
+    elif ext == "taz":
+        return FORMAT_TAZ
     else:
         return FORMAT_UNK

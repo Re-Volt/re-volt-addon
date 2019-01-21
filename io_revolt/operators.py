@@ -104,7 +104,11 @@ class ImportRV(bpy.types.Operator):
         elif frmt == FORMAT_RIM:
             from . import rim_in
             rim_in.import_file(self.filepath, scene)
-
+        
+        elif frmt == FORMAT_TAZ:
+            from . import taz_in
+            taz_in.import_file(self.filepath, scene)
+        
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 

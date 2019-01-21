@@ -1410,3 +1410,76 @@ class MirrorPlane:
         self.bounding_box.write(file)
         for v in self.vertices:
             v.write(file)
+            
+            
+class TrackZones:
+    """
+    Reads a .taz file and stores all sub-structures
+    All contained objects are of a same flat structure.
+    Usage: Objects of this class can be created to read and store .taz files.
+    If an opened file is supplied, it immediately starts reading from it.
+    """
+    def __init__(self, file=None):
+        self.zones_count = 0           # rvint, amount of Zone objects
+        self.zones = []                # sequence of Zone structures
+
+        # Immediately starts reading if an opened file is supplied
+        if file:
+            self.read(file)
+
+    def read(self, file):
+
+        # Reads the zones count 
+        self.zones_count = struct.unpack("<i", file.read(4))[0]
+
+        # Reads the zones. 
+        for zone in range(self.zones_count):
+            self.zones.append(Zone(file, self))
+
+    def write(self, file):
+        # Writes the mesh count
+        file.write(struct.pack("<i", self.zones_count))
+
+        # Writes all zones
+        for zone in self.zones:
+            zone.write(file)
+
+class Zone:
+    """
+    Reads the Track Zones found in .taz files from an opened file
+    """
+    def __init__(self, file=None, w=None):
+        self.w = w                      # World it belongs to
+
+        self.id = 0                     # Zone ID int
+        self.pos = None                 # Position Vector 3f
+        self.matrix = None              # Rotation Matrix 9f
+        self.size = None                # Zone size 3f
+
+        if file:
+            self.read(file)
+
+    def __repr__(self):
+        return "Zone %d" % self.id
+
+    def read(self, file):
+        self.id = struct.unpack("<i", file.read(4))[0]
+        self.pos = Vector(file)
+        self.matrix = Matrix(file)
+        self.size = Vector(file)
+
+    def write(self, file):
+        file.write(struct.pack("<i", self.id))
+        self.pos.write(file)
+        self.matrix.write(file)
+        self.size.write(file)
+        
+
+    def as_dict(self):
+        dic = { "id": self.id,
+                "pos": self.pos,
+                "matrix": self.matrix,
+                "size": self.size,
+        }
+        return dic
+
