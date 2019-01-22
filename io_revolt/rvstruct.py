@@ -432,6 +432,8 @@ class Matrix:
 
         if file:
             self.read(file)
+        elif data:
+            self.data = data
 
     def __repr__(self):
         return "Matrix"
@@ -1443,6 +1445,16 @@ class TrackZones:
         # Writes all zones
         for zone in self.zones:
             zone.write(file)
+            
+    def append(self, id, pos, rotation_matrix, size):
+        new_zone = Zone()
+        new_zone.id = id
+        new_zone.pos = Vector(data = pos)
+        new_zone.matrix = Matrix(data=rotation_matrix)
+        new_zone.size = Vector(data = size)
+        self.zones.append(new_zone)
+        self.zones_count += 1
+
 
 class Zone:
     """
@@ -1474,7 +1486,7 @@ class Zone:
         self.matrix.write(file)
         self.size.write(file)
         
-
+    
     def as_dict(self):
         dic = { "id": self.id,
                 "pos": self.pos,

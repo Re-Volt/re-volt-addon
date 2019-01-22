@@ -285,6 +285,10 @@ def exec_export(filepath, context):
             print("Exporting texture animation sheet...")
             ta_csv_out.export_file(filepath, scene)
 
+        elif frmt == FORMAT_TAZ:
+            from . import taz_out
+            taz_out.export_file(filepath, scene)
+        
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 

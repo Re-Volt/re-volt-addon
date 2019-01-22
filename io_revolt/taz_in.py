@@ -36,17 +36,22 @@ def import_file(filepath, scene):
         matrix = Matrix(zone.matrix.data)
         matrix.transpose()
         rot = matrix.to_euler("XZY")
-        
         # Add to scene
-        bpy.ops.mesh.primitive_cube_add(location=(loc[0],loc[2],-loc[1]))
-        ob = bpy.context.object
-        ob.name = "%d" % zone.id
-        bpy.ops.object.group_link(group="TRACK_ZONES")
-        ob.draw_type = 'WIRE'
-        ob.show_x_ray = True
-        ob.show_name = True
-        bpy.ops.transform.resize(value=(size[0],size[2],size[1]))
-        ob.rotation_mode = 'XYZ'
-        ob.rotation_euler = (rot[0],rot[2],-rot[1])
-
+        create_zone(zone.id, (loc[0],loc[2],-loc[1]), (size[0],size[2],size[1]), (rot[0],rot[2],-rot[1]))
         
+
+def create_zone(zid, location=(0,0,0), size=(1,1,1), rotation = (0,0,0)):
+    """
+    Adds a zone representative cube to scene.
+    """
+    bpy.ops.mesh.primitive_cube_add(location=location)
+    ob = bpy.context.object
+    ob.name = "Z%d" % zid
+    bpy.ops.object.group_link(group="TRACK_ZONES")
+    ob.draw_type = 'WIRE'
+    ob.show_x_ray = True
+    ob.show_name = True
+    ob.revolt.is_track_zone = True
+    bpy.ops.transform.resize(value=size)
+    ob.rotation_mode = 'XYZ'
+    ob.rotation_euler = rotation
