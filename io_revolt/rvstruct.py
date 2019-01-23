@@ -1439,6 +1439,9 @@ class TrackZones:
             self.zones.append(Zone(file, self))
 
     def write(self, file):
+        # Sort all zones by id
+        self.zones.sort(key=lambda zn: zn.id)
+        
         # Writes the mesh count
         file.write(struct.pack("<i", self.zones_count))
 

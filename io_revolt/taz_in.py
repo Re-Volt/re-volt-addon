@@ -24,9 +24,6 @@ def import_file(filepath, scene):
     
     zones = tzones.zones
     
-    if not bpy.data.groups.get('TRACK_ZONES'):
-        bpy.ops.group.create(name="TRACK_ZONES")
-    
     # Create an cubes representing each zone
     for zone in zones:
         # Position and size
@@ -40,18 +37,31 @@ def import_file(filepath, scene):
         create_zone(zone.id, (loc[0],loc[2],-loc[1]), (size[0],size[2],size[1]), (rot[0],rot[2],-rot[1]))
         
 
-def create_zone(zid, location=(0,0,0), size=(1,1,1), rotation = (0,0,0)):
+def create_zone(zid = None, location=(0,0,0), size=(1,1,1), rotation = (0,0,0)):
     """
     Adds a zone representative cube to scene.
     """
+    if not bpy.data.groups.get('TRACK_ZONES'):
+        bpy.ops.group.create(name="TRACK_ZONES")
+    
     bpy.ops.mesh.primitive_cube_add(location=location)
     ob = bpy.context.object
+    
+    # Auto ID
+    if zid == None:
+        zid = len(bpy.data.groups['TRACK_ZONES'].objects)
     ob.name = "Z%d" % zid
-    bpy.ops.object.group_link(group="TRACK_ZONES")
+    
+    # Set transformations
+    bpy.ops.transform.resize(value=size)
+    ob.rotation_mode = 'XYZ'
+    ob.rotation_euler = rotation
+    
+    # Set some properties
     ob.draw_type = 'WIRE'
     ob.show_x_ray = True
     ob.show_name = True
     ob.revolt.is_track_zone = True
-    bpy.ops.transform.resize(value=size)
-    ob.rotation_mode = 'XYZ'
-    ob.rotation_euler = rotation
+    
+    # Assign zone to its group
+    bpy.ops.object.group_link(group="TRACK_ZONES")

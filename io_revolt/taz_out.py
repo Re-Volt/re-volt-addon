@@ -39,11 +39,15 @@ def export_file(filepath, scene):
 def coords_blend_to_rv(location, rotation_euler = (0,0,0), scale = (1,1,1)):
     """
     This function takes blender's order coordinates parameters values and converts
-    them to values ready for export
+    them into values ready to export
     """
-    location = mathutils.Vector((location[0],-location[2],location[1])) * 1/SCALE
-    rotation_euler = (rotation_euler[0], -rotation_euler[2], rotation_euler[1])
-    rotation_matrix = mathutils.Euler(rotation_euler, 'XZY').to_matrix()
+    location =          mathutils.Vector((location[0],-location[2],location[1])) * 1/SCALE
+    rotation_euler =    (rotation_euler[0], -rotation_euler[2], rotation_euler[1])
+    rotation_matrix =   mathutils.Euler(rotation_euler, 'XZY').to_matrix()
     rotation_matrix.transpose()
+
+    # Make scale absolute values
+    scale = [abs(val) for val in scale]
     scale = mathutils.Vector((scale[0],scale[2],scale[1])) * 1/SCALE
+    
     return location, rotation_matrix, scale

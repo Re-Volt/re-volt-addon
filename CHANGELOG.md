@@ -2,6 +2,10 @@
 
 ## 2018-01-15
 
+- **Additions**
+    - Track zones `.taz` import and export, added zones commands in UI panel.
+    - New textures management commands in UI panel.
+
 - **Modifications**
     - Changed convention for texture images names in blender, support for 64 (possible up to 702) track textures with backward compatibility.
 
