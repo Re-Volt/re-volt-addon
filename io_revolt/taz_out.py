@@ -30,24 +30,24 @@ def export_file(filepath, scene):
             continue
         # Get a name of object and zone id from it
         zid = int(obj.name.split(".", 1)[0][1:])
-        zones.append(zid, *coords_blend_to_rv(obj.location, obj.rotation_euler, obj.scale))
+        zones.append(zid, *transforms_to_revolt(obj.location, obj.rotation_euler, obj.scale))
     
     # Exports all zones to the TAZ file
     with open(filepath, "wb") as file:
         zones.write(file)
 
-def coords_blend_to_rv(location, rotation_euler = (0,0,0), scale = (1,1,1)):
+def transforms_to_revolt(location, rotation_euler = (0,0,0), scale = (1,1,1)):
     """
-    This function takes blender's order coordinates parameters values and converts
+    This function takes blender's order transformation parameters values and converts
     them into values ready to export
     """
-    location =          mathutils.Vector((location[0],-location[2],location[1])) * 1/SCALE
-    rotation_euler =    (rotation_euler[0], -rotation_euler[2], rotation_euler[1])
+    location =          to_revolt_coord(location)
+    rotation_euler =    to_revolt_axis(rotation_euler)
     rotation_matrix =   mathutils.Euler(rotation_euler, 'XZY').to_matrix()
     rotation_matrix.transpose()
 
     # Make scale absolute values
+    scale = to_revolt_coord(scale)
     scale = [abs(val) for val in scale]
-    scale = mathutils.Vector((scale[0],scale[2],scale[1])) * 1/SCALE
     
     return location, rotation_matrix, scale

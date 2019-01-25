@@ -582,3 +582,15 @@ class TexturesReaname(bpy.types.Operator):
                 image.name = ("%d.bmp" % number)
                 number += 1
         return{"FINISHED"}
+
+class CarParemetersExport(bpy.types.Operator):
+    bl_idname = "helpers.car_parameters_export"
+    bl_label = "Car parameters to clipboard"
+    bl_description = (
+        "Copies most important parameters into clipboard"
+    )
+
+    def execute(self, context):
+        from . import parameters_out
+        parameters_out.export_file()
+        return{"FINISHED"}

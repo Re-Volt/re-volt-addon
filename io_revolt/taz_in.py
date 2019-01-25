@@ -27,14 +27,15 @@ def import_file(filepath, scene):
     # Create an cubes representing each zone
     for zone in zones:
         # Position and size
-        loc = zone.pos.scale(SCALE)
+        pos =  to_blender_coord(zone.pos)
         size = zone.size.scale(SCALE)
         # Rotation
         matrix = Matrix(zone.matrix.data)
         matrix.transpose()
         rot = matrix.to_euler("XZY")
+        rot = to_blender_axis(rot)
         # Add to scene
-        create_zone(zone.id, (loc[0],loc[2],-loc[1]), (size[0],size[2],size[1]), (rot[0],rot[2],-rot[1]))
+        create_zone(zone.id, pos, (size[0],size[2],size[1]), rot)
         
 
 def create_zone(zid = None, location=(0,0,0), size=(1,1,1), rotation = (0,0,0)):
