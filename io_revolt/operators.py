@@ -568,7 +568,7 @@ class TexturesSave(bpy.types.Operator):
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
-class TexturesReaname(bpy.types.Operator):
+class TexturesRename(bpy.types.Operator):
     bl_idname = "helpers.textures_rename"
     bl_label = "Rename track textures"
     bl_description = (
@@ -583,7 +583,7 @@ class TexturesReaname(bpy.types.Operator):
                 number += 1
         return{"FINISHED"}
 
-class CarParemetersExport(bpy.types.Operator):
+class CarParametersExport(bpy.types.Operator):
     bl_idname = "helpers.car_parameters_export"
     bl_label = "Car parameters to clipboard"
     bl_description = (
