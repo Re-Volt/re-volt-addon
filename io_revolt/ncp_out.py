@@ -129,7 +129,8 @@ def add_bm_to_ncp(bm, ncp):
             queue_error("exporting to .ncp", "Invalid material")
             if DEBUG:
                 return
-        poly.type = face[type_layer]
+
+        poly.type = face[type_layer] & NCP_PROP_MASK
 
         verts = face.verts
 
