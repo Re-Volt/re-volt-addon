@@ -1,5 +1,22 @@
 # Changelog
 
+## 2019-08-16
+
+Version [`rva_19.0816`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.0816)
+
+**Topics**: Track Zones, Textures, Bugfixes
+
+- **Additions**
+    - Track zones `.taz` import and export, added zones commands in UI panel.
+    - New textures management commands in UI panel.
+    - Export important car parameters to clipboard.
+    - Aerial representation using axes.
+- **Modifications**
+    - Changed convention for texture images names in blender, support for 64 (possible up to 702) track textures with backward compatibility.
+- **Fixes**
+    - Fix NCP face triangulation. Ensure invalid NCP flags are stripped on export.
+    - Better color layer compatibility for Blender 2.79 (sub 2) and above.
+
 ## 2018-08-01
 
 Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801)
