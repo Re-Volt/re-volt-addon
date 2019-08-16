@@ -45,7 +45,10 @@ class RevoltHelpersPanelObj(bpy.types.Panel):
         box.operator(
             "helpers.textures_rename"
         )
-        layout.operator(
+
+        box = layout.box()
+        box.label("Car tools:")
+        box.operator(
             "helpers.car_parameters_export"
         )
 
