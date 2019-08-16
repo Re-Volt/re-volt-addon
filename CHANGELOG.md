@@ -1,30 +1,45 @@
 # Changelog 
 
-## 2018-01-15
+## 2019-08-16
+
+Version [`rva_19.0816`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.0816)
+
+**Topics**: Track Zones, Textures, Bugfixes
 
 - **Additions**
     - Track zones `.taz` import and export, added zones commands in UI panel.
     - New textures management commands in UI panel.
-
+    - Export important car parameters to clipboard.
+    - Aerial representation using axes.
 - **Modifications**
     - Changed convention for texture images names in blender, support for 64 (possible up to 702) track textures with backward compatibility.
+- **Fixes**
+    - Fix NCP face triangulation. Ensure invalid NCP flags are stripped on export.
+    - Better color layer compatibility for Blender 2.79 (sub 2) and above.
 
 ## 2018-08-01
 
 Version [`rva_18.0801`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801)
 
-**Topics**: Mirror Planes, Bugfixes, Tools
+**Topics**: Mirror Planes, Hull, Bugfixes, Tools
 
-- **Fixes**
-    - Crash when importing levels with texture animation
-    - Batch bake should not crash anymore
-    - Import and export of .fin properties (mainly colors)
-    - Set default model rgb to (0.5, 0.5, 0.5)
 - **Additions**
-    - `.rim` support (Mirror Planes)
+    - **Mirror Planes**: `.rim` support
+    - **Hulls**: `.hul` support
+        - Import and Export
+        - _Hulls_ tool panel with convex hull generation
     - Vertex color layer list in the tools panel
     - Batch Bake section in the Light and Shadow tool panel
     - RVGL Launcher in the Helpers panel. The RVGL path (folder) has to be set in the add-on settings.
+    - Setting: _Check Parameters for texture_
+- **Fixes**
+    - Crash when importing levels with texture animation (reported by Gotolei)
+    - Batch bake should not crash anymore
+    - Import and export of .fin properties (mainly colors)
+    - Set default model rgb to (0.5, 0.5, 0.5)
+    - Too many dummy textures when importing prm
+    - Catch error when parameters.txt files don't end with a '}' (reported by Shara)
+    - NCPs consisting of multiple objects are now exported with correct materials
 - **Modifications**
     - New documentation, yet again
     - Code restructuring
@@ -68,6 +83,7 @@ Version [`rva_18.0430`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     - *Prefer Solid Textured Mode* is now disabled by default
 
 ## 2018-02-25
+
 Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)
 
 - **Additions**
@@ -79,6 +95,7 @@ Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     - New system for handling import and export errors
 
 ## 2018-02-19
+
 Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0219)
 
 - **Additions**
@@ -176,7 +193,7 @@ Version [`rva_17.1009`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
 
 ## 2017-10-07
 
-Version `rva_17.1007`
+Version [`rva_17.1007`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1007)
 
 - **Tool panels**
     - Fixed a bug where the tool panels became unusable after CTRL Z.

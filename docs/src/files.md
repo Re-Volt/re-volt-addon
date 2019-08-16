@@ -10,6 +10,7 @@ The following files are supported by the add-on:
 - [Hulls (`.hul`)](#hull)
 - [Texture Animation Spreadsheets (`.ta.csv`)](#texture-animation-spreadsheets)
 - [Car Parameters (`parameters.txt`)](#car-parameters)
+- [Track Zones (`.taz`)](#zones)
 
 ## World
 
@@ -53,6 +54,8 @@ The texture file name is used by the game engine to determine the texture number
 - `51      trackza`
 - `52      trackab`
 - `53      trackbb`
+- `...            `
+- `63      tracklb`
 
 **Note**: For convenience add-on changes the imported image names (not file names) in blender's image editor to `<number>.bmp`, please use same convention when adding a new images. There are built-in tools to take care of all the names, see helpers section.
 
@@ -129,4 +132,10 @@ TODO
 
 The add-on currently imports the car's body and wheels and their positions.  
 If a wheel file cannot be found, it will be represented with an empty object.
+
+---
+
+## Zones
+
+TODO
 
