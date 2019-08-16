@@ -1,52 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible">
+<html lang="en" class="sidebar-visible no-js">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>File Specifications - RV Add-On</title>
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Documentation for the Blender add-on.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <base href="">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
 
-        <link rel="stylesheet" href="book.css">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
 
-        <link rel="shortcut icon" href="favicon.png">
-
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
+        <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
         <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- Custom theme -->
+        <!-- Custom theme stylesheets -->
         
 
         
-
-        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
-        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script>
-            if (typeof Clipboard == 'undefined') {
-                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
-            }
-        </script>
-
-        <noscript>
-            <style type="text/css">
-                .javascript-only {
-                    display: none;
-                }
-            </style>
-        </noscript>
-
     </head>
     <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script type="text/javascript">
             try {
@@ -66,10 +58,10 @@
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
             var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
-            if (theme === null || theme === undefined) { theme = 'light'; }
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
             document.body.className = theme;
-            document.querySelector('html').className = theme;
+            document.querySelector('html').className = theme + ' js';
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
@@ -85,7 +77,10 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html" class="active"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html" class="active"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -94,7 +89,7 @@
                 
                 <div id="menu-bar" class="menu-bar">
                     <div id="menu-bar-sticky-container">
-                        <div class="left-buttons javascript-only">
+                        <div class="left-buttons">
                             <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                                 <i class="fa fa-bars"></i>
                             </button>
@@ -102,7 +97,7 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -115,24 +110,27 @@
                             
                         </div>
 
-                        <h1 class="menu-title">RV Add-On</h1> 
+                        <h1 class="menu-title">RV Add-On</h1>
 
                         <div class="right-buttons">
                             <a href="print.html" title="Print this book" aria-label="Print this book">
                                 <i id="print-button" class="fa fa-print"></i>
                             </a>
+                            
                         </div>
                     </div>
                 </div>
 
                 
-                <div id="searchbar-outer" class="searchbar-outer">
-                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                </div>
-                <div id="searchresults-outer" class="searchresults-outer">
-                    <div class="searchresults-header" id="searchresults-header"></div>
-                    <ul id="searchresults">
-                    </ul>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
                 </div>
                 
 
@@ -147,28 +145,29 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="files.html#file-specifications" id="file-specifications"><h1>File Specifications</h1></a>
+                        <h1><a class="header" href="#file-specifications" id="file-specifications">File Specifications</a></h1>
 <p>The following files are supported by the add-on:</p>
 <ul>
-<li><a href="files.html#world">World (<code>.w</code>)</a></li>
-<li><a href="files.html#mesh">Mesh (<code>.prm</code>)</a></li>
-<li><a href="files.html#collision">Collision (<code>.ncp</code>)</a></li>
-<li><a href="files.html#instances">Instances (<code>.fin</code>)</a></li>
-<li><a href="files.html#mirror-planes">Mirror Planes (<code>.rim</code>)</a></li>
-<li><a href="files.html#hull">Hulls (<code>.hul</code>)</a></li>
-<li><a href="files.html#texture-animation-spreadsheets">Texture Animation Spreadsheets (<code>.ta.csv</code>)</a></li>
-<li><a href="files.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+<li><a href="#world">World (<code>.w</code>)</a></li>
+<li><a href="#mesh">Mesh (<code>.prm</code>)</a></li>
+<li><a href="#collision">Collision (<code>.ncp</code>)</a></li>
+<li><a href="#instances">Instances (<code>.fin</code>)</a></li>
+<li><a href="#mirror-planes">Mirror Planes (<code>.rim</code>)</a></li>
+<li><a href="#hull">Hulls (<code>.hul</code>)</a></li>
+<li><a href="#texture-animation-spreadsheets">Texture Animation Spreadsheets (<code>.ta.csv</code>)</a></li>
+<li><a href="#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+<li><a href="#zones">Track Zones (<code>.taz</code>)</a></li>
 </ul>
-<a class="header" href="files.html#world" id="world"><h2>World</h2></a>
+<h2><a class="header" href="#world" id="world">World</a></h2>
 <p>File extension: <code>.w</code></p>
-<p>See <a href="files.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
+<p>See <a href="#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
 <p>The <strong>environment color</strong> is accessible on a <strong>vertex color layer</strong> called <code>Env</code>.
 The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<code>EnvAlpha</code>).</p>
 <p>Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.</p>
 <p><strong>Debug</strong>:<br />
 There are <a href="./tools-panel/settings.html#import-world-w">debug options</a> in the add-on settings (bounding boxes). They are for debug purposes only and they will not affect the export in any way.</p>
 <hr />
-<a class="header" href="files.html#mesh" id="mesh"><h2>Mesh</h2></a>
+<h2><a class="header" href="#mesh" id="mesh">Mesh</a></h2>
 <p>File extension: <code>.prm</code></p>
 <p><strong>Vertex Color Layers</strong>:</p>
 <ul>
@@ -178,7 +177,24 @@ There are <a href="./tools-panel/settings.html#import-world-w">debug options</a>
 <p><strong>UV</strong>:<br />
 Only the uv map called <code>UVMap</code> will be exported.</p>
 <p><strong>Textures</strong>:<br />
-The texture file name is used to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>).</p>
+The texture file name is used by the game engine to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>). Currently one car texture and up to 64 track textures are supported, all present files must be named in order using scheme presented bellow. Example: <code>tracka.bmp ... trackk.bmp trackl.bmp</code> is correct set but <code>tracka.bmp ... trackk.bmp trackm.bmp</code> is incorrect - the last file and any further will be not loaded.</p>
+<ul>
+<li><code>0       tracka </code></li>
+<li><code>1       trackb </code></li>
+<li><code>2       trackc </code></li>
+<li><code>3       trackd </code></li>
+<li><code>...            </code></li>
+<li><code>25      trackz </code></li>
+<li><code>26      trackaa</code></li>
+<li><code>27      trackba</code></li>
+<li><code>...            </code></li>
+<li><code>51      trackza</code></li>
+<li><code>52      trackab</code></li>
+<li><code>53      trackbb</code></li>
+<li><code>...            </code></li>
+<li><code>63      tracklb</code></li>
+</ul>
+<p><strong>Note</strong>: For convenience add-on changes the imported image names (not file names) in blender's image editor to <code>&lt;number&gt;.bmp</code>, please use same convention when adding a new images. There are built-in tools to take care of all the names, see helpers section.</p>
 <p>If the imported mesh is a <strong>car mesh</strong>, the texture path will be taken from <code>parameters.txt</code>.<br />
 If it's a <strong>level file</strong>, the texture name will be generated from the polygon's texture number and taken from the level folder.<br />
 If a texture file cannot be found, a 512x512 dummy texture will be generated.<br />
@@ -190,7 +206,7 @@ A suffix will be appended to the mesh name (<code>|q0</code> is the highest qual
 A fake user will be assigned to them so they're not lost when saving the file.</p>
 <p><strong>Note</strong>: Only car wheels support LoD.</p>
 <hr />
-<a class="header" href="files.html#collision" id="collision"><h2>Collision</h2></a>
+<h2><a class="header" href="#collision" id="collision">Collision</a></h2>
 <p>File extension: <code>.ncp</code></p>
 <p>NCP flags and materials are written to the integer layers <code>NCPFlags</code> and <code>Material</code>. A preview color for the materials is written to the <code>NCPPreview</code> vertex color layer.</p>
 <p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (<a href="./properties/object/ncp.html">Properties Editor</a>).<br />
@@ -198,15 +214,15 @@ Faces that have the material <code>NONE</code> assigned to them will not be expo
 The vertex color layer called <code>NCPPreview</code> will be ignored since it's only for previewing purposes.</p>
 <p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
 <hr />
-<a class="header" href="files.html#instances" id="instances"><h2>Instances</h2></a>
+<h2><a class="header" href="#instances" id="instances">Instances</a></h2>
 <p>File extension: <code>.fin</code></p>
-<p>Instances are <a href="files.html#mesh">PRM meshes</a> placed around a level. An instance file contains metadata about multiple instances.</p>
+<p>Instances are <a href="#mesh">PRM meshes</a> placed around a level. An instance file contains metadata about multiple instances.</p>
 <p><strong>ModelRGB</strong>: Each RGB value ranges from -128 to 127. The color picker in Blender likes values from 0.0 to 1.0 most, that's why the default ModelRGB is (0.5, 0.5, 0.5).</p>
 <hr />
-<a class="header" href="files.html#mirror-planes" id="mirror-planes"><h2>Mirror Planes</h2></a>
+<h2><a class="header" href="#mirror-planes" id="mirror-planes">Mirror Planes</a></h2>
 <p>TODO</p>
 <hr />
-<a class="header" href="files.html#hull" id="hull"><h2>Hull</h2></a>
+<h2><a class="header" href="#hull" id="hull">Hull</a></h2>
 <p>File extension: <code>.hul</code></p>
 <p><strong>Note</strong>: For importing hull files <code>qhull</code> needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with <code>sudo pacman -S qhull</code>, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.</p>
 <p>Hull files are mainly used for car collision and some other moving objects (some of which can be found in the <code>models</code> folder).</p>
@@ -215,12 +231,15 @@ One (sometimes more) <strong>convex hull</strong> which resembles the car body.<
 The <strong>interior</strong> (one per convex hull) consisting of spheres.</p>
 <p><strong>Note</strong>: Vertex and edge data is ignored when importing but written to exported files. Many custom <code>.hul</code>s don't include vertex and edge data, apparently the game works without them.</p>
 <hr />
-<a class="header" href="files.html#texture-animation-spreadsheets" id="texture-animation-spreadsheets"><h2>Texture Animation Spreadsheets</h2></a>
+<h2><a class="header" href="#texture-animation-spreadsheets" id="texture-animation-spreadsheets">Texture Animation Spreadsheets</a></h2>
 <p>TODO</p>
 <hr />
-<a class="header" href="files.html#car-parameters" id="car-parameters"><h2>Car Parameters</h2></a>
+<h2><a class="header" href="#car-parameters" id="car-parameters">Car Parameters</a></h2>
 <p>The add-on currently imports the car's body and wheels and their positions.<br />
 If a wheel file cannot be found, it will be represented with an empty object.</p>
+<hr />
+<h2><a class="header" href="#zones" id="zones">Zones</a></h2>
+<p>TODO</p>
 
                     </main>
 
@@ -259,54 +278,25 @@ If a wheel file cannot be found, it will be represented with an empty object.</p
 
         </div>
 
-
-        <!-- Local fallback for Font Awesome -->
-        <script>
-            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
-                var link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.type = 'text/css';
-                link.href = '_FontAwesome/css/font-awesome.css';
-                document.head.insertBefore(link, document.head.firstChild)
-            }
-        </script>
-
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3001");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload(true); // force reload from server (not from cache)
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         
 
         
 
-        
-        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
-        
         
         <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
         
 
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
-
-        <!-- Custom JS script -->
         
 
     </body>

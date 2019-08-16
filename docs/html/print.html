@@ -1,52 +1,46 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible">
+<html lang="en" class="sidebar-visible no-js">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>RV Add-On</title>
+        
+        <meta name="robots" content="noindex" />
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Documentation for the Blender add-on.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <base href="">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
 
-        <link rel="stylesheet" href="book.css">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
 
-        <link rel="shortcut icon" href="favicon.png">
-
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
+        <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
         <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- Custom theme -->
+        <!-- Custom theme stylesheets -->
         
 
         
-
-        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
-        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script>
-            if (typeof Clipboard == 'undefined') {
-                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
-            }
-        </script>
-
-        <noscript>
-            <style type="text/css">
-                .javascript-only {
-                    display: none;
-                }
-            </style>
-        </noscript>
-
     </head>
     <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script type="text/javascript">
             try {
@@ -66,10 +60,10 @@
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
             var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
-            if (theme === null || theme === undefined) { theme = 'light'; }
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
             document.body.className = theme;
-            document.querySelector('html').className = theme;
+            document.querySelector('html').className = theme + ' js';
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
@@ -85,7 +79,10 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -94,7 +91,7 @@
                 
                 <div id="menu-bar" class="menu-bar">
                     <div id="menu-bar-sticky-container">
-                        <div class="left-buttons javascript-only">
+                        <div class="left-buttons">
                             <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                                 <i class="fa fa-bars"></i>
                             </button>
@@ -102,7 +99,7 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -115,24 +112,27 @@
                             
                         </div>
 
-                        <h1 class="menu-title">RV Add-On</h1> 
+                        <h1 class="menu-title">RV Add-On</h1>
 
                         <div class="right-buttons">
                             <a href="print.html" title="Print this book" aria-label="Print this book">
                                 <i id="print-button" class="fa fa-print"></i>
                             </a>
+                            
                         </div>
                     </div>
                 </div>
 
                 
-                <div id="searchbar-outer" class="searchbar-outer">
-                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                </div>
-                <div id="searchresults-outer" class="searchresults-outer">
-                    <div class="searchresults-header" id="searchresults-header"></div>
-                    <ul id="searchresults">
-                    </ul>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
                 </div>
                 
 
@@ -147,34 +147,35 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="print.html#rv-add-on-documentation" id="rv-add-on-documentation"><h1>RV Add-On Documentation</h1></a>
-<a class="header" href="print.html#download" id="download"><h2>Download</h2></a>
+                        <h1><a class="header" href="#rv-add-on-documentation" id="rv-add-on-documentation">RV Add-On Documentation</a></h1>
+<h2><a class="header" href="#download" id="download">Download</a></h2>
 <p><span style="float: right; margin: 1em 2em;"><img src="img/rva_small.png" alt="" /></span></p>
 <p>This is the documentation for Marv's Add-On for Re-Volt files.<br />
-It is intended to be used with <a href="https://www.blender.org/download/"><strong>Blender 2.79b</strong></a> or newer.</p>
-<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801"><strong>Download</strong> (rva_18.0801)</a></p>
+It is intended to be used with <a href="https://www.blender.org/download/"><strong>Blender 2.79b</strong></a> or newer.<br />
+<em><strong>Note</strong>: Blender 2.8x series is not supported.</em></p>
+<p><a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.0816"><strong>Download</strong> (rva_19.0816)</a></p>
 <p><a href="http://learn.re-volt.io">Tutorial</a><br />
 <a href="http://learn.re-volt.io/tracks-blender/resources">Resources</a> (Animations, textures, etc.)</p>
-<a class="header" href="print.html#known-issues" id="known-issues"><h2>Known Issues</h2></a>
+<h2><a class="header" href="#known-issues" id="known-issues">Known Issues</a></h2>
 <p>Please report Bugs and suggest features on <a href="https://github.com/Yethiel/re-volt-addon/issues">GitHub</a>.</p>
-<a class="header" href="print.html#features" id="features"><h2>Features</h2></a>
+<h2><a class="header" href="#features" id="features">Features</a></h2>
 <p><strong>Import, Export</strong></p>
 <ul>
 <li>World (.w)</li>
 <li>Mesh (.prm)</li>
 <li>Collision (.ncp)</li>
-<li>Hull (.hul)</li>
 <li>Instances (.fin)</li>
 <li>Mirror Planes (.rim)</li>
-<li>Texture animations (.ta.csv)</li>
+<li>Hulls (.hul)</li>
+<li>Texture Animations (.ta.csv)</li>
+<li>Car Parameters (parameters.txt; only partial import: body, wheels)</li>
+<li>Track Zones (.taz)</li>
 </ul>
 <p><strong>Missing Formats (help appreciated!)</strong></p>
 <ul>
-<li><strong>Objects</strong> (.fob)</li>
-<li><strong>Car Parameters</strong> (parameters.txt; parser is complete, only partial import: car body, wheels)</li>
+<li>Objects (.fob)</li>
 <li>AI Nodes (.fan)</li>
 <li>Position Nodes (.pos)</li>
-<li>Track Zones (.taz)</li>
 <li>Visiboxes (.vis)</li>
 <li>Lights (.lit)</li>
 <li>Force Fields (.fld)</li>
@@ -193,7 +194,7 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#installation" id="installation"><h1>Installation</h1></a>
+<h1><a class="header" href="#installation" id="installation">Installation</a></h1>
 <p>To install the add-on, locate the <code>addons</code> folder within your Blender folder.</p>
 <p>In most cases, it is located at <code>C:\Program Files\Blender Foundation\Blender\2.79\scripts\addons</code>.</p>
 <p>If you're on GNU/Linux, your add-on folder should be located at <code>~/.config/blender/2.79/scripts/addons/</code>, where <code>2.79</code> is the <strong>Blender version you are using</strong>.</p>
@@ -202,28 +203,29 @@ It is intended to be used with <a href="https://www.blender.org/download/"><stro
 <p>Now start up Blender and open the user preferences (File -&gt; User Preferences...). Click on the <strong>Add-ons</strong> tab and enter <em>Re-Volt</em>.</p>
 <p><img src="img/user_preferences.png" alt="User Preferences" /></p>
 <p><strong>Tip:</strong> Now, click on <strong>Save User Settings</strong> at the bottom of the User Preferences window to keep the add-on enabled when you restart Blender.</p>
-<a class="header" href="print.html#file-specifications" id="file-specifications"><h1>File Specifications</h1></a>
+<h1><a class="header" href="#file-specifications" id="file-specifications">File Specifications</a></h1>
 <p>The following files are supported by the add-on:</p>
 <ul>
-<li><a href="print.html#world">World (<code>.w</code>)</a></li>
-<li><a href="print.html#mesh">Mesh (<code>.prm</code>)</a></li>
-<li><a href="print.html#collision">Collision (<code>.ncp</code>)</a></li>
-<li><a href="print.html#instances">Instances (<code>.fin</code>)</a></li>
-<li><a href="print.html#mirror-planes">Mirror Planes (<code>.rim</code>)</a></li>
-<li><a href="print.html#hull">Hulls (<code>.hul</code>)</a></li>
-<li><a href="print.html#texture-animation-spreadsheets">Texture Animation Spreadsheets (<code>.ta.csv</code>)</a></li>
-<li><a href="print.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+<li><a href="files.html#world">World (<code>.w</code>)</a></li>
+<li><a href="files.html#mesh">Mesh (<code>.prm</code>)</a></li>
+<li><a href="files.html#collision">Collision (<code>.ncp</code>)</a></li>
+<li><a href="files.html#instances">Instances (<code>.fin</code>)</a></li>
+<li><a href="files.html#mirror-planes">Mirror Planes (<code>.rim</code>)</a></li>
+<li><a href="files.html#hull">Hulls (<code>.hul</code>)</a></li>
+<li><a href="files.html#texture-animation-spreadsheets">Texture Animation Spreadsheets (<code>.ta.csv</code>)</a></li>
+<li><a href="files.html#car-parameters">Car Parameters (<code>parameters.txt</code>)</a></li>
+<li><a href="files.html#zones">Track Zones (<code>.taz</code>)</a></li>
 </ul>
-<a class="header" href="print.html#world" id="world"><h2>World</h2></a>
+<h2><a class="header" href="#world" id="world">World</a></h2>
 <p>File extension: <code>.w</code></p>
-<p>See <a href="print.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
+<p>See <a href="files.html#mesh">Mesh</a>. The only addition is the environment color list that defines a specularity color for certain polygons if the flag is enabled for them.</p>
 <p>The <strong>environment color</strong> is accessible on a <strong>vertex color layer</strong> called <code>Env</code>.
 The alpha value of the color is only accessible via the face property editing panel since it's written to a per-face float layer (<code>EnvAlpha</code>).</p>
 <p>Do note that environment colors are per-polygon. The average color will be sampled from the vertex color layer when an env-enabled polygon is selected.</p>
 <p><strong>Debug</strong>:<br />
 There are <a href="./tools-panel/settings.html#import-world-w">debug options</a> in the add-on settings (bounding boxes). They are for debug purposes only and they will not affect the export in any way.</p>
 <hr />
-<a class="header" href="print.html#mesh" id="mesh"><h2>Mesh</h2></a>
+<h2><a class="header" href="#mesh" id="mesh">Mesh</a></h2>
 <p>File extension: <code>.prm</code></p>
 <p><strong>Vertex Color Layers</strong>:</p>
 <ul>
@@ -233,7 +235,24 @@ There are <a href="./tools-panel/settings.html#import-world-w">debug options</a>
 <p><strong>UV</strong>:<br />
 Only the uv map called <code>UVMap</code> will be exported.</p>
 <p><strong>Textures</strong>:<br />
-The texture file name is used to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>).</p>
+The texture file name is used by the game engine to determine the texture number for exported faces. Make sure it's named correctly (e.g. <code>tracka.bmp</code>, <code>car.bmp</code>). Currently one car texture and up to 64 track textures are supported, all present files must be named in order using scheme presented bellow. Example: <code>tracka.bmp ... trackk.bmp trackl.bmp</code> is correct set but <code>tracka.bmp ... trackk.bmp trackm.bmp</code> is incorrect - the last file and any further will be not loaded.</p>
+<ul>
+<li><code>0       tracka </code></li>
+<li><code>1       trackb </code></li>
+<li><code>2       trackc </code></li>
+<li><code>3       trackd </code></li>
+<li><code>...            </code></li>
+<li><code>25      trackz </code></li>
+<li><code>26      trackaa</code></li>
+<li><code>27      trackba</code></li>
+<li><code>...            </code></li>
+<li><code>51      trackza</code></li>
+<li><code>52      trackab</code></li>
+<li><code>53      trackbb</code></li>
+<li><code>...            </code></li>
+<li><code>63      tracklb</code></li>
+</ul>
+<p><strong>Note</strong>: For convenience add-on changes the imported image names (not file names) in blender's image editor to <code>&lt;number&gt;.bmp</code>, please use same convention when adding a new images. There are built-in tools to take care of all the names, see helpers section.</p>
 <p>If the imported mesh is a <strong>car mesh</strong>, the texture path will be taken from <code>parameters.txt</code>.<br />
 If it's a <strong>level file</strong>, the texture name will be generated from the polygon's texture number and taken from the level folder.<br />
 If a texture file cannot be found, a 512x512 dummy texture will be generated.<br />
@@ -245,7 +264,7 @@ A suffix will be appended to the mesh name (<code>|q0</code> is the highest qual
 A fake user will be assigned to them so they're not lost when saving the file.</p>
 <p><strong>Note</strong>: Only car wheels support LoD.</p>
 <hr />
-<a class="header" href="print.html#collision" id="collision"><h2>Collision</h2></a>
+<h2><a class="header" href="#collision" id="collision">Collision</a></h2>
 <p>File extension: <code>.ncp</code></p>
 <p>NCP flags and materials are written to the integer layers <code>NCPFlags</code> and <code>Material</code>. A preview color for the materials is written to the <code>NCPPreview</code> vertex color layer.</p>
 <p>All objects of the scene will be merged into one mesh and then exported to the file. Objects will be ignored if they're a debug object or have the <em>ignore</em> object property set (<a href="./properties/object/ncp.html">Properties Editor</a>).<br />
@@ -253,15 +272,15 @@ Faces that have the material <code>NONE</code> assigned to them will not be expo
 The vertex color layer called <code>NCPPreview</code> will be ignored since it's only for previewing purposes.</p>
 <p>A lookup grid will be automatically exported. This can be turned off in the export settings.</p>
 <hr />
-<a class="header" href="print.html#instances" id="instances"><h2>Instances</h2></a>
+<h2><a class="header" href="#instances" id="instances">Instances</a></h2>
 <p>File extension: <code>.fin</code></p>
-<p>Instances are <a href="print.html#mesh">PRM meshes</a> placed around a level. An instance file contains metadata about multiple instances.</p>
+<p>Instances are <a href="files.html#mesh">PRM meshes</a> placed around a level. An instance file contains metadata about multiple instances.</p>
 <p><strong>ModelRGB</strong>: Each RGB value ranges from -128 to 127. The color picker in Blender likes values from 0.0 to 1.0 most, that's why the default ModelRGB is (0.5, 0.5, 0.5).</p>
 <hr />
-<a class="header" href="print.html#mirror-planes" id="mirror-planes"><h2>Mirror Planes</h2></a>
+<h2><a class="header" href="#mirror-planes" id="mirror-planes">Mirror Planes</a></h2>
 <p>TODO</p>
 <hr />
-<a class="header" href="print.html#hull" id="hull"><h2>Hull</h2></a>
+<h2><a class="header" href="#hull" id="hull">Hull</a></h2>
 <p>File extension: <code>.hul</code></p>
 <p><strong>Note</strong>: For importing hull files <code>qhull</code> needs to be installed on GNU/Linux (macOS too) in order to import Hulls (on Arch, install it with <code>sudo pacman -S qhull</code>, package name may be similar on your distro). The add-on is shipped with qhull.exe for Windows systems, nothing needs to be installed additionally.</p>
 <p>Hull files are mainly used for car collision and some other moving objects (some of which can be found in the <code>models</code> folder).</p>
@@ -270,13 +289,16 @@ One (sometimes more) <strong>convex hull</strong> which resembles the car body.<
 The <strong>interior</strong> (one per convex hull) consisting of spheres.</p>
 <p><strong>Note</strong>: Vertex and edge data is ignored when importing but written to exported files. Many custom <code>.hul</code>s don't include vertex and edge data, apparently the game works without them.</p>
 <hr />
-<a class="header" href="print.html#texture-animation-spreadsheets" id="texture-animation-spreadsheets"><h2>Texture Animation Spreadsheets</h2></a>
+<h2><a class="header" href="#texture-animation-spreadsheets" id="texture-animation-spreadsheets">Texture Animation Spreadsheets</a></h2>
 <p>TODO</p>
 <hr />
-<a class="header" href="print.html#car-parameters" id="car-parameters"><h2>Car Parameters</h2></a>
+<h2><a class="header" href="#car-parameters" id="car-parameters">Car Parameters</a></h2>
 <p>The add-on currently imports the car's body and wheels and their positions.<br />
 If a wheel file cannot be found, it will be represented with an empty object.</p>
-<a class="header" href="print.html#tools-panel" id="tools-panel"><h1>Tools Panel</h1></a>
+<hr />
+<h2><a class="header" href="#zones" id="zones">Zones</a></h2>
+<p>TODO</p>
+<h1><a class="header" href="#tools-panel" id="tools-panel">Tools Panel</a></h1>
 <p><img src="./tools-panel/img/tools-panel-collapsed.png" alt="Tools Panel" /></p>
 <p>The panel located on the left hand side of the 3D view.<br />
 Open/Close the tools panel using <code>T</code>.<br />
@@ -285,31 +307,31 @@ The following panels are located in the <strong>Re-Volt</strong> section. Its co
 <p>Panels can also be rearranged by dragging them using the handles at the right hand side.</p>
 <p><strong>Tip</strong>: Resize the tools panel to a comfortable size so the contents can be read more easily.</p>
 <p>You can <strong>hover</strong> your mouse over any of the buttons to get a tooltip with an explanation.</p>
-<a class="header" href="print.html#widgets" id="widgets"><h2>Widgets</h2></a>
+<h2><a class="header" href="#widgets" id="widgets">Widgets</a></h2>
 <p><img src="./tools-panel/img/widgets.png" alt="Tools Panel" /></p>
 <p>Sometimes <strong>helper widgets</strong> pop up to make your life easier. They may prompt you about missing vertex color layers or a different view mode.</p>
 <p><strong>Note</strong>: Some panels are disabled until you click on a widget (e.g. missing vertex color layer).</p>
-<a class="header" href="print.html#import--export" id="import--export"><h1>Import / Export</h1></a>
+<h1><a class="header" href="#import--export" id="import--export">Import / Export</a></h1>
 <p>The Import / Export panel is fixed to the top of the Re-Volt section of the tool panel. It can only be seen in Object mode.</p>
-<p><img src="tools-panel/img/import-export-panel.png" alt="Import / Export Panel" /></p>
+<p><img src="tools-panel/tools-panel/img/import-export-panel.png" alt="Import / Export Panel" /></p>
 <p>There are two main buttons, one for <strong>import</strong> and one for <strong>export</strong>.<br />
 They have the same effect as the menu entries in the File -&gt; Import/Export menus.</p>
 <p>A <strong>repeat</strong> button can be found next to the <strong>Export</strong> button which repeats the last export.</p>
-<a class="header" href="print.html#add-on-settings" id="add-on-settings"><h1>Add-On Settings</h1></a>
-<p><img src="./tools-panel/img/settings.png" alt="Settings Panel" /></p>
+<h1><a class="header" href="#add-on-settings" id="add-on-settings">Add-On Settings</a></h1>
+<p><img src="tools-panel/./tools-panel/img/settings.png" alt="Settings Panel" /></p>
 <p>Some of these settings can also be found when importing/exporting files in the bottom left.</p>
-<a class="header" href="print.html#general-settings" id="general-settings"><h2>General Settings</h2></a>
+<h2><a class="header" href="#general-settings" id="general-settings">General Settings</a></h2>
 <p><strong>Prefer Textured Solid Mode</strong>:<br />
 There are two encouraged ways to view textured meshes: Texture mode and Solid mode with <em>Textured Solid</em> shading enabled.</p>
 <p>If this setting is enabled, the add-on will switch to Textured Solid mode instead of Texture mode.<br />
 In Textured Solid mode, objects have additional shading which makes white and untextured models a lot easier to work with.</p>
-<a class="header" href="print.html#import-settings" id="import-settings"><h2>Import Settings</h2></a>
+<h2><a class="header" href="#import-settings" id="import-settings">Import Settings</a></h2>
 <p><strong>Texture Mode after Import</strong>:<br />
 Switches to texture display mode when a mesh has been imported (applies to .prm
 and .w).</p>
 <p><strong>Check Parameters for texture</strong>:<br />
 Whether to read the parameters.txt from the car folder when importing a <code>.prm</code> to find out the texture path.</p>
-<a class="header" href="print.html#export-settings" id="export-settings"><h2>Export Settings</h2></a>
+<h2><a class="header" href="#export-settings" id="export-settings">Export Settings</a></h2>
 <p><strong>Triangulate n-gons</strong>:<br />
 Triangulates faces with more than 4 vertices (also called n-gons).<br />
 This will only affect the exported object, the mesh itself will not be
@@ -324,7 +346,7 @@ Applies the scale of the object when exporting.</p>
 Applies the rotation of the object when exporting.</p>
 <p><strong>Apply Translation</strong>:<br />
 Applies the <em>position</em> of the object when exporting.</p>
-<a class="header" href="print.html#import-world-w" id="import-world-w"><h2>Import World (.w)</h2></a>
+<h2><a class="header" href="#import-world-w" id="import-world-w">Import World (.w)</a></h2>
 <p><strong>Parent .w meshes to Empty</strong>:<br />
 Creates an empty object with the imported file's name and parents all meshes
 contained in the .w file to it. This makes the object outliner a lot less
@@ -345,7 +367,7 @@ By default, all objects will be imported to the first layer.</p>
 debug objects potentially are on other layers.<br />
 To view multiple layers at once, hold down <code>Shift</code> and press numbers, e.g.
 <code>1</code> and then <code>2</code>. While doing that, make sure the mouse cursor hovers over the 3D view.</p>
-<a class="header" href="print.html#export-collision-ncp" id="export-collision-ncp"><h2>Export Collision (.ncp)</h2></a>
+<h2><a class="header" href="#export-collision-ncp" id="export-collision-ncp">Export Collision (.ncp)</a></h2>
 <p><strong>Only export selected</strong>:<br />
 When this setting is enabled, only selected objects will be exported to the NCP.
 If only one object is selected, the location of the object will be ignored and the center
@@ -355,8 +377,8 @@ This setting is required when exporting a collision file that matches a .w file 
 NCP files can be exported without the collision grid if the .ncp is intended to be used with an object or instance (.prm).</p>
 <p><strong>Grid Size</strong>:<br />
 Defines the size of the lookup grid that is written to the end of the NCP file. The size defines the size of the single &quot;cells&quot;. Choosing a higher number will result in a faster export but poorer performance in-game.</p>
-<a class="header" href="print.html#instances-1" id="instances-1"><h1>Instances</h1></a>
-<p><img src="./tools-panel/img/instances.png" alt="Instances Panel" /></p>
+<h1><a class="header" href="#instances-1" id="instances-1">Instances</a></h1>
+<p><img src="tools-panel/./tools-panel/img/instances.png" alt="Instances Panel" /></p>
 <p>The Instances Panel provides some helper tools to make working with instances easier.</p>
 <hr />
 <p><strong>Select by data</strong>: Selects all objects with the same object data (mesh) as the currently selected object. You could, for example, place objects around the scene using <code>ALT</code>+<code>D</code> to create duplicates with shared mesh data and then select all of them.</p>
@@ -366,14 +388,14 @@ Defines the size of the lookup grid that is written to the end of the NCP file. 
 <hr />
 <p><strong>Mark as Instance</strong>: Sets the <em>is instance</em> property for all selected objects. These objects will then be exported when exporting to <code>.fin</code>.</p>
 <p><strong>Remove Instance property</strong>: Removes the <em>is instance</em> property for all selected objects so they won't be exported when exporting to <code>.fin</code>.</p>
-<a class="header" href="print.html#hulls" id="hulls"><h1>Hulls</h1></a>
+<h1><a class="header" href="#hulls" id="hulls">Hulls</a></h1>
 <p><strong>Generate Convex Hull</strong>:<br />
 Generates a convex hull from the selected object.</p>
 <p><strong>Create Hull Sphere</strong>:<br />
 Adds a hull interior sphere at the 3D cursor position to be placed inside the convex hull.</p>
-<a class="header" href="print.html#light-and-shadow" id="light-and-shadow"><h1>Light and Shadow</h1></a>
-<p><img src="./tools-panel/img/light-shadow.png" alt="Light and Shadow Panel" /></p>
-<a class="header" href="print.html#shade-object" id="shade-object"><h2>Shade Object</h2></a>
+<h1><a class="header" href="#light-and-shadow" id="light-and-shadow">Light and Shadow</a></h1>
+<p><img src="tools-panel/./tools-panel/img/light-shadow.png" alt="Light and Shadow Panel" /></p>
+<h2><a class="header" href="#shade-object" id="shade-object">Shade Object</a></h2>
 <p>Shades a mesh by baking light to the vertex color layer.</p>
 <p><strong>Orientation</strong>:<br />
 Sets the orientation of the lights. The following options are available:</p>
@@ -396,7 +418,7 @@ Three options: Hard (sun, more contrast), Soft (hemisphere, smoother) and None.<
 <p><strong>Intensity</strong>:<br />
 This defines the intensity of the light sources. This is the same setting as the lamp's energy.</p>
 <hr />
-<a class="header" href="print.html#generate-shadow-texture" id="generate-shadow-texture"><h2>Generate Shadow Texture</h2></a>
+<h2><a class="header" href="#generate-shadow-texture" id="generate-shadow-texture">Generate Shadow Texture</a></h2>
 <p>With this feature you can create shadows that are ready for use in-game. The shadows are negative which is a requirement by the game.</p>
 <p>The add-on creates the shadows with ray-tracing and then baking them to an automatically sized textured plane (takes child objects into account).</p>
 <p>To <strong>save the shadows</strong>, go into the <em>UV/Image Editor</em>, select the shadow (most recenty try has the highest number, e.g. Shadow.420) and then click <em>Image -&gt; Save as Image</em>.</p>
@@ -414,8 +436,8 @@ Light size for ray shadow sampling.</p>
 <p><strong>Resolution</strong>:<br />
 The resolution of the resulting texture (height and width).</p>
 <p><strong>Table</strong>:<br />
-Shadow coordinates for use in parameters.txt of cars. Click to select all, then CTRL C to copy.</p>
-<a class="header" href="print.html#batch-bake-lights" id="batch-bake-lights"><h2>Batch Bake Lights</h2></a>
+Shadow coordinates for use in parameters.txt of cars. Click to select all, then CTRL C to copy. </p>
+<h2><a class="header" href="#batch-bake-lights" id="batch-bake-lights">Batch Bake Lights</a></h2>
 <p>This feature allows you to bake lights in the current scene to instance objects.</p>
 <p><strong>Bake to Model RGB</strong>:<br />
 Whether to bake the color to the Model RGB value. This can be used to darken or tint the instance.</p>
@@ -423,16 +445,24 @@ Whether to bake the color to the Model RGB value. This can be used to darken or 
 Whether to bake the color to the Model Env value. This can be used to alter the reflection color of the instance.</p>
 <p><strong>Bake all selected</strong><br />
 Bakes a full render to all selected objects. This usually takes a long time, Blender freezes until the action is done. A popup will show up when the baking process is complete.</p>
-<a class="header" href="print.html#helpers" id="helpers"><h1>Helpers</h1></a>
-<p><img src="./tools-panel/img/helpers.png" alt="Helpers Panel" /></p>
-<a class="header" href="print.html#a3d-view" id="a3d-view"><h2>3D View</h2></a>
+<h1><a class="header" href="#helpers" id="helpers">Helpers</a></h1>
+<p><img src="tools-panel/./tools-panel/img/helpers.png" alt="Helpers Panel" /></p>
+<h2><a class="header" href="#3d-view" id="3d-view">3D View</a></h2>
 <p><strong>Texture</strong>:<br />
 Enables texture mode.</p>
 <p><strong>Textured Solid</strong>:<br />
 Enables solid shading mode and enables the textured solid option. This might be better for working with only half-textured models.</p>
-<a class="header" href="print.html#rvgl" id="rvgl"><h2>RVGL</h2></a>
-<p><strong>Launch RVGL</strong>: Starts RVGL in developer mode. The path has to be configured in the add-on settings.</p>
-<a class="header" href="print.html#face-properties" id="face-properties"><h1>Face Properties</h1></a>
+<h2><a class="header" href="#rvgl" id="rvgl">RVGL</a></h2>
+<p><strong>Launch RVGL</strong>:
+Starts RVGL in developer mode. The path has to be configured in the add-on settings.</p>
+<h2><a class="header" href="#texture-tools" id="texture-tools">Texture tools</a></h2>
+<p><strong>Copy project textures</strong>: 
+Renaming and checking many image files may be monotonous. This command copies all used track textures from their source to chosen destination track folder and renames them properly for you. 
+<strong>Note:</strong> If you chose destination directory same as actual source for textures all files with matching names will be overwritten. </p>
+<p><strong>Rename track textures</strong>:
+All used textures must be named (this is not referring file names) in numerical order in blender's image editor e.g. <code>0.bmp 1.bmp 2.bmp 3.bmp ... 63.bmp</code>. This name uniquely identifies each texture, any gap in numeration may cause an issues. Command will assign new name (ID) to each texture. 
+<strong>Note:</strong> this may override existing (manual) numeration.</p>
+<h1><a class="header" href="#face-properties" id="face-properties">Face Properties</a></h1>
 <p>The list of properties is put together as follows:</p>
 <p><strong>Checkbox</strong>:<br />
 Enable or disable the property for all selected faces. The checkbox is checked when <em>all</em> selected faces have this property.</p>
@@ -444,15 +474,15 @@ Hover the property name to find out more about the property.</p>
 Click to select/deselect all faces with this property.</p>
 <p><strong>Texture</strong>:<br />
 Sets the texture number for all selected faces. <code>-1</code> if numbers of selected faces don't match.</p>
-<a class="header" href="print.html#prmworld" id="prmworld"><h2>PRM/World</h2></a>
-<p><img src="./tools-panel/img/faceprops-prm.png" alt="PRM Face Properties" /></p>
-<a class="header" href="print.html#ncp" id="ncp"><h2>NCP</h2></a>
-<p><img src="./tools-panel/img/faceprops-ncp.png" alt="NCP Face Properties" /></p>
+<h2><a class="header" href="#prmworld" id="prmworld">PRM/World</a></h2>
+<p><img src="tools-panel/./tools-panel/img/faceprops-prm.png" alt="PRM Face Properties" /></p>
+<h2><a class="header" href="#ncp" id="ncp">NCP</a></h2>
+<p><img src="tools-panel/./tools-panel/img/faceprops-ncp.png" alt="NCP Face Properties" /></p>
 <p><strong>Material</strong>:<br />
 <strong>Set</strong>: Displays the material of the currently selected face. Select a material from the list to apply it to all selected faces. The select (sel) button selects all faces with the same material.</p>
 <p><strong>Select</strong>: Select a material from the list to select all faces with the same material.</p>
-<a class="header" href="print.html#vertex-colors" id="vertex-colors"><h1>Vertex Colors</h1></a>
-<p><img src="./tools-panel/img/vertex-color.png" alt="Vertex Color Panel" /></p>
+<h1><a class="header" href="#vertex-colors" id="vertex-colors">Vertex Colors</a></h1>
+<p><img src="tools-panel/./tools-panel/img/vertex-color.png" alt="Vertex Color Panel" /></p>
 <p>Vertex colors will be set depending on the selection mode.<br />
 Vertex, edge and face select modes (<code>CTRL</code>+<code>TAB</code>) each have different effects.</p>
 <p><strong>Vertex Color Layers</strong>:<br />
@@ -464,8 +494,8 @@ An easy to access color selector to select the color hue and shade.</p>
 <p>Click on the <strong>color preview</strong> button to get a more detailed color wheel that supports RBG, HSV and Hex values and a color picker.</p>
 <p><strong>Shade buttons</strong>:<br />
 These buttons can be used for easily shading a mesh. They range from black to white.</p>
-<a class="header" href="print.html#texture-animation" id="texture-animation"><h1>Texture Animation</h1></a>
-<p><img src="./tools-panel/img/texanim.png" alt="Texture Animation Panel" /></p>
+<h1><a class="header" href="#texture-animation" id="texture-animation">Texture Animation</a></h1>
+<p><img src="tools-panel/./tools-panel/img/texanim.png" alt="Texture Animation Panel" /></p>
 <p>An edit panel for texture animations. The animations themselves are saved in the
 scene, not the selected object. It is only accessible in edit mode to provide
 tools to use existing polygons and UV mapping to create an animation.</p>
@@ -474,7 +504,7 @@ The total amount of texture animations you would like to use.<br />
 For example, set this to <code>3</code> to use slots <code>0</code>, <code>1</code> and <code>2</code>.</p>
 <p>The maximum amount is 10 since a polygon's animation is determined by the
 texture number.</p>
-<a class="header" href="print.html#animation-slots" id="animation-slots"><h2>Animation Slots</h2></a>
+<h2><a class="header" href="#animation-slots" id="animation-slots">Animation Slots</a></h2>
 <p><strong>Slot</strong>:<br />
 The animation slot to display in the panel. The actual animation is set by the
 texture number/page.</p>
@@ -490,10 +520,10 @@ Click the Preview button to preview the frame's UV on the currently selected fac
 The texture page number this animation frame uses.</p>
 <p><strong>Duration</strong>:<br />
 The duration of the frame or the delay until the next frame shows up.</p>
-<a class="header" href="print.html#animate" id="animate"><h2>Animate</h2></a>
+<h2><a class="header" href="#animate" id="animate">Animate</a></h2>
 <p>Functions for automatically generating animations.</p>
-<a class="header" href="print.html#transform-animation" id="transform-animation"><h3>Transform Animation</h3></a>
-<p><img src="./tools-panel/img/texanim-transform.png" alt="Texture Animation Panel: Transform" /></p>
+<h3><a class="header" href="#transform-animation" id="transform-animation">Transform Animation</a></h3>
+<p><img src="tools-panel/./tools-panel/img/texanim-transform.png" alt="Texture Animation Panel: Transform" /></p>
 <p>Interpolates the UV coordinates between two given frames. (Animates from point A to B.)</p>
 <p><strong>Start Frame</strong>:<br />
 The start frame the animation starts from. This frame will not be changed.</p>
@@ -503,8 +533,8 @@ The frame the animation ends on. This frame will not be changed. To achieve a pe
 The duration of all resulting frames.</p>
 <p><strong>Texture</strong>:<br />
 The texture page applied to all resulting frames.</p>
-<a class="header" href="print.html#grid-animation" id="grid-animation"><h3>Grid Animation</h3></a>
-<p><img src="./tools-panel/img/texanim-grid.png" alt="Texture Animation Panel: Grid" /></p>
+<h3><a class="header" href="#grid-animation" id="grid-animation">Grid Animation</a></h3>
+<p><img src="tools-panel/./tools-panel/img/texanim-grid.png" alt="Texture Animation Panel: Grid" /></p>
 <p>Lays out animation frames on a grid, much like the mars animation in Museum 2.</p>
 <p><strong>Start Frame</strong>:<br />
 The frame the animation starts at.</p>
@@ -516,25 +546,25 @@ The height of the grid.</p>
 The duration of all resulting frames.</p>
 <p><strong>Texture</strong>:<br />
 The texture page applied to all resulting frames.</p>
-<a class="header" href="print.html#uv" id="uv"><h2>UV</h2></a>
+<h2><a class="header" href="#uv" id="uv">UV</a></h2>
 <p><strong>UV to Frame</strong>:<br />
 Takes the UV coordinates of the currently selected face and applies them to the texture animation frame.</p>
 <p><strong>Coordinates</strong>:<br />
 The UV mapping for the currently displayed frame. For triangular faces, UV3 will
 be ignored.</p>
-<a class="header" href="print.html#properties-editor" id="properties-editor"><h1>Properties Editor</h1></a>
+<h1><a class="header" href="#properties-editor" id="properties-editor">Properties Editor</a></h1>
 <p><img src="./properties/img/editor.png" alt="Properties Editor" /></p>
 <p>The properties Editor is usually found at the right hand side of the user interface.</p>
 <p>Most Re-Volt properties can be found in the <strong>Object</strong> tab (orange cube icon).</p>
 <p>Some properties from Blender are used as well, such as vertex colors.
 Vertex color layers can be found in the object data section (symbol with three dots).</p>
-<a class="header" href="print.html#object" id="object"><h1>Object</h1></a>
-<p><img src="./properties/img/editor-object.png" alt="Properties Editor: Object" /></p>
+<h1><a class="header" href="#object" id="object">Object</a></h1>
+<p><img src="properties/./properties/img/editor-object.png" alt="Properties Editor: Object" /></p>
 <p>The Re-Volt Panel of the Object section is pinned to the top.</p>
-<a class="header" href="print.html#ncp-properties" id="ncp-properties"><h1>NCP Properties</h1></a>
+<h1><a class="header" href="#ncp-properties" id="ncp-properties">NCP Properties</a></h1>
 <p><strong>Ignore Collision</strong>: If enabled, the object won't be exported to .ncp.</p>
-<a class="header" href="print.html#instance-properties" id="instance-properties"><h1>Instance Properties</h1></a>
-<p><img src="./properties/img/props-instance.png" alt="Instance Properties" /></p>
+<h1><a class="header" href="#instance-properties" id="instance-properties">Instance Properties</a></h1>
+<p><img src="properties/object/./properties/img/props-instance.png" alt="Instance Properties" /></p>
 <p><strong>Is Instance</strong>: If enabled, the object will be exported to <code>.fin</code>. If a <code>.prm</code> file with the name of the object doesn't yet exist, it will also be exported to <code>.prm</code>.</p>
 <p><strong>Model Color</strong>: Additional or subtractive RGB color. Default is (0.5, 0.5, 0.5). Setting this to 1.0 erases the existing vertex color, 0.5 leaves it where it is and anything closer to 0 darkens the instance.</p>
 <p><strong>EnvColor</strong>: Environment map color and intensity (alpha).</p>
@@ -545,18 +575,18 @@ Vertex color layers can be found in the object data section (symbol with three d
 <p><strong>No Object Collision</strong>: The instance won't collide with cars and other moving objects.</p>
 <p><strong>Priority</strong>: If set to anything other than <code>0</code>, the instance cannot be turned off using the video options.</p>
 <p><strong>LoD Bias</strong>: Unused</p>
-<a class="header" href="print.html#mirror-properties" id="mirror-properties"><h1>Mirror Properties</h1></a>
+<h1><a class="header" href="#mirror-properties" id="mirror-properties">Mirror Properties</a></h1>
 <p><strong>Is Mirror Plane</strong>: If enabled, the object will be exported to</p>
-<a class="header" href="print.html#hull-properties" id="hull-properties"><h1>Hull Properties</h1></a>
+<h1><a class="header" href="#hull-properties" id="hull-properties">Hull Properties</a></h1>
 <p>These properties can be changed manually, however, it is encouraged to create hulls and spheres using the operators in the tools panel or via the <em>Add</em> menu.</p>
 <p><strong>Is Convex Hull</strong>:<br />
 If enabled, the object will be exported as a convex hull.</p>
 <p><strong>Is Interior Sphere</strong>:
 If enabled, the object will be exported as an interior sphere.</p>
-<a class="header" href="print.html#scene" id="scene"><h1>Scene</h1></a>
+<h1><a class="header" href="#scene" id="scene">Scene</a></h1>
 <p>Only some debug stuff, <em>not much to be scene</em>.</p>
-<a class="header" href="print.html#changelog" id="changelog"><h1>Changelog</h1></a>
-<a class="header" href="print.html#a2018-08-01" id="a2018-08-01"><h2>2018-08-01</h2></a>
+<h1><a class="header" href="#changelog" id="changelog">Changelog</a></h1>
+<h2><a class="header" href="#2018-08-01" id="2018-08-01">2018-08-01</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801"><code>rva_18.0801</code></a></p>
 <p><strong>Topics</strong>: Mirror Planes, Hull, Bugfixes, Tools</p>
 <ul>
@@ -594,7 +624,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2018-06-19" id="a2018-06-19"><h2>2018-06-19</h2></a>
+<h2><a class="header" href="#2018-06-19" id="2018-06-19">2018-06-19</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0619"><code>rva_18.0619</code></a></p>
 <p><strong>Topics</strong>: Bugfixes</p>
 <ul>
@@ -611,7 +641,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2018-04-30" id="a2018-04-30"><h2>2018-04-30</h2></a>
+<h2><a class="header" href="#2018-04-30" id="2018-04-30">2018-04-30</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0430"><code>rva_18.0430</code></a></p>
 <p><strong>Topics</strong>: Instance (.fin), UI, Bugfixes</p>
 <ul>
@@ -642,7 +672,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2018-02-25" id="a2018-02-25"><h2>2018-02-25</h2></a>
+<h2><a class="header" href="#2018-02-25" id="2018-02-25">2018-02-25</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225"><code>rva_18.0225</code></a></p>
 <ul>
 <li><strong>Additions</strong>
@@ -662,7 +692,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2018-02-19" id="a2018-02-19"><h2>2018-02-19</h2></a>
+<h2><a class="header" href="#2018-02-19" id="2018-02-19">2018-02-19</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0219"><code>rva_18.0219</code></a></p>
 <ul>
 <li><strong>Additions</strong>
@@ -685,7 +715,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-11-12" id="a2017-11-12"><h2>2017-11-12</h2></a>
+<h2><a class="header" href="#2017-11-12" id="2017-11-12">2017-11-12</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1112"><code>rva_17.1112</code></a></p>
 <ul>
 <li><strong>Fixes</strong>
@@ -701,7 +731,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-10-25" id="a2017-10-25"><h2>2017-10-25</h2></a>
+<h2><a class="header" href="#2017-10-25" id="2017-10-25">2017-10-25</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1025"><code>rva_17.1025</code></a></p>
 <ul>
 <li><strong>Fixes</strong> (reported by Gotolei)
@@ -712,7 +742,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-10-24" id="a2017-10-24"><h2>2017-10-24</h2></a>
+<h2><a class="header" href="#2017-10-24" id="2017-10-24">2017-10-24</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1024"><code>rva_17.1024</code></a></p>
 <ul>
 <li><strong>Additions</strong>
@@ -744,7 +774,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-10-17" id="a2017-10-17"><h2>2017-10-17</h2></a>
+<h2><a class="header" href="#2017-10-17" id="2017-10-17">2017-10-17</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1017"><code>rva_17.1017</code></a></p>
 <ul>
 <li><strong>Additions</strong>
@@ -762,7 +792,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-10-10" id="a2017-10-10"><h2>2017-10-10</h2></a>
+<h2><a class="header" href="#2017-10-10" id="2017-10-10">2017-10-10</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1010"><code>rva_17.1010</code></a></p>
 <ul>
 <li>Added Re-Volt file structure specifications to the documentation</li>
@@ -781,7 +811,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-10-09" id="a2017-10-09"><h2>2017-10-09</h2></a>
+<h2><a class="header" href="#2017-10-09" id="2017-10-09">2017-10-09</a></h2>
 <p>Version <a href="https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1009"><code>rva_17.1009</code></a></p>
 <ul>
 <li><strong>Export .w</strong>
@@ -806,7 +836,7 @@ If enabled, the object will be exported as an interior sphere.</p>
 </ul>
 </li>
 </ul>
-<a class="header" href="print.html#a2017-10-07" id="a2017-10-07"><h2>2017-10-07</h2></a>
+<h2><a class="header" href="#2017-10-07" id="2017-10-07">2017-10-07</a></h2>
 <p>Version <code>rva_17.1007</code></p>
 <ul>
 <li><strong>Tool panels</strong>
@@ -848,60 +878,33 @@ If enabled, the object will be exported as an interior sphere.</p>
 
         </div>
 
-
-        <!-- Local fallback for Font Awesome -->
-        <script>
-            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
-                var link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.type = 'text/css';
-                link.href = '_FontAwesome/css/font-awesome.css';
-                document.head.insertBefore(link, document.head.firstChild)
-            }
-        </script>
-
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3001");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload(true); // force reload from server (not from cache)
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         
 
         
 
-        
-        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
-        
         
         <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
         
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                window.print();
-            })
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
         </script>
         
-
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
-
-        <!-- Custom JS script -->
         
 
     </body>
