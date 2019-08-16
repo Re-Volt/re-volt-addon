@@ -138,3 +138,10 @@ class RVObjectProperties(bpy.types.PropertyGroup):
         default = False,
         description = "Object is a mirror plane (.rim)"
     )
+    
+    # Zones
+    is_track_zone = BoolProperty(
+        name = "Is Track Zone",
+        default = False,
+        description = "This object is a track zone box"
+    )

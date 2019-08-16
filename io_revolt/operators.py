@@ -12,6 +12,7 @@ providing the functions behind the UI buttons.
 import bpy
 import time
 import subprocess
+import shutil
 
 from . import tools
 from .common import *
@@ -103,7 +104,11 @@ class ImportRV(bpy.types.Operator):
         elif frmt == FORMAT_RIM:
             from . import rim_in
             rim_in.import_file(self.filepath, scene)
-
+        
+        elif frmt == FORMAT_TAZ:
+            from . import taz_in
+            taz_in.import_file(self.filepath, scene)
+        
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 
@@ -280,6 +285,10 @@ def exec_export(filepath, context):
             print("Exporting texture animation sheet...")
             ta_csv_out.export_file(filepath, scene)
 
+        elif frmt == FORMAT_TAZ:
+            from . import taz_out
+            taz_out.export_file(filepath, scene)
+        
         else:
             msg_box("Format not yet supported: {}".format(FORMATS[frmt]))
 
@@ -523,4 +532,65 @@ class LaunchRV(bpy.types.Operator):
         else:
             return{"FINISHED"}
         subprocess.Popen(["{}/{}".format(rvgl_dir, executable), "-window", "-nointro", "-sload", "-dev"])
+        return{"FINISHED"}
+
+
+class TexturesSave(bpy.types.Operator):
+    bl_idname = "helpers.textures_save"
+    bl_label = "Copy project textures"
+    bl_description = (
+        "Saves all used track texture files to desired project directory and takes a care of correct files names"
+    )
+    bl_options = {'REGISTER'}
+    
+    directory = bpy.props.StringProperty(
+        name="Outdir Path",
+        description="Where to save all the textures",
+        subtype='DIR_PATH' 
+    )
+
+    def execute(self, context):
+        dirname = os.path.basename(os.path.dirname(self.directory))
+        # try to copy each image to selected project directory
+        for image in bpy.data.images:
+            if ".bmp" in image.name:
+                base, ext = image.name.split(".", 1)
+            try:
+                if image.source == 'FILE':
+                    dst = os.path.join(self.directory, int_to_texture(int(base), dirname))
+                    shutil.copyfile(image.filepath, dst)                 
+            except:
+                print("Failed to copy image %s" % image.name)
+                
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+class TexturesRename(bpy.types.Operator):
+    bl_idname = "helpers.textures_rename"
+    bl_label = "Rename track textures"
+    bl_description = (
+        "Assigns a proper name to each texture image used and makes their id numbers consistent"
+    )
+
+    def execute(self, context):
+        number = 0
+        for key, image in bpy.data.images.items():
+            if image.source == 'FILE':
+                image.name = ("%d.bmp" % number)
+                number += 1
+        return{"FINISHED"}
+
+class CarParametersExport(bpy.types.Operator):
+    bl_idname = "helpers.car_parameters_export"
+    bl_label = "Car parameters to clipboard"
+    bl_description = (
+        "Copies most important parameters into clipboard"
+    )
+
+    def execute(self, context):
+        from . import parameters_out
+        parameters_out.export_file()
         return{"FINISHED"}

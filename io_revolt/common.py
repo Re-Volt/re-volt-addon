@@ -27,34 +27,35 @@ PARAMETERS = {}  # Glocal dict to hold parameters
 
 
 # If True, more debug messages will be printed
-DEBUG = True
+DEBUG =             True
 
-SCALE = 0.01
+SCALE =             0.01
+TEX_PAGES_MAX =     64
 
-FACE_QUAD = 1               # 0x1
-FACE_DOUBLE = 2             # 0x2
-FACE_TRANSLUCENT = 4        # 0x4
-FACE_MIRROR = 128           # 0x80
-FACE_TRANSL_TYPE = 256      # 0x100
-FACE_TEXANIM = 512          # 0x200
-FACE_NOENV = 1024           # 0x400
-FACE_ENV = 2048             # 0x800
-FACE_CLOTH = 4096           # 0x1000
-FACE_SKIP = 8192            # 0x2000
+FACE_QUAD =         1       # 0x1
+FACE_DOUBLE =       2       # 0x2
+FACE_TRANSLUCENT =  4       # 0x4
+FACE_MIRROR =       128     # 0x80
+FACE_TRANSL_TYPE =  256     # 0x100
+FACE_TEXANIM =      512     # 0x200
+FACE_NOENV =        1024    # 0x400
+FACE_ENV =          2048    # 0x800
+FACE_CLOTH =        4096    # 0x1000
+FACE_SKIP =         8192    # 0x2000
 
-NCP_QUAD = 1
-NCP_DOUBLE = 2
-NCP_OBJECT_ONLY = 4
-NCP_CAMERA_ONLY = 8
-NCP_NON_PLANAR = 16
-NCP_NO_SKID = 32
-NCP_OIL = 64
-NCP_NOCOLL = 128
+NCP_QUAD =          1
+NCP_DOUBLE =        2
+NCP_OBJECT_ONLY =   4
+NCP_CAMERA_ONLY =   8
+NCP_NON_PLANAR =    16
+NCP_NO_SKID =       32
+NCP_OIL =           64
+NCP_NOCOLL =        128
 
-FIN_ENV = 1
-FIN_HIDE = 2
-FIN_NO_MIRROR = 4
-FIN_NO_LIGHTS = 8
+FIN_ENV =           1
+FIN_HIDE =          2
+FIN_NO_MIRROR =     4
+FIN_NO_LIGHTS =     8
 FIN_SET_MODEL_RGB = 16
 FIN_NO_OBJECT_COLLISION = 32
 FIN_NO_CAMERA_COLLISION = 64
@@ -337,13 +338,19 @@ def texture_to_int(string):
     if "car.bmp" in string:
         return 0
 
-    # Checks if the last letter of the file name matches naming convention
-    elif ".bmp" in string:
+    if ".bmp" in string:
         base, ext = string.split(".", 1)
-        num = ord(base[-1]) - 97
+        try:
+            num = int(base)
+        except:
+            # Checks if the last letter of the file name matches old naming convention
+            if base[-1].isalpha():
+                num = ord(base[-1]) - 97
+            else:
+                return -1
 
         # Returns texture A if it's not a fitting track texture
-        if num > 9 or num < 0:
+        if num >= TEX_PAGES_MAX or num < 0:
             return 0
 
         return num
@@ -351,6 +358,14 @@ def texture_to_int(string):
     # .bmp is not in the texture name, assumes no texture
     else:
         return -1
+
+
+def int_to_texture(tex_num, name=""):
+    suffix = chr(tex_num % 26 + 97)
+    suffix2 = (tex_num // 26 )
+    if suffix2 > 0:
+        suffix += chr(suffix2 + 96) 
+    return name + suffix + ".bmp"
 
 def create_material(name, diffuse, alpha):
     """ Creates a material, mostly used for debugging objects """
@@ -699,11 +714,11 @@ def get_texture_path(filepath, tex_num, scene):
         return os.path.join(path, tpage)
 
     # The file is part of a track
-    elif is_track_folder(path):
-        tpage = folder.lower() + chr(97 + tex_num) + ".bmp"
+    elif is_track_folder(path): 
+        tpage = int_to_texture(tex_num, folder.lower())
         return os.path.join(path, tpage)
     else:
-        return os.path.join(path, "dummy{}.bmp".format(chr(97 + tex_num)))
+        return os.path.join(path, int_to_texture(tex_num, "dummy"))
 
 
 def is_track_folder(path):
@@ -743,5 +758,7 @@ def get_format(fstr):
         return FORMAT_RIM
     elif ext == "w":
         return FORMAT_W
+    elif ext == "taz":
+        return FORMAT_TAZ
     else:
         return FORMAT_UNK

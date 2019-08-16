@@ -10,6 +10,7 @@ The following files are supported by the add-on:
 - [Hulls (`.hul`)](#hull)
 - [Texture Animation Spreadsheets (`.ta.csv`)](#texture-animation-spreadsheets)
 - [Car Parameters (`parameters.txt`)](#car-parameters)
+- [Track Zones (`.taz`)](#zones)
 
 ## World
 
@@ -39,7 +40,24 @@ File extension: `.prm`
 Only the uv map called `UVMap` will be exported.
 
 **Textures**:  
-The texture file name is used to determine the texture number for exported faces. Make sure it's named correctly (e.g. `tracka.bmp`, `car.bmp`).
+The texture file name is used by the game engine to determine the texture number for exported faces. Make sure it's named correctly (e.g. `tracka.bmp`, `car.bmp`). Currently one car texture and up to 64 track textures are supported, all present files must be named in order using scheme presented bellow. Example: `tracka.bmp ... trackk.bmp trackl.bmp` is correct set but `tracka.bmp ... trackk.bmp trackm.bmp` is incorrect - the last file and any further will be not loaded.
+
+- `0       tracka `
+- `1       trackb `
+- `2       trackc `
+- `3       trackd `
+- `...            `
+- `25      trackz `
+- `26      trackaa`
+- `27      trackba`
+- `...            `
+- `51      trackza`
+- `52      trackab`
+- `53      trackbb`
+- `...            `
+- `63      tracklb`
+
+**Note**: For convenience add-on changes the imported image names (not file names) in blender's image editor to `<number>.bmp`, please use same convention when adding a new images. There are built-in tools to take care of all the names, see helpers section.
 
 If the imported mesh is a **car mesh**, the texture path will be taken from `parameters.txt`.  
 If it's a **level file**, the texture name will be generated from the polygon's texture number and taken from the level folder.  
@@ -114,4 +132,10 @@ TODO
 
 The add-on currently imports the car's body and wheels and their positions.  
 If a wheel file cannot be found, it will be represented with an empty object.
+
+---
+
+## Zones
+
+TODO
 

@@ -5,9 +5,10 @@
 <span style="float: right; margin: 1em 2em;">![](img/rva_small.png)</span>
 
 This is the documentation for Marv's Add-On for Re-Volt files.  
-It is intended to be used with [**Blender 2.79b**](https://www.blender.org/download/) or newer.
+It is intended to be used with [**Blender 2.79b**](https://www.blender.org/download/) or newer.  
+_**Note**: Blender 2.8x series is not supported._
 
-[**Download** (rva_18.0801)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0801)
+[**Download** (rva_19.0816)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.0816)
 
 
 [Tutorial](http://learn.re-volt.io)  
@@ -26,18 +27,18 @@ Please report Bugs and suggest features on [GitHub](https://github.com/Yethiel/r
 - World (.w)
 - Mesh (.prm)
 - Collision (.ncp)
-- Hull (.hul)
 - Instances (.fin)
 - Mirror Planes (.rim)
-- Texture animations (.ta.csv)
+- Hulls (.hul)
+- Texture Animations (.ta.csv)
+- Car Parameters (parameters.txt; only partial import: body, wheels)
+- Track Zones (.taz)
 
 **Missing Formats (help appreciated!)**
 
-- **Objects** (.fob)
-- **Car Parameters** (parameters.txt; parser is complete, only partial import: car body, wheels)
+- Objects (.fob)
 - AI Nodes (.fan)
 - Position Nodes (.pos)
-- Track Zones (.taz)
 - Visiboxes (.vis)
 - Lights (.lit)
 - Force Fields (.fld)

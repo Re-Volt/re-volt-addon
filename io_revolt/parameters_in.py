@@ -129,3 +129,13 @@ def import_car(scene, params, filepath):
         wheel.empty_draw_size = 0.1
     wheel.location = wheel3loc
     wheel.parent = body_obj
+    
+    # Aerial representation
+    aerial_loc = to_blender_coord(params["aerial"]["offset"])
+    aerial = bpy.data.objects.new( "aerial", None )
+    scene.objects.link(aerial)
+    aerial.location = aerial_loc
+    aerial.empty_draw_size = 0.1
+    aerial.empty_draw_type = 'PLAIN_AXES'
+    aerial.parent = body_obj
+    

@@ -1,6 +1,7 @@
 import bpy
 from ..common import *
 from .hull import *
+from .zone import *
 
 def menu_func_add(self, context):
     self.layout.separator()
@@ -13,3 +14,4 @@ class INFO_MT_revolt_add(bpy.types.Menu):
     
     def draw(self, context):
         self.layout.operator("object.add_hull_sphere", icon="MATSPHERE")
+        self.layout.operator("object.add_track_zone", icon="MATCUBE")

@@ -150,7 +150,7 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, scene, envlist=None):
                 if image.filepath == texture_path:
                     texture = image
             if not texture:
-                texture = img_in.import_file(texture_path)
+                texture = img_in.import_file(texture_path, poly.texture)
             face[tex_layer].image = texture
 
         # Assigns the face properties (bit field, one int per face)
@@ -174,10 +174,14 @@ def add_rvmesh_to_bmesh(prm, bm, filepath, scene, envlist=None):
                 face.loops[l][env_layer][2] = env_col[2]
 
             face.loops[l][uv_layer].uv = (uvs[l].u, 1 - uvs[l].v)
-            # face.loops[l][vc_layer] = (color[0], color[1], color[2], 1.0)
-            face.loops[l][vc_layer] = (color[0], color[1], color[2])
-            # face.loops[l][va_layer] = (alpha, alpha, alpha, 1.0)
-            face.loops[l][va_layer] = (alpha, alpha, alpha)
+
+            face.loops[l][vc_layer][0] = color[0]
+            face.loops[l][vc_layer][1] = color[1]
+            face.loops[l][vc_layer][2] = color[2]
+
+            face.loops[l][va_layer][0] = alpha
+            face.loops[l][va_layer][1] = alpha
+            face.loops[l][va_layer][2] = alpha
 
         # Enables smooth shading for that face
         face.smooth = True

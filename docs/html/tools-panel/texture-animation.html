@@ -1,52 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible">
+<html lang="en" class="sidebar-visible no-js">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Texture Animation - RV Add-On</title>
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Documentation for the Blender add-on.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <base href="../">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
-        <link rel="stylesheet" href="book.css">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
 
-        <link rel="shortcut icon" href="favicon.png">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
-
-        <!-- Custom theme -->
+        <!-- Custom theme stylesheets -->
         
 
         
-
-        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
-        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script>
-            if (typeof Clipboard == 'undefined') {
-                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
-            }
-        </script>
-
-        <noscript>
-            <style type="text/css">
-                .javascript-only {
-                    display: none;
-                }
-            </style>
-        </noscript>
-
     </head>
     <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script type="text/javascript">
             try {
@@ -66,10 +58,10 @@
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
             var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
-            if (theme === null || theme === undefined) { theme = 'light'; }
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
             document.body.className = theme;
-            document.querySelector('html').className = theme;
+            document.querySelector('html').className = theme + ' js';
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
@@ -85,7 +77,10 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="files.html"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="tools-panel/texture-animation.html" class="active"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="changelog.html">Changelog</a></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="affix"><a href="../introduction.html">Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li><a href="../files.html"><strong aria-hidden="true">2.</strong> File Specifications</a></li><li><a href="../tools-panel.html"><strong aria-hidden="true">3.</strong> Tools Panel</a></li><li><ol class="section"><li><a href="../tools-panel/io.html"><strong aria-hidden="true">3.1.</strong> Import / Export</a></li><li><a href="../tools-panel/settings.html"><strong aria-hidden="true">3.2.</strong> Add-On Settings</a></li><li><a href="../tools-panel/instances.html"><strong aria-hidden="true">3.3.</strong> Instances</a></li><li><a href="../tools-panel/hulls.html"><strong aria-hidden="true">3.4.</strong> Hulls</a></li><li><a href="../tools-panel/light-and-shadow.html"><strong aria-hidden="true">3.5.</strong> Light and Shadow</a></li><li><a href="../tools-panel/helpers.html"><strong aria-hidden="true">3.6.</strong> Helpers</a></li><li><a href="../tools-panel/face-properties.html"><strong aria-hidden="true">3.7.</strong> Face Properties</a></li><li><a href="../tools-panel/vertex-colors.html"><strong aria-hidden="true">3.8.</strong> Vertex Colors</a></li><li><a href="../tools-panel/texture-animation.html" class="active"><strong aria-hidden="true">3.9.</strong> Texture Animation</a></li></ol></li><li><a href="../properties.html"><strong aria-hidden="true">4.</strong> Properties Editor</a></li><li><ol class="section"><li><a href="../properties/object.html"><strong aria-hidden="true">4.1.</strong> Object</a></li><li><ol class="section"><li><a href="../properties/object/ncp.html"><strong aria-hidden="true">4.1.1.</strong> NCP Properties</a></li><li><a href="../properties/object/instance.html"><strong aria-hidden="true">4.1.2.</strong> Instance Properties</a></li><li><a href="../properties/object/mirror.html"><strong aria-hidden="true">4.1.3.</strong> Mirror Properties</a></li><li><a href="../properties/object/hull.html"><strong aria-hidden="true">4.1.4.</strong> Hull Properties</a></li></ol></li><li><a href="../properties/scene.html"><strong aria-hidden="true">4.2.</strong> Scene</a></li></ol></li><li><a href="../changelog.html">Changelog</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -94,7 +89,7 @@
                 
                 <div id="menu-bar" class="menu-bar">
                     <div id="menu-bar-sticky-container">
-                        <div class="left-buttons javascript-only">
+                        <div class="left-buttons">
                             <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                                 <i class="fa fa-bars"></i>
                             </button>
@@ -102,7 +97,7 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -115,24 +110,27 @@
                             
                         </div>
 
-                        <h1 class="menu-title">RV Add-On</h1> 
+                        <h1 class="menu-title">RV Add-On</h1>
 
                         <div class="right-buttons">
-                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
                                 <i id="print-button" class="fa fa-print"></i>
                             </a>
+                            
                         </div>
                     </div>
                 </div>
 
                 
-                <div id="searchbar-outer" class="searchbar-outer">
-                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                </div>
-                <div id="searchresults-outer" class="searchresults-outer">
-                    <div class="searchresults-header" id="searchresults-header"></div>
-                    <ul id="searchresults">
-                    </ul>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
                 </div>
                 
 
@@ -147,7 +145,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="tools-panel/texture-animation.html#texture-animation" id="texture-animation"><h1>Texture Animation</h1></a>
+                        <h1><a class="header" href="#texture-animation" id="texture-animation">Texture Animation</a></h1>
 <p><img src="./tools-panel/img/texanim.png" alt="Texture Animation Panel" /></p>
 <p>An edit panel for texture animations. The animations themselves are saved in the
 scene, not the selected object. It is only accessible in edit mode to provide
@@ -157,7 +155,7 @@ The total amount of texture animations you would like to use.<br />
 For example, set this to <code>3</code> to use slots <code>0</code>, <code>1</code> and <code>2</code>.</p>
 <p>The maximum amount is 10 since a polygon's animation is determined by the
 texture number.</p>
-<a class="header" href="tools-panel/texture-animation.html#animation-slots" id="animation-slots"><h2>Animation Slots</h2></a>
+<h2><a class="header" href="#animation-slots" id="animation-slots">Animation Slots</a></h2>
 <p><strong>Slot</strong>:<br />
 The animation slot to display in the panel. The actual animation is set by the
 texture number/page.</p>
@@ -173,9 +171,9 @@ Click the Preview button to preview the frame's UV on the currently selected fac
 The texture page number this animation frame uses.</p>
 <p><strong>Duration</strong>:<br />
 The duration of the frame or the delay until the next frame shows up.</p>
-<a class="header" href="tools-panel/texture-animation.html#animate" id="animate"><h2>Animate</h2></a>
+<h2><a class="header" href="#animate" id="animate">Animate</a></h2>
 <p>Functions for automatically generating animations.</p>
-<a class="header" href="tools-panel/texture-animation.html#transform-animation" id="transform-animation"><h3>Transform Animation</h3></a>
+<h3><a class="header" href="#transform-animation" id="transform-animation">Transform Animation</a></h3>
 <p><img src="./tools-panel/img/texanim-transform.png" alt="Texture Animation Panel: Transform" /></p>
 <p>Interpolates the UV coordinates between two given frames. (Animates from point A to B.)</p>
 <p><strong>Start Frame</strong>:<br />
@@ -186,7 +184,7 @@ The frame the animation ends on. This frame will not be changed. To achieve a pe
 The duration of all resulting frames.</p>
 <p><strong>Texture</strong>:<br />
 The texture page applied to all resulting frames.</p>
-<a class="header" href="tools-panel/texture-animation.html#grid-animation" id="grid-animation"><h3>Grid Animation</h3></a>
+<h3><a class="header" href="#grid-animation" id="grid-animation">Grid Animation</a></h3>
 <p><img src="./tools-panel/img/texanim-grid.png" alt="Texture Animation Panel: Grid" /></p>
 <p>Lays out animation frames on a grid, much like the mars animation in Museum 2.</p>
 <p><strong>Start Frame</strong>:<br />
@@ -199,7 +197,7 @@ The height of the grid.</p>
 The duration of all resulting frames.</p>
 <p><strong>Texture</strong>:<br />
 The texture page applied to all resulting frames.</p>
-<a class="header" href="tools-panel/texture-animation.html#uv" id="uv"><h2>UV</h2></a>
+<h2><a class="header" href="#uv" id="uv">UV</a></h2>
 <p><strong>UV to Frame</strong>:<br />
 Takes the UV coordinates of the currently selected face and applies them to the texture animation frame.</p>
 <p><strong>Coordinates</strong>:<br />
@@ -211,13 +209,13 @@ be ignored.</p>
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="tools-panel/vertex-colors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../tools-panel/vertex-colors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="properties.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../properties.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -229,13 +227,13 @@ be ignored.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="tools-panel/vertex-colors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="../tools-panel/vertex-colors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="properties.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="../properties.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -243,33 +241,6 @@ be ignored.</p>
 
         </div>
 
-
-        <!-- Local fallback for Font Awesome -->
-        <script>
-            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
-                var link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.type = 'text/css';
-                link.href = '_FontAwesome/css/font-awesome.css';
-                document.head.insertBefore(link, document.head.firstChild)
-            }
-        </script>
-
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3001");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload(true); // force reload from server (not from cache)
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         
@@ -277,20 +248,18 @@ be ignored.</p>
         
 
         
-        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
-        
-        
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
         
 
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
-
-        <!-- Custom JS script -->
         
 
     </body>

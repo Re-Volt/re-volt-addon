@@ -52,7 +52,8 @@ def export_file(filepath, scene):
                 not obj.revolt.is_bbox and
                 #not obj.revolt.is_instance and
                 not obj.revolt.ignore_ncp and
-                not obj.revolt.is_mirror_plane
+                not obj.revolt.is_mirror_plane and
+                not obj.revolt.is_track_zone
             )
             if conditions:
                 objs.append(obj)
@@ -128,7 +129,8 @@ def add_bm_to_ncp(bm, ncp):
             queue_error("exporting to .ncp", "Invalid material")
             if DEBUG:
                 return
-        poly.type = face[type_layer]
+
+        poly.type = face[type_layer] & NCP_PROP_MASK
 
         verts = face.verts
 
