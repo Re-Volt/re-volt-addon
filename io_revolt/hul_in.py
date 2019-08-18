@@ -42,13 +42,24 @@ def import_hull(filepath, scene):
     with open(filepath, "rb") as fd:
         hull = Hull(fd)
 
+    script_file = os.path.realpath(__file__)
+    script_dir = os.path.dirname(script_file)
+
+    qhull_in = os.path.join(script_dir, "hull", "qhull_in.txt")
+    qhull_out = os.path.join(script_dir, "hull", "qhull_out.txt")
+
+    if os.name == "nt":
+        qhull_exe = os.path.join(script_dir, "hull", "qhull.exe")
+    else:
+        qhull_exe = "qhull"
+
     filename = os.path.basename(filepath)
 
     for chull in hull.chulls:
 
         bm = bmesh.new()
         me = bpy.data.meshes.new(filename)
-        with open("qhull_in.txt", "w") as file:
+        with open(qhull_in, "w") as file:
             #TODO: Document this. I'm relying on what jig did here
             file.write("3 1\n")
             file.write("{} {} {}\n".format(*chull.bbox_offset))
@@ -57,12 +68,9 @@ def import_hull(filepath, scene):
             for face in chull.faces:
                 file.write("{} {} {} {}\n".format(*face.normal, face.distance))
 
-        if os.name == "nt":
-            subprocess.Popen(["2.79\\scripts\\addons\\io_revolt\\hull\\qhull.exe", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
-        else:
-            subprocess.Popen(["qhull", "H", "Fp", "FN", "E0.0001", "TI", "qhull_in.txt", "TO", "qhull_out.txt"]).wait()
+        subprocess.Popen([qhull_exe, "H", "Fp", "FN", "E0.0001", "TI", qhull_in, "TO", qhull_out]).wait()
 
-        with open("qhull_out.txt", "r") as file:
+        with open(qhull_out, "r") as file:
             file.readline() # ignores first line
             num_verts = int(file.readline())
 
@@ -78,8 +86,8 @@ def import_hull(filepath, scene):
                     bm.faces.new([bm.verts[i] for i in face])
                     continue
 
-        os.remove("qhull_in.txt")
-        os.remove("qhull_out.txt")
+        os.remove(qhull_in)
+        os.remove(qhull_out)
 
         me.materials.append(create_material("RVHull", COL_HULL, 0.3))
 
