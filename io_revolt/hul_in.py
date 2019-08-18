@@ -53,7 +53,7 @@ def import_hull(filepath, scene):
             file.write("3 1\n")
             file.write("{} {} {}\n".format(*chull.bbox_offset))
             file.write("4\n")
-            file.write("{}".format(len(chull.faces)))
+            file.write("{}\n".format(len(chull.faces)))
             for face in chull.faces:
                 file.write("{} {} {} {}\n".format(*face.normal, face.distance))
 
