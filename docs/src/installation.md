@@ -1,10 +1,12 @@
 # Installation
 
-To install the add-on, locate the `addons` folder within your Blender folder.
+To install the add-on, locate the `addons` folder within your Blender configuration folder.
 
-In most cases, it is located at `C:\Program Files\Blender Foundation\Blender\2.79\scripts\addons`.
+In most cases, it is located at `C:\Users\<your-user>\AppData\Roaming\Blender Foundation\Blender\2.79\scripts\addons\`.
 
 If you're on GNU/Linux, your add-on folder should be located at `~/.config/blender/2.79/scripts/addons/`, where `2.79` is the **Blender version you are using**.  
+
+For more information, see [Configuring Directories ― Blender Manual](https://docs.blender.org/manual/en/2.79/getting_started/installing/configuration/directories.html).
 
 Extract the `io_revolt` folder into the addons folder.
 
