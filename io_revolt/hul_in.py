@@ -60,7 +60,7 @@ def import_hull(filepath, scene):
         bm = bmesh.new()
         me = bpy.data.meshes.new(filename)
         with open(qhull_in, "w") as file:
-            #TODO: Document this. I'm relying on what jig did here
+            # TODO: Document this. I'm relying on what jig did here
             file.write("3 1\n")
             file.write("{} {} {}\n".format(*chull.bbox_offset))
             file.write("4\n")
@@ -71,7 +71,9 @@ def import_hull(filepath, scene):
         subprocess.Popen([qhull_exe, "H", "Fp", "FN", "E0.0001", "TI", qhull_in, "TO", qhull_out]).wait()
 
         with open(qhull_out, "r") as file:
-            file.readline() # ignores first line
+            if not file.readline(): # ignores first line
+                continue
+
             num_verts = int(file.readline())
 
             for i in range(num_verts):
