@@ -57,6 +57,25 @@ def import_hull(filepath, scene):
 
     for chull in hull.chulls:
 
+        # If the bbox is not centered, center it and update the offset.
+        # TODO: Add center() function and bbox + vector operator for BoundingBox.
+        offset = rvstruct.Vector(data=(
+                (chull.bbox.xlo + chull.bbox.xhi) / 2,
+                (chull.bbox.ylo + chull.bbox.yhi) / 2,
+                (chull.bbox.zlo + chull.bbox.zhi) / 2
+            )
+        )
+
+        dprint("Fixing convex hull offset: {} {} {}".format(*offset))
+
+        chull.bbox_offset += offset
+        chull.bbox.xlo -= offset[0]
+        chull.bbox.xhi -= offset[0]
+        chull.bbox.ylo -= offset[1]
+        chull.bbox.yhi -= offset[1]
+        chull.bbox.zlo -= offset[2]
+        chull.bbox.zhi -= offset[2]
+
         bm = bmesh.new()
         me = bpy.data.meshes.new(filename)
         with open(qhull_in, "w") as file:
