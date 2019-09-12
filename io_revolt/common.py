@@ -30,7 +30,9 @@ PARAMETERS = {}  # Glocal dict to hold parameters
 DEBUG =             True
 
 SCALE =             0.01
+
 TEX_PAGES_MAX =     64
+TEX_ANIM_MAX =      1024
 
 FACE_QUAD =         1       # 0x1
 FACE_DOUBLE =       2       # 0x2

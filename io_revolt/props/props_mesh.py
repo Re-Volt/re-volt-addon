@@ -41,7 +41,7 @@ class RVMeshProperties(bpy.types.PropertyGroup):
         set = set_face_texture,
         default = 0,
         min = -1,
-        max = 9,
+        max = TEX_PAGES_MAX-1,
         description = "Texture page number:\n-1 is none,\n"
                       "0 is texture page A\n"
                       "1 is texture page B\n"

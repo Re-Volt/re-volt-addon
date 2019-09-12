@@ -91,7 +91,7 @@ class TexAnimTransform(bpy.types.Operator):
         name = "Texture",
         default = 0,
         min = -1,
-        max = 9,
+        max = TEX_PAGES_MAX-1,
         description = "Texture for every frame"
     )
 
@@ -214,7 +214,7 @@ class TexAnimGrid(bpy.types.Operator):
         name = "Texture",
         default = 0,
         min = -1,
-        max = 9,
+        max = TEX_PAGES_MAX-1,
         description = "Texture for every frame"
     )
 

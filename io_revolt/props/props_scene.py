@@ -291,7 +291,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
     ta_max_slots = IntProperty(
         name = "Slots",
         min = 0,
-        max = 10,
+        max = TEX_ANIM_MAX,
         default = 0,
         update = update_ta_max_slots,
         description = "Total number of texture animation slots. "
@@ -301,7 +301,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Animation",
         default = 0,
         min = 0,
-        max = 9,
+        max = TEX_ANIM_MAX-1,
         update = update_ta_current_slot,
         description = "Texture animation slot"
     )
@@ -324,7 +324,7 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "Texture",
         default = 0,
         min = -1,
-        max = 9,
+        max = TEX_PAGES_MAX-1,
         update = update_ta_current_frame_tex,
         description = "Texture of the current frame"
     )
@@ -339,8 +339,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "UV 0",
         size = 2,
         default = (0, 0),
-        min = 0.0,
-        max = 1.0,
+        #min = 0.0,
+        #max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 0),
         description = "UV coordinate of the first vertex"
     )
@@ -348,8 +348,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "UV 1",
         size = 2,
         default = (0, 0),
-        min = 0.0,
-        max = 1.0,
+        #min = 0.0,
+        #max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 1),
         description = "UV coordinate of the second vertex"
     )
@@ -357,8 +357,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "UV 2",
         size = 2,
         default = (0, 0),
-        min = 0.0,
-        max = 1.0,
+        #min = 0.0,
+        #max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 2),
         description = "UV coordinate of the third vertex"
     )
@@ -366,8 +366,8 @@ class RVSceneProperties(bpy.types.PropertyGroup):
         name = "UV 3",
         size = 2,
         default = (0, 0),
-        min = 0.0,
-        max = 1.0,
+        #min = 0.0,
+        #max = 1.0,
         update = lambda self, context: update_ta_current_frame_uv(context, 3),
         description = "UV coordinate of the fourth vertex"
     )
