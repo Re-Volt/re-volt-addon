@@ -170,8 +170,8 @@ class PRM:
         return "PRM"
 
     def read(self, file):
-        self.polygon_count = struct.unpack("<h", file.read(2))[0]
-        self.vertex_count = struct.unpack("<h", file.read(2))[0]
+        self.polygon_count = struct.unpack("<H", file.read(2))[0]
+        self.vertex_count = struct.unpack("<H", file.read(2))[0]
 
         for polygon in range(self.polygon_count):
             self.polygons.append(Polygon(file))
@@ -181,8 +181,8 @@ class PRM:
 
     def write(self, file):
         # Writes amount of polygons/vertices and the structures themselves
-        file.write(struct.pack("<h", self.polygon_count))
-        file.write(struct.pack("<h", self.vertex_count))
+        file.write(struct.pack("<H", self.polygon_count))
+        file.write(struct.pack("<H", self.vertex_count))
 
         for polygon in self.polygons:
             polygon.write(file)
@@ -237,8 +237,8 @@ class Mesh:
         self.bbox = BoundingBox(file)
 
         # Reads amount of polygons/vertices and the structures themselves
-        self.polygon_count = struct.unpack("<h", file.read(2))[0]
-        self.vertex_count = struct.unpack("<h", file.read(2))[0]
+        self.polygon_count = struct.unpack("<H", file.read(2))[0]
+        self.vertex_count = struct.unpack("<H", file.read(2))[0]
 
         # Also give the polygon a reference to w so it can report if env is on
         for polygon in range(self.polygon_count):
@@ -253,8 +253,8 @@ class Mesh:
         file.write(struct.pack("<f", self.bound_ball_radius))
         self.bbox.write(file)
 
-        file.write(struct.pack("<h", self.polygon_count))
-        file.write(struct.pack("<h", self.vertex_count))
+        file.write(struct.pack("<H", self.polygon_count))
+        file.write(struct.pack("<H", self.vertex_count))
 
         # Also give the polygon a reference to w so it can write the env bit
         for polygon in self.polygons:
@@ -982,7 +982,7 @@ class NCP:
         file.seek(file_start, os.SEEK_SET)
 
         # Reads ncp information
-        self.polyhedron_count = struct.unpack("<h", file.read(2))[0]
+        self.polyhedron_count = struct.unpack("<H", file.read(2))[0]
         self.polyhedra = [Polyhedron(file) for x in range(self.polyhedron_count)]
 
         # If file has collision grid info
@@ -993,7 +993,7 @@ class NCP:
 
     def write(self, file):
         # Writes the polyhedron count
-        file.write(struct.pack("<h", self.polyhedron_count))
+        file.write(struct.pack("<H", self.polyhedron_count))
 
         # Writes all polyhedra
         for p in range(self.polyhedron_count):

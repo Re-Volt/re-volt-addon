@@ -88,6 +88,12 @@ def export_file(filepath, scene):
 
     # Sets length of polyhedron list
     ncp.polyhedron_count = len(ncp.polyhedra)
+    if ncp.polyhedron_count > 65535:
+        common.queue_error(
+            "exporting ncp",
+            "Too many collision polygons, try cutting it down."
+        )
+        return None
 
     # Creates a collision grid
     if props.ncp_export_collgrid:
