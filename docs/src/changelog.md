@@ -1,5 +1,25 @@
 # Changelog
 
+## 2019-12-30
+
+Version [`rva_19.1230`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.1230)
+
+**Topics**: Hull, Textures, Mesh
+
+- **Modifications**
+    - Support up to 65535 polys per object (World Mesh, PRM and NCP).
+    - **TexAnim**:
+        - Support up to 1024 slots.
+        - 64 textures selectable.
+        - UV coords outside (0,1).
+- **Fixes**
+    - **Hulls**:
+        - Support for non-centered hulls exported by `prm2hul`.
+        - `qhull` files are created in addon path to avoid permission issues.
+        - Fixed a missing newline in `qhull` input file.
+        - Properly handle empty `qhull` output.
+    - Fixed links to docs and GitHub issues.
+
 ## 2019-08-16
 
 Version [`rva_19.0816`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.0816)
@@ -14,7 +34,7 @@ Version [`rva_19.0816`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
 - **Modifications**
     - Changed convention for texture images names in blender, support for 64 (possible up to 702) track textures with backward compatibility.
 - **Fixes**
-    - Fix NCP face triangulation. Ensure invalid NCP flags are stripped on export.
+    - Fixed NCP face triangulation. Ensure invalid NCP flags are stripped on export.
     - Better color layer compatibility for Blender 2.79 (sub 2) and above.
 
 ## 2018-08-01
@@ -83,6 +103,7 @@ Version [`rva_18.0430`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     - *Prefer Solid Textured Mode* is now disabled by default
 
 ## 2018-02-25
+
 Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0225)
 
 - **Additions**
@@ -94,6 +115,7 @@ Version [`rva_18.0225`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
     - New system for handling import and export errors
 
 ## 2018-02-19
+
 Version [`rva_18.0219`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_18.0219)
 
 - **Additions**
@@ -191,7 +213,7 @@ Version [`rva_17.1009`](https://github.com/Yethiel/re-volt-addon/releases/tag/rv
 
 ## 2017-10-07
 
-Version `rva_17.1007`
+Version [`rva_17.1007`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_17.1007)
 
 - **Tool panels**
     - Fixed a bug where the tool panels became unusable after CTRL Z.

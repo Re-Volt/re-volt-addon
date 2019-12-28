@@ -117,8 +117,8 @@ bl_info = {
 "blender": (2, 79, 0),
 "location": "File > Import-Export",
 "description": "Import and export Re-Volt file formats.",
-"wiki_url": "https://yethiel.github.io/re-volt-addon/",
-"tracker_url": "https://github.com/Yethiel/re-volt-addon/issues",
+"wiki_url": "https://re-volt.github.io/re-volt-addon/",
+"tracker_url": "https://github.com/Re-Volt/re-volt-addon/issues",
 "support": 'COMMUNITY',
 "category": "Import-Export"
 }

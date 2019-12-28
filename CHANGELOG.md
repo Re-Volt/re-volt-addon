@@ -1,4 +1,24 @@
-# Changelog 
+# Changelog
+
+## 2019-12-30
+
+Version [`rva_19.1230`](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.1230)
+
+**Topics**: Hull, Textures, Mesh
+
+- **Modifications**
+    - Support up to 65535 polys per object (World Mesh, PRM and NCP).
+    - **TexAnim**:
+        - Support up to 1024 slots.
+        - 64 textures selectable.
+        - UV coords outside (0,1).
+- **Fixes**
+    - **Hulls**:
+        - Support for non-centered hulls exported by `prm2hul`.
+        - `qhull` files are created in addon path to avoid permission issues.
+        - Fixed a missing newline in `qhull` input file.
+        - Properly handle empty `qhull` output.
+    - Fixed links to docs and GitHub issues.
 
 ## 2019-08-16
 
