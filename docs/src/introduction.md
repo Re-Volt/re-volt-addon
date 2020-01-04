@@ -8,7 +8,7 @@ This is the documentation for Marv's Add-On for Re-Volt files.
 It is intended to be used with [**Blender 2.79b**](https://www.blender.org/download/) or newer.  
 _**Note**: Blender 2.8x series is not supported._
 
-[**Download** (rva_19.0816)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.0816)
+[**Download** (rva_19.1230)](https://github.com/Yethiel/re-volt-addon/releases/tag/rva_19.1230)
 
 
 [Tutorial](http://learn.re-volt.io)  
