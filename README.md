@@ -1,5 +1,1 @@
-# Blender Add-On for Re-Volt File Formats
-
-## Documentation, Changelog
-
-The documentation can be found [here](https://re-volt.github.io/re-volt-addon).
+Moved here: https://gitlab.com/re-volt/re-volt-addon
